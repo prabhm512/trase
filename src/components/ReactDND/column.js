@@ -24,26 +24,29 @@ const TaskList = styled.div`
   min-height: 100px;
 `
 
-export default class Column extends React.Component {
-  render() {
-    return (
-      <Container>
-        <Title>{this.props.column.title}</Title>
-        <Droppable droppableId={this.props.column.id} type="TASK">
-          {(provided, snapshot) => (
-            <TaskList
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              isDraggingOver={snapshot.isDraggingOver}
-            >
-              {this.props.tasks.map((task, index) => (
-                <Task key={task.id} task={task} index={index} />
-              ))}
-              {provided.placeholder}
-            </TaskList>
-          )}
-        </Droppable>
-      </Container>
-    )
-  }
+function Column(props) {
+  return (
+    <Container>
+      <Title>{props.column.title}</Title>
+      {/* Child of Droppable has to be a function that returns a react component */}
+      <Droppable droppableId={props.column.id} type="TASK">
+        {(provided, snapshot) => (
+          <TaskList
+            // Supplies DOM Node of Task List to react-beautiful-dnd
+            ref={provided.innerRef}
+            // droppableProps need to be applied to doppable components
+            {...provided.droppableProps}
+            isDraggingOver={snapshot.isDraggingOver}
+          >
+            {props.tasks.map((task, index) => (
+              <Task key={task.id} task={task} index={index} />
+            ))}
+            {provided.placeholder} {/* Increase available space in a droppable whenever needed during a drag*/}
+          </TaskList>
+        )}
+      </Droppable>
+    </Container>
+  )
 }
+
+export default Column;

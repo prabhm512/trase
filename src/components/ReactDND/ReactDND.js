@@ -1,25 +1,28 @@
-import React from 'react'
-import '@atlaskit/css-reset'
-import { DragDropContext } from 'react-beautiful-dnd'
-import styled from 'styled-components'
+import React, { useState } from 'react';
+import '@atlaskit/css-reset';
+import { DragDropContext } from 'react-beautiful-dnd';
+import styled from 'styled-components';
 
-import initialData from './initial-data'
-import Column from './column'
+import initialDataDND from './initial-data';
+import Column from './column';
 
 const Container = styled.div`
   display:flex;
 `
 
-class ReactDND extends React.Component {
-  state = initialData
+function ReactDND() {
+  const [ DND, setDND ] = useState(initialDataDND);
 
-  onDragEnd = result => {
+  // Synchronously updates state to reflect drag & drop result
+  const onDragEnd = result => {
     const { destination, source, draggableId } = result
 
+    // Exit if task dragged outside of a droppable
     if (!destination) {
       return
     }
 
+    // Check whether location of draggable changed
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -27,8 +30,8 @@ class ReactDND extends React.Component {
       return
     }
 
-    const start = this.state.columns[source.droppableId]
-    const finish = this.state.columns[destination.droppableId]
+    const start = DND.columns[source.droppableId]
+    const finish = DND.columns[destination.droppableId]
 
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds)
@@ -41,14 +44,14 @@ class ReactDND extends React.Component {
       }
 
       const newState = {
-        ...this.state,
+        ...DND,
         columns: {
-          ...this.state.columns,
+          ...DND.columns,
           [newColumn.id]: newColumn
         }
       }
 
-      this.setState(newState)
+      setDND(newState);
       return
     }
 
@@ -68,34 +71,32 @@ class ReactDND extends React.Component {
     }
 
     const newState = {
-      ...this.state,
+      ...DND,
       columns: {
-        ...this.state.columns,
+        ...DND.columns,
         [newStart.id]: newStart,
         [newFinish.id]: newFinish
       }
     }
-    this.setState(newState)
+    setDND(newState);
   }
 
-  render() {
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
+        <DragDropContext onDragEnd={onDragEnd}>
         <Container>
-          {this.state.columnOrder.map(columnId => {
-            const column = this.state.columns[columnId]
+            {DND.columnOrder.map(columnId => {
+            const column = DND.columns[columnId]
             const tasks = column.taskIds.map(
-              taskId => this.state.tasks[taskId]
+                taskId => DND.tasks[taskId]
             )
 
             return (
-              <Column key={column.id} column={column} tasks={tasks} />
+                <Column key={column.id} column={column} tasks={tasks} />
             )
-          })}
+            })}
         </Container>
-      </DragDropContext>
+        </DragDropContext>
     )
-  }
 }
 
 export default ReactDND;
