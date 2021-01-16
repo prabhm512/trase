@@ -17,6 +17,7 @@ const Container = styled.div`
 `
 
 function Task(props) {
+
   // const isDragDisabled = this.props.task.id === 'task-1'
   return (
     <Draggable
@@ -27,7 +28,7 @@ function Task(props) {
       {(provided, snapshot) => (
         <Container
           {...provided.draggableProps}
-          {...provided.dragHandleProps} // Applied to part of component that we want to control the whole with. 
+          {...provided.dragHandleProps} // Applied to part of component that we want to control the drag with. 
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
           // isDragDisabled={isDragDisabled}

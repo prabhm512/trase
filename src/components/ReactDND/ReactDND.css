@@ -1,0 +1,28 @@
+.openTextArea {
+    float: right;
+    cursor: pointer;
+}
+
+.addTasks {
+    display: none;
+    position: relative;
+    top: 2px;
+    float: right;
+}
+
+.inputNewTaskContent {
+    float: right;
+    font-size: 14px;
+    width: 100%;
+}
+
+.addTaskButton, .cancelTaskButton  {
+    float: right;
+    font-size: 20px;
+    margin-top: 7px;
+    cursor: pointer;
+}
+
+.addTaskButton {
+    margin-right: 10px;
+}
