@@ -34,6 +34,8 @@ function Task(props) {
           // isDragDisabled={isDragDisabled}
         >
           {props.task.content}
+          <br></br>
+          {props.task.seconds}
         </Container>
       )}
     </Draggable>

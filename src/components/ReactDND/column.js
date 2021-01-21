@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import Task from './task'
-import NewTask from './NewTask';
-import { Droppable } from 'react-beautiful-dnd'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import NewTask from '../NewTaskAddBox/NewTaskAddBox';
+import { Droppable } from 'react-beautiful-dnd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import './ReactDND.css';
 
@@ -31,6 +31,7 @@ const TaskList = styled.div`
 
 function Column(props) {
 
+  // Show hidden text area
   const displayTextArea = () => {
     document.querySelector(".addTasks").style.display = "contents";
   }
@@ -41,7 +42,7 @@ function Column(props) {
       <Title>{ props.column.title === 'To do' 
       ? 
       <div>
-        { props.column.title } 
+        { props.column.title }
         <h4 className="openTextArea"><FontAwesomeIcon icon={faPlus} onClick={displayTextArea}></FontAwesomeIcon></h4>
         <NewTask></NewTask>
       </div>

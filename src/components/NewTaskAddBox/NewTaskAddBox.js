@@ -1,14 +1,15 @@
 import React, { useContext }from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarCheck, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
-import './ReactDND.css';
-import UpdateToDoContext from './UpdateToDoContext';
+import './NewTaskAddBox.css';
+import UpdateToDoContext from '../../utils/contexts/UpdateToDoContext';
 
 function NewTask() {
     // Call addNewTask function in ReactDND.js (2 levels up) from here
     const addNewTask = useContext(UpdateToDoContext);
- 
+
     return (
+        // Textarea where users can add new tasks to the 'To Do' list
         <div className="addTasks">
             <textarea className="inputNewTaskContent"></textarea>
             <FontAwesomeIcon icon={faTrashAlt} className="cancelTaskButton" onClick={() => {
