@@ -19,7 +19,9 @@ if (process.env.NODE_ENV === "production") {
 // Connect to the Mongo DB
 const PWD = process.env.MONGO_PWD;
 
-mongoose.connect( `mongodb+srv://prabhm512:${encodeURIComponent(PWD)}@cluster0.ltepl.mongodb.net/project3`, {
+const databaseURL = `mongodb+srv://prabhm512:${encodeURIComponent(PWD)}@cluster0.ltepl.mongodb.net/project3`;
+
+mongoose.connect( process.env.MONGODB_URI || databaseURL, {
   useNewUrlParser: true,
   useFindAndModify: false
 });

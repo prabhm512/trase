@@ -187,7 +187,8 @@ function ReactDND() {
       }
 
       setDND(newToDos);
-      console.log(newToDos);
+      // console.log(newToDos);
+
       document.querySelector('.inputNewTaskContent').value = "";
     }
   }
