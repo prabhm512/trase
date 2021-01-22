@@ -116,8 +116,6 @@ function ReactDND() {
       + ':'
       + DND.tasks[draggableId].timer.getTimeValues().seconds
 
-      // updateDraggablePosition(start, finish, source, destination, draggableId);
-
       const newState = {
         tasks: { 
           ...DND.tasks,
@@ -130,8 +128,7 @@ function ReactDND() {
         },
         columnOrder: [ ...DND.columnOrder ]
       } 
-      // console.log(newState);
-
+      console.log(newState);
       setDND(newState);
     }
   } 
