@@ -6,7 +6,6 @@ const mongoose = require("mongoose");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-// const apiRoutes = require("./routes/apiRoutes");
 
 // Define middleware here
 app.use(express.urlencoded({ extended: true }));
@@ -16,23 +15,23 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
 }
 
-// Connect to the Mongo DB
-const PWD = process.env.MONGO_PWD;
-
-const databaseURL = `mongodb+srv://prabhm512:${encodeURIComponent(PWD)}@cluster0.ltepl.mongodb.net/project3`;
-
-mongoose.connect( process.env.MONGODB_URI || databaseURL, {
-  useNewUrlParser: true,
-  useFindAndModify: false
-});
-
 // Use apiRoutes
-// app.use("/api", apiRoutes);
+require("./routes/apiRoutes")(app);
 
 // Send every request to the React app
 // Define any API routes before this runs
 app.get("*", function(req, res) {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+  res.sendFile(path.join(__dirname, "./client/public/index.html"));
+});
+
+// Connect to the Mongo DB
+const PWD = process.env.MONGO_PWD;
+
+const databaseURL = `mongodb+srv://prabhm512:${encodeURIComponent(PWD)}@cluster0.ltepl.mongodb.net/project3?retryWrites=true&w=majority`;
+
+mongoose.connect( process.env.MONGODB_URI || databaseURL, {
+  useNewUrlParser: true,
+  useFindAndModify: false
 });
 
 app.listen(PORT, function() {

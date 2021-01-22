@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // react-beautiful-dnd
 import '@atlaskit/css-reset';
@@ -9,6 +9,7 @@ import Column from './column';
 // Utils
 import UpdateToDoContext from '../../utils/contexts/UpdateToDoContext';
 import Timer from 'easytimer.js';
+import API from '../../utils/apis/API';
 
 // Styling
 import styled from 'styled-components';
@@ -25,6 +26,11 @@ function ReactDND() {
 
   const [ DND, setDND ] = useState(initialData);
 
+  useEffect(() => {
+    // Load tasks on /api/tasks route on component mount
+    loadTasks();
+  }, []);
+  
   // Synchronously updates state to reflect drag & drop result
   const onDragEnd = result => {
     const { destination, source, draggableId } = result
@@ -65,12 +71,14 @@ function ReactDND() {
         }
       }
 
-      setDND(newState);
+      // setDND(newState);
+      saveTask(newState);
       return
     }
 
+    // Moving tasks from 1 column to another
+    // Do not allow task to move back to 'To Do' column once it has been moved out
     if ((start.id !== 'column-2' || start.id !== 'column-3' || start.id !== 'column-4') && finish.id !== 'column-1') {
-      // Moving tasks from 1 column to another
       const startTaskIds = Array.from(start.taskIds)
         startTaskIds.splice(source.index, 1)
         newStart = {
@@ -93,7 +101,8 @@ function ReactDND() {
           [newFinish.id]: newFinish
         }
       }
-      setDND(newState);
+      // setDND(newState);
+      saveTask(newState);
     }
 
     // Start/pause the timer based on what column the task is dragged to
@@ -128,8 +137,9 @@ function ReactDND() {
         },
         columnOrder: [ ...DND.columnOrder ]
       } 
-      console.log(newState);
-      setDND(newState);
+      // console.log(newState);
+      // setDND(newState);
+      saveTask(newState);
     }
   } 
 
@@ -186,11 +196,30 @@ function ReactDND() {
         columnOrder: [...DND.columnOrder],
       }
 
-      setDND(newToDos);
-      // console.log(newToDos);
+      saveTask(newToDos);
 
+      // console.log(newToDos);
       document.querySelector('.inputNewTaskContent').value = "";
     }
+  }
+
+  // Get all tasks
+  const loadTasks = () => {
+    API.getTasks()
+    .then(res => {
+      console.log(res.data[0]);
+      setDND(res.data[0])
+    })
+    .catch(err => console.log(err));
+  }
+  // Post task to /api/tasks route
+  const saveTask = (taskData) => {
+    API.saveTask(taskData)
+    .then(res => { 
+      console.log(res);
+      setDND(JSON.parse(res.config.data)) 
+    })
+    .catch(err => console.log(err));
   }
 
   return (

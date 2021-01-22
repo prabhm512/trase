@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const tasksSchema = new Schema({
   tasks: { type: Object },
   columns: { type: Object },
-  columnOrder: Array
+  columnOrder: { type: Array }
 });
 
 const Tasks = mongoose.model("Tasks", tasksSchema);

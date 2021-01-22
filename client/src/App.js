@@ -1,17 +1,17 @@
 import './App.css';
-import ReactDND from './components/ReactDND/ReactDND';
-import Timesheet from './components/Timesheet/Timesheet';
+import Home from './pages/Home';
+import TimesheetPage from './pages/TimesheetPage';
 import { Route, Switch } from 'react-router-dom';
 
 function App() {
     return (
         <div className="App">
             <Switch>
-                <Route exact path="/">
-                    <ReactDND></ReactDND>
+                <Route exact path={["/", "/api/tasks"]}>
+                    <Home></Home>
                 </Route>
                 <Route exact path="/timesheet">
-                    <Timesheet></Timesheet>
+                    <TimesheetPage></TimesheetPage>
                 </Route>
             </Switch>
         </div>
