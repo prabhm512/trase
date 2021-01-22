@@ -69,32 +69,34 @@ function ReactDND() {
       return
     }
 
-    // Moving tasks from 1 column to another
-    const startTaskIds = Array.from(start.taskIds)
-      startTaskIds.splice(source.index, 1)
-      newStart = {
-        ...start,
-        taskIds: startTaskIds
-    }
-
-    const finishTaskIds = Array.from(finish.taskIds)
-      finishTaskIds.splice(destination.index, 0, draggableId)
-      newFinish = {
-        ...finish,
-        taskIds: finishTaskIds
-    }
+    if ((start.id !== 'column-2' || start.id !== 'column-3' || start.id !== 'column-4') && finish.id !== 'column-1') {
+      // Moving tasks from 1 column to another
+      const startTaskIds = Array.from(start.taskIds)
+        startTaskIds.splice(source.index, 1)
+        newStart = {
+          ...start,
+          taskIds: startTaskIds
+      }
   
-  const newState = {
-    ...DND,
-    columns: {
-      ...DND.columns,
-      [newStart.id]: newStart,
-      [newFinish.id]: newFinish
+      const finishTaskIds = Array.from(finish.taskIds)
+        finishTaskIds.splice(destination.index, 0, draggableId)
+        newFinish = {
+          ...finish,
+          taskIds: finishTaskIds
+      }
+    
+      const newState = {
+        ...DND,
+        columns: {
+          ...DND.columns,
+          [newStart.id]: newStart,
+          [newFinish.id]: newFinish
+        }
+      }
+      setDND(newState);
     }
-  }
-  setDND(newState);
 
-    // Start/stop noting the time based on what column the task is dragged to
+    // Start/pause the timer based on what column the task is dragged to
     if (finish.id === 'column-2') {
 
       DND.tasks[draggableId].timer.start();
@@ -137,6 +139,7 @@ function ReactDND() {
   // Add new task to To do list 
   const addNewTask = () => {
     const storeAllIDs = [];
+    let newTaskID;
 
     // Loop through initial data to find out value of last key
     for (let key in DND.tasks) {
@@ -145,7 +148,12 @@ function ReactDND() {
           storeAllIDs.push(key.slice(-1));
       }
     }
-    const newTaskID = `task-${parseInt(Math.max(...storeAllIDs)) + 1}`;
+    
+    if (storeAllIDs.length !== 0) {
+      newTaskID = `task-${parseInt(Math.max(...storeAllIDs)) + 1}`;
+    } else {
+      newTaskID = 'task-1';
+    }
 
     if (document.querySelector('.inputNewTaskContent').value !== "") {
 
