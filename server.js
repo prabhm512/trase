@@ -31,7 +31,8 @@ const databaseURL = `mongodb+srv://prabhm512:${encodeURIComponent(PWD)}@cluster0
 
 mongoose.connect( process.env.MONGODB_URI || databaseURL, {
   useNewUrlParser: true,
-  useFindAndModify: false
+  useFindAndModify: false,
+  useUnifiedTopology: true
 });
 
 app.listen(PORT, function() {

@@ -21,8 +21,8 @@ const Container = styled.div`
 
 function ReactDND() {
 
-  // Used in the updateDraggablePosition function to update the position of the draggable
-  let newStart, newFinish; 
+  // easytimer.js that runs behind each task
+  const timer = new Timer();
 
   const [ DND, setDND ] = useState(initialData);
 
@@ -71,7 +71,8 @@ function ReactDND() {
         }
       }
 
-      // setDND(newState);
+      // Do not set state inside method that does an axios call as task movement lags.
+      setDND(newState);
       saveTask(newState);
       return
     }
@@ -81,19 +82,19 @@ function ReactDND() {
     if ((start.id !== 'column-2' || start.id !== 'column-3' || start.id !== 'column-4') && finish.id !== 'column-1') {
       const startTaskIds = Array.from(start.taskIds)
         startTaskIds.splice(source.index, 1)
-        newStart = {
+        const newStart = {
           ...start,
           taskIds: startTaskIds
       }
   
       const finishTaskIds = Array.from(finish.taskIds)
         finishTaskIds.splice(destination.index, 0, draggableId)
-        newFinish = {
+        const newFinish = {
           ...finish,
           taskIds: finishTaskIds
       }
     
-      const newState = {
+      let newState = {
         ...DND,
         columns: {
           ...DND.columns,
@@ -101,44 +102,41 @@ function ReactDND() {
           [newFinish.id]: newFinish
         }
       }
-      // setDND(newState);
-      saveTask(newState);
-    }
 
-    // Start/pause the timer based on what column the task is dragged to
-    if (finish.id === 'column-2') {
+      // Start/pause the timer based on what column the task is dragged to
+      if (finish.id === 'column-2') {
 
-      DND.tasks[draggableId].timer.start();
+        // Reset timer before starting it again 
+        timer.reset();
 
-      // console.log(timer.getTimeValues());
-    } else if (finish.id === 'column-3') {
-
-      DND.tasks[draggableId].timer.pause();
-
-    } else if (finish.id === 'column-4') {
-      // Do not STOP timer as that changes the time to 0. Pause keeps note of the time. 
-      DND.tasks[draggableId].timer.pause();
-
-      const finalTime = DND.tasks[draggableId].timer.getTimeValues().hours 
-      + ':' 
-      + DND.tasks[draggableId].timer.getTimeValues().minutes
-      + ':'
-      + DND.tasks[draggableId].timer.getTimeValues().seconds
-
-      const newState = {
-        tasks: { 
-          ...DND.tasks,
-          [draggableId]: { ...DND.tasks[draggableId], seconds: finalTime}
-        },
-        columns: {
-          ...DND.columns,
-          [newStart.id]: newStart,
-          [newFinish.id]: newFinish
-        },
-        columnOrder: [ ...DND.columnOrder ]
+        // start timer again
+        timer.start();
       } 
-      // console.log(newState);
-      // setDND(newState);
+      
+      else if (finish.id === 'column-3' || finish.id === 'column-4') {
+
+        const finalTime = timer.getTimeValues().hours 
+        + ':' 
+        + timer.getTimeValues().minutes
+        + ':'
+        + timer.getTimeValues().seconds
+
+        console.log(finalTime);
+
+        newState = {
+          ...DND, 
+          tasks: { 
+            ...DND.tasks,
+            [draggableId]: { ...DND.tasks[draggableId], time: finalTime}
+          },
+          columns: {
+            ...DND.columns,
+            [newStart.id]: newStart,
+            [newFinish.id]: newFinish
+          }
+        } 
+      } 
+      setDND(newState);
       saveTask(newState);
     }
   } 
@@ -166,7 +164,7 @@ function ReactDND() {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, timer: new Timer(), seconds: '0:0:0' };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, time: '0:0:0' };
 
       // ID of new task gets inserted into first column
       const newToDos = {
@@ -196,6 +194,7 @@ function ReactDND() {
         columnOrder: [...DND.columnOrder],
       }
 
+      setDND(newToDos);
       saveTask(newToDos);
 
       // console.log(newToDos);
@@ -207,18 +206,25 @@ function ReactDND() {
   const loadTasks = () => {
     API.getTasks()
     .then(res => {
+
       console.log(res.data[0]);
       setDND(res.data[0])
     })
     .catch(err => console.log(err));
   }
+
   // Post task to /api/tasks route
   const saveTask = (taskData) => {
     API.saveTask(taskData)
     .then(res => { 
-      console.log(res);
-      setDND(JSON.parse(res.config.data)) 
+      const parsedData = JSON.parse(res.config.data);
+
+      console.log(parsedData);
     })
+    .then(() =>  { 
+      // console.log(DND);
+      timer.pause();
+     })
     .catch(err => console.log(err));
   }
 
