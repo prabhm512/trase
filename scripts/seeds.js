@@ -15,7 +15,7 @@ mongoose.connect( process.env.MONGODB_URI || databaseURL, {
 
 const tasksSeed = {
   tasks: {
-      'task-1': { id: 'task-1', content: 'Demo Task', time: '0:0:0'}
+      'task-1': { id: 'task-1', content: 'Demo Task', inProgressDate: 0, pausedDate: 0, doneDate: 0, time: 0}
   },
   columns: {
     'column-1': {

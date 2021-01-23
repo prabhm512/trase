@@ -8,7 +8,6 @@ import Column from './column';
 
 // Utils
 import UpdateToDoContext from '../../utils/contexts/UpdateToDoContext';
-import Timer from 'easytimer.js';
 import API from '../../utils/apis/API';
 
 // Styling
@@ -21,9 +20,6 @@ const Container = styled.div`
 
 function ReactDND() {
 
-  // easytimer.js that runs behind each task
-  const timer = new Timer();
-
   const [ DND, setDND ] = useState(initialData);
 
   useEffect(() => {
@@ -31,7 +27,7 @@ function ReactDND() {
     loadTasks();
   }, []);
   
-  // Synchronously updates state to reflect drag & drop result
+  // Updates state to reflect drag & drop result
   const onDragEnd = result => {
     const { destination, source, draggableId } = result
 
@@ -103,31 +99,40 @@ function ReactDND() {
         }
       }
 
-      // Start/pause the timer based on what column the task is dragged to
+      // Record the date task was moved into 'In Progress' column
       if (finish.id === 'column-2') {
-
-        // Reset timer before starting it again 
-        timer.reset();
-
-        // start timer again
-        timer.start();
-      } 
-      
-      else if (finish.id === 'column-3' || finish.id === 'column-4') {
-
-        const finalTime = timer.getTimeValues().hours 
-        + ':' 
-        + timer.getTimeValues().minutes
-        + ':'
-        + timer.getTimeValues().seconds
-
-        console.log(finalTime);
 
         newState = {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], time: finalTime}
+            [draggableId]: { ...DND.tasks[draggableId], inProgressDate: Date.now() }
+          },
+          columns: {
+            ...DND.columns,
+            [newStart.id]: newStart,
+            [newFinish.id]: newFinish
+          }
+        }
+      } 
+
+      // Record the date task was moved FROM 'In Progress' column into 'Paused' column 
+      else if (finish.id === 'column-3' && start.id === 'column-2')  {
+
+        let taskTime;
+
+        // Calculate exact time (in miilliseconds) that task was in 'In Progress' column
+        if (DND.tasks[draggableId].inProgressDate !== 0) {
+          taskTime = Date.now() - DND.tasks[draggableId].inProgressDate;
+        }
+
+        const timeInSeconds = Math.round(taskTime / 1000);
+
+        newState = {
+          ...DND, 
+          tasks: { 
+            ...DND.tasks,
+            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), time: DND.tasks[draggableId].time + timeInSeconds}
           },
           columns: {
             ...DND.columns,
@@ -135,7 +140,36 @@ function ReactDND() {
             [newFinish.id]: newFinish
           }
         } 
-      } 
+      }
+
+      // Record the date task was moved FROM 'In Progress' column into 'Done' column 
+      else if (finish.id === 'column-4'  && start.id === 'column-2') {
+
+        let taskTime;
+
+        // Calculate exact time (in miilliseconds) that task was in 'In Progress' column
+        if (DND.tasks[draggableId].inProgressDate !== 0) {
+          taskTime = Date.now() - DND.tasks[draggableId].inProgressDate;
+        }
+
+        const timeInSeconds = Math.round(taskTime / 1000);
+        console.log(timeInSeconds);
+
+        newState = {
+          ...DND, 
+          tasks: { 
+            ...DND.tasks,
+            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), time: DND.tasks[draggableId].time + timeInSeconds}
+          },
+          columns: {
+            ...DND.columns,
+            [newStart.id]: newStart,
+            [newFinish.id]: newFinish
+          }
+        } 
+      }
+      // console.log(newState);
+      // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
       saveTask(newState);
     }
@@ -164,7 +198,7 @@ function ReactDND() {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, time: '0:0:0' };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, time: 0 };
 
       // ID of new task gets inserted into first column
       const newToDos = {
@@ -193,7 +227,7 @@ function ReactDND() {
         },
         columnOrder: [...DND.columnOrder],
       }
-
+      // Do not set state inside method that does an axios call as task movement lags.
       setDND(newToDos);
       saveTask(newToDos);
 
@@ -206,8 +240,6 @@ function ReactDND() {
   const loadTasks = () => {
     API.getTasks()
     .then(res => {
-
-      console.log(res.data[0]);
       setDND(res.data[0])
     })
     .catch(err => console.log(err));
@@ -216,15 +248,6 @@ function ReactDND() {
   // Post task to /api/tasks route
   const saveTask = (taskData) => {
     API.saveTask(taskData)
-    .then(res => { 
-      const parsedData = JSON.parse(res.config.data);
-
-      console.log(parsedData);
-    })
-    .then(() =>  { 
-      // console.log(DND);
-      timer.pause();
-     })
     .catch(err => console.log(err));
   }
 
