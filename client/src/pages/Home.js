@@ -7,7 +7,8 @@ function Home() {
     
     const handleClick = () => {
         history.push('/timesheet')
-    }
+    };
+
     return (
         <div className="home">
             <ReactDND></ReactDND>
