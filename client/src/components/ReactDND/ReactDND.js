@@ -20,6 +20,10 @@ const Container = styled.div`
 
 function ReactDND() {
 
+  // Used when task is moved in to the 'Puased' & 'Done' columns to record time for current day.
+  // One task may be worked on for multiple days
+  let dayToday = new Date().getDay();
+
   const [ DND, setDND ] = useState(initialData);
 
   useEffect(() => {
@@ -120,6 +124,7 @@ function ReactDND() {
       else if (finish.id === 'column-3' && start.id === 'column-2')  {
 
         let taskTime;
+        let totalTaskTime = 0;
 
         // Calculate exact time (in miilliseconds) that task was in 'In Progress' column
         if (DND.tasks[draggableId].inProgressDate !== 0) {
@@ -127,12 +132,18 @@ function ReactDND() {
         }
 
         const timeInSeconds = Math.round(taskTime / 1000);
+      
+        // Calculate total time it took to complete task
+        for (let i=1; i<6; i++) {
+          totalTaskTime += DND.tasks[draggableId].timesheet[i];
+        }
+        totalTaskTime+=timeInSeconds;
 
         newState = {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), time: DND.tasks[draggableId].time + timeInSeconds}
+            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime }
           },
           columns: {
             ...DND.columns,
@@ -146,6 +157,7 @@ function ReactDND() {
       else if (finish.id === 'column-4'  && start.id === 'column-2') {
 
         let taskTime;
+        let totalTaskTime=0;
 
         // Calculate exact time (in miilliseconds) that task was in 'In Progress' column
         if (DND.tasks[draggableId].inProgressDate !== 0) {
@@ -153,13 +165,18 @@ function ReactDND() {
         }
 
         const timeInSeconds = Math.round(taskTime / 1000);
-        console.log(timeInSeconds);
+
+        // Calculate total time it took to complete task
+        for (let i=1; i<6; i++) {
+          totalTaskTime += DND.tasks[draggableId].timesheet[i];
+        }
+        totalTaskTime+=timeInSeconds;
 
         newState = {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), time: DND.tasks[draggableId].time + timeInSeconds}
+            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime }
           },
           columns: {
             ...DND.columns,
@@ -198,7 +215,7 @@ function ReactDND() {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, time: 0 };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, totalTaskTime: 0 };
 
       // ID of new task gets inserted into first column
       const newToDos = {

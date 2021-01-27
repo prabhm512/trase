@@ -35,7 +35,7 @@ function Task(props) {
         >
           {props.task.content}
           <br></br>
-          {props.task.time}
+          {/* {props.task.time} */}
         </Container>
       )}
     </Draggable>
