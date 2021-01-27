@@ -1,19 +1,30 @@
 import './App.css';
-import Home from './pages/Home';
-import TimesheetPage from './pages/TimesheetPage';
+import Tasks from './pages/Tasks';
+import Timesheet from './components/Timesheet/Timesheet';
 import { Route, Switch } from 'react-router-dom';
+
+import Navbar from "./components/Navbar/Navbar";
+import Landing from "./pages/Landing/Landing";
+import Register from "./components/Register/register";
+import Login from "./components/Login/login";
+
+import Auth from './Auth';
 
 function App() {
 
     return (
         <div className="App">
             <Switch>
-                <Route exact path="/timesheet">
-                    <TimesheetPage></TimesheetPage>
-                </Route>
-                <Route exact path={"/"}>
-                    <Home></Home>
-                </Route>
+                <div className="container-fluid pl-0 pr-0 m-0">
+                        <Navbar />
+                        <Route exact path="/" component={Landing} />
+                        <div className='container-fluid m-0 p-0'>
+                            <Route exact path="/tasks" component={Auth(Tasks)}/>
+                            <Route exact path="/timesheet" component={Auth(Timesheet)}/>
+                            <Route exact path="/register" component={Register} />
+                            <Route exact path="/login" component={Login} />
+                        </div>
+                    </div>
             </Switch>
         </div>
     )

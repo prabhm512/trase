@@ -269,22 +269,22 @@ function ReactDND() {
   }
 
   return (
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Container>
-            {DND.columnOrder.map(columnId => {
-              const column = DND.columns[columnId]
-              const tasks = column.taskIds.map(
-                  taskId => DND.tasks[taskId]
-            )
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Container>
+          {DND.columnOrder.map(columnId => {
+            const column = DND.columns[columnId]
+            const tasks = column.taskIds.map(
+                taskId => DND.tasks[taskId]
+          )
 
-            return (
-              <UpdateToDoContext.Provider value={addNewTask} key={column.id}>
-                <Column column={column} tasks={tasks}/>
-              </UpdateToDoContext.Provider>
-            )
-          })}
-        </Container>
-      </DragDropContext>
+          return (
+            <UpdateToDoContext.Provider value={addNewTask} key={column.id}>
+              <Column column={column} tasks={tasks}/>
+            </UpdateToDoContext.Provider>
+          )
+        })}
+      </Container>
+    </DragDropContext>
   )
 }
 
