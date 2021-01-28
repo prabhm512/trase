@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import { Dropdown } from 'react-bootstrap';
 
 const Container = styled.div`
   border: 1px solid lightgrey;
@@ -33,9 +36,17 @@ function Task(props) {
           isDragging={snapshot.isDragging}
           // isDragDisabled={isDragDisabled}
         >
+          <Dropdown>
+            <Dropdown.Toggle id="dropdown-basic" >
+              <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item>Edit</Dropdown.Item>
+              <Dropdown.Item>Delete</Dropdown.Item>
+              {/* <Dropdown.Item href="#/action-3">Something else</Dropdown.Item> */}
+            </Dropdown.Menu>
+          </Dropdown>
           {props.task.content}
-          <br></br>
-          {/* {props.task.time} */}
         </Container>
       )}
     </Draggable>

@@ -2,3 +2,13 @@
     float: right;
     cursor: pointer;
 }
+
+.taskActions {
+    /* float: right; */
+    background-color: white;
+    border: 1px solid white;
+}
+
+#dropdown-basic {
+    margin-right: 0px;
+}
