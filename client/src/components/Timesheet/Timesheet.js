@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import API from '../../utils/apis/API';
 import { startOfWeek, endOfWeek } from 'date-fns';
+import { useLocation } from 'react-router-dom';
 import './Timesheet.css';
 
 function Timesheet() {
     // const dayToday = new Date().getDay();
 
+    // ID of the users unique board is extracted from the location pathname
+    const location = useLocation();
+
     const renderTasks = () => {
-        API.getUserBoard()
+        API.getUserBoard(location.pathname.substr(11))
             .then(res => {
                 // Clear innerHTML before adding it again 
                 document.querySelector(".timesheet-body").innerHTML = "";
@@ -20,20 +24,20 @@ function Timesheet() {
 
                 // Loop through initial data to find out content & time of each task
                 // Add this data to table
-                for (let key in res.data[0].tasks) {
+                for (let key in res.data.tasks) {
 
-                    if (res.data[0].tasks.hasOwnProperty(key)) {
+                    if (res.data.tasks.hasOwnProperty(key)) {
 
                         let newTableRow = `
                         <tr>
-                            <th>${res.data[0].tasks[key].content}</th>
+                            <th>${res.data.tasks[key].content}</th>
                         `;
 
                         for (let i=1; i<6; i++) {
-                            if (res.data[0].tasks[key].timesheet[i] === 0) {
+                            if (res.data.tasks[key].timesheet[i] === 0) {
                                 newTableRow += `<td></td>`;
                             } else {
-                                newTableRow += `<td>${res.data[0].tasks[key].timesheet[i]}</td>`;
+                                newTableRow += `<td>${res.data.tasks[key].timesheet[i]}</td>`;
                             }
                         }
                         
@@ -42,11 +46,11 @@ function Timesheet() {
                         document.querySelector(".timesheet-body").innerHTML += newTableRow;
 
                         // Calculate the total time the employee for each day
-                        totalTimeMon += parseInt(res.data[0].tasks[key].timesheet[1]);
-                        totalTimeTues += parseInt(res.data[0].tasks[key].timesheet[2]);
-                        totalTimeWed += parseInt(res.data[0].tasks[key].timesheet[3]);
-                        totalTimeThurs += parseInt(res.data[0].tasks[key].timesheet[4]);
-                        totalTimeFri += parseInt(res.data[0].tasks[key].timesheet[5]);
+                        totalTimeMon += parseInt(res.data.tasks[key].timesheet[1]);
+                        totalTimeTues += parseInt(res.data.tasks[key].timesheet[2]);
+                        totalTimeWed += parseInt(res.data.tasks[key].timesheet[3]);
+                        totalTimeThurs += parseInt(res.data.tasks[key].timesheet[4]);
+                        totalTimeFri += parseInt(res.data.tasks[key].timesheet[5]);
 
                     }
                 }

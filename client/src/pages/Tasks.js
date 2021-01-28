@@ -19,7 +19,7 @@ class Home extends Component {
     decoded = jwt_decode(this.token);
 
     handleClick = () => {
-        this.props.history.push('/timesheet');
+        this.props.history.push('/timesheet/' + this.decoded._id);
     };
 
     componentDidMount() {
@@ -30,7 +30,7 @@ class Home extends Component {
         //     last_name: this.decoded.last_name,
         //     email: this.decoded.email
         // })
-        console.log(this.decoded._id);
+        // console.log(this.decoded._id);
         // Create a new user board only if it does not exist
         API.getUserBoard(this.decoded._id).then(res => {
             // console.log(res);

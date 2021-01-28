@@ -20,7 +20,7 @@ function App() {
                         <Route exact path="/" component={Landing} />
                         <div className='container-fluid m-0 p-0'>
                             <Route exact path="/tasks" component={Auth(Tasks)}/>
-                            <Route exact path="/timesheet" component={Auth(Timesheet)}/>
+                            <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
                             <Route exact path="/register" component={Register} />
                             <Route exact path="/login" component={Login} />
                         </div>
