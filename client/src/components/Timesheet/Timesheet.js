@@ -7,7 +7,7 @@ function Timesheet() {
     // const dayToday = new Date().getDay();
 
     const renderTasks = () => {
-        API.getTasks()
+        API.getUserBoard()
             .then(res => {
                 // Clear innerHTML before adding it again 
                 document.querySelector(".timesheet-body").innerHTML = "";

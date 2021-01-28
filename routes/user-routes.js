@@ -120,4 +120,16 @@ module.exports = function(app) {
             res.send('error: ' + err);
         })
     })
+    app.get('/api/users/:email', (req, res) => {
+        console.log(req.params.email);
+
+        db.Users.find({ email: req.params.email })
+        .then(response => {
+            console.log(response);
+            res.json(response);   
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    })
 }

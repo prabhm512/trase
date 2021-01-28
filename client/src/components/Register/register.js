@@ -95,13 +95,13 @@ class Register extends Component {
                 var destination = data.map(element => {
                     if (element.email === this.state.email) {
                         console.log('foundmatch');
-                        console.log(element.email)
                         return true;
                     }
                 }).filter(item => { return item; })[0];
+                // Check if email exists in db or not
                 if (!destination) {
                     registerUser(userData).then(res => {
-                        this.props.history.push('/login')
+                        setTimeout(() => this.props.history.push('/login'), 200);
                     })
                     console.log("Form submitted");
                 }

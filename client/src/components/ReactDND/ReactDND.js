@@ -18,7 +18,7 @@ const Container = styled.div`
   display:flex;
 `
 
-function ReactDND() {
+function ReactDND(props) {
 
   // Used when task is moved in to the 'Puased' & 'Done' columns to record time for current day.
   // One task may be worked on for multiple days
@@ -27,8 +27,8 @@ function ReactDND() {
   const [ DND, setDND ] = useState(initialData);
 
   useEffect(() => {
-    // Load tasks on /api/tasks route on component mount
-    loadTasks();
+    // Load tasks on component mount
+    loadTasks(props.userID);
   }, []);
   
   // Updates state to reflect drag & drop result
@@ -73,7 +73,7 @@ function ReactDND() {
 
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
-      saveTask(newState);
+      updateUserBoard(newState);
       return
     }
 
@@ -118,6 +118,7 @@ function ReactDND() {
             [newFinish.id]: newFinish
           }
         }
+        console.log(newState);
       } 
 
       // Record the date task was moved FROM 'In Progress' column into 'Paused' column 
@@ -188,7 +189,7 @@ function ReactDND() {
       // console.log(newState);
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
-      saveTask(newState);
+      updateUserBoard(newState);
     }
   } 
 
@@ -219,6 +220,7 @@ function ReactDND() {
 
       // ID of new task gets inserted into first column
       const newToDos = {
+        _id: props.userID,
         tasks: { ...DND.tasks },
         columns: {
           'column-1': {
@@ -246,25 +248,27 @@ function ReactDND() {
       }
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newToDos);
-      saveTask(newToDos);
+      updateUserBoard(newToDos);
 
       // console.log(newToDos);
       document.querySelector('.inputNewTaskContent').value = "";
     }
   }
 
-  // Get all tasks
-  const loadTasks = () => {
-    API.getTasks()
+  // Get all tasks of the logged in user
+  const loadTasks = (userID) => {
+    // console.log(userID);
+    API.getUserBoard(userID)
     .then(res => {
-      setDND(res.data[0])
+      // console.log(res);
+      setDND(res.data)
     })
     .catch(err => console.log(err));
   }
 
   // Post task to /api/tasks route
-  const saveTask = (taskData) => {
-    API.saveTask(taskData)
+  const updateUserBoard = (taskData) => {
+    API.updateUserBoard(taskData)
     .catch(err => console.log(err));
   }
 

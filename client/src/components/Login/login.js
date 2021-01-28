@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { loginUser } from '../UserFunctions/userFunctions';
+import { getOneUser, loginUser } from '../UserFunctions/userFunctions';
 
 class Login extends Component {
     constructor() {
@@ -21,14 +21,17 @@ class Login extends Component {
         const user = {
             email: this.state.email,
             password: this.state.password
-        }
-        loginUser(user).then(res => {
-            if(res) {
-                this.props.history.push('/tasks');
-            }
-            else {
-                console.log("Incorrect email or password");
-            }
+        };
+        getOneUser(user).then(res => {
+            loginUser(user)
+            .then(res => {
+                if(res) {
+                    this.props.history.push('/tasks');
+                }
+                else {
+                    console.log("Incorrect email or password");
+                }
+            })
         })
     }
 

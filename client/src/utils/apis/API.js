@@ -1,13 +1,21 @@
 import axios from "axios";
 
 const methods = {
-  // Gets all books
-  getTasks: () => {
-    return axios.get("/api/tasks");
+  // Gets all boards
+  getBoards: () => {
+    return axios.get("/api/boards");
   },
-  // Saves a book to the database
-  saveTask: (taskData) => {
-    return axios.post("/api/tasks", taskData);
+  // Gets all boards
+  getUserBoard: (id) => {
+    return axios.get("/api/boards/" + id);
+  },
+  // Updates current task list
+  updateUserBoard: (taskData) => {
+    return axios.put("/api/boards/" + taskData._id, taskData);
+  }, 
+  // Creates new task board
+  createBoard: (taskData) => {
+    return axios.post("/api/boards", taskData);
   }
 }
 

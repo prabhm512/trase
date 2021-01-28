@@ -34,8 +34,7 @@ export const loginUser = userData => {
 
 export const getUsers = userData => {
     return axios
-    .get('/api/users', {
-    })
+    .get('/api/users', {})
     .then(response => {
         // console.log(response.data);
         // console.log(userData);  
@@ -43,5 +42,14 @@ export const getUsers = userData => {
     })
     .catch(err => {
         console.log(err);
+    })
+}
+
+export const getOneUser = userData => {
+
+    return axios
+    .get("/api/users/" + userData.email)
+    .then(response => {
+        return response.data
     })
 }
