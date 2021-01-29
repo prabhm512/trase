@@ -10,5 +10,15 @@
 }
 
 #dropdown-basic {
-    margin-right: 0px;
+    border: 0px;
+    margin-left: 5px;
+    height: 10px;
+    width: 10px;
+    float: right;
+    background-color: red;
 }
+
+#dropdown-basic.dropdown-toggle::after {
+    display: none;
+} 
+

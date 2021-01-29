@@ -255,6 +255,20 @@ function ReactDND(props) {
     }
   }
 
+  // Called from component inside task.js (2 levels down)
+  const editTaskContent = (taskID, content) => {
+    const newState = {
+      ...DND, 
+      tasks: {
+        ...DND.tasks,
+        [taskID]: { ...DND.tasks[taskID], content: content}
+      }
+    }
+
+    setDND(newState);
+    updateUserBoard(newState);
+  }
+  
   // Get all tasks of the logged in user
   const loadTasks = (userID) => {
     // console.log(userID);
@@ -283,7 +297,7 @@ function ReactDND(props) {
 
           return (
             <UpdateToDoContext.Provider value={addNewTask} key={column.id}>
-              <Column column={column} tasks={tasks} currState={DND}/>
+              <Column column={column} tasks={tasks} currState={DND} editTaskContentCB={editTaskContent}/>
             </UpdateToDoContext.Provider>
           )
         })}

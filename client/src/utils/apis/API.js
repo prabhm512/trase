@@ -5,7 +5,7 @@ const methods = {
   getBoards: () => {
     return axios.get("/api/boards");
   },
-  // Gets all boards
+  // Gets task board of logged in user
   getUserBoard: (id) => {
     return axios.get("/api/boards/" + id);
   },

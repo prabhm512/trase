@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Modal, Button } from 'react-bootstrap';
 
 const Container = styled.div`
   border: 1px solid lightgrey;
@@ -21,7 +21,19 @@ const Container = styled.div`
 
 function Task(props) {
 
-  // const isDragDisabled = this.props.task.id === 'task-1'
+  // Managing state of modal that allows tasks to be edited
+  const [show, setShow] = useState(false);
+
+  const handleClose = event => { 
+    setShow(false);
+
+    // New content of task
+    const editedContent = event.target.parentElement.parentElement.querySelector(".modal-body").innerHTML;
+    props.editTaskContentCB(props.task.id, editedContent);
+  };
+
+  const handleShow = () => setShow(true);
+
   return (
     <Draggable
       draggableId={props.task.id}
@@ -37,16 +49,34 @@ function Task(props) {
           // isDragDisabled={isDragDisabled}
         >
           <Dropdown>
-            <Dropdown.Toggle id="dropdown-basic" >
-              <FontAwesomeIcon icon={faEdit}></FontAwesomeIcon>
+            <Dropdown.Toggle id="dropdown-basic">
+              ...
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>Edit</Dropdown.Item>
+              <Dropdown.Item onClick={handleShow}>Edit</Dropdown.Item>
               <Dropdown.Item>Delete</Dropdown.Item>
-              {/* <Dropdown.Item href="#/action-3">Something else</Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
           {props.task.content}
+
+          <Modal
+            show={show}
+            onHide={() => setShow(false)}
+            backdrop="static"
+            keyboard={false}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body contentEditable>
+              {props.task.content}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Save
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Container>
       )}
     </Draggable>
