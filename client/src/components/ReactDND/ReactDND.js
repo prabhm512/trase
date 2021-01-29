@@ -255,7 +255,7 @@ function ReactDND(props) {
     }
   }
 
-  // Called from component inside task.js (2 levels down)
+  // Called from component inside task.js (2 levels down). Allows task content to be edited
   const editTaskContent = (taskID, content) => {
     const newState = {
       ...DND, 
@@ -268,7 +268,29 @@ function ReactDND(props) {
     setDND(newState);
     updateUserBoard(newState);
   }
-  
+
+  // Called from component inside task.js (2 levels down). Allows task to be deleted
+  const deleteTask = (taskID) => {
+    // console.log(taskID);
+    delete DND.tasks[taskID];
+
+    // Delete task from columns object as well
+    for (let key in DND.columns) {
+      DND.columns[key].taskIds.forEach((el, idx) => {
+        if (el === taskID) {
+          DND.columns[key].taskIds.splice(idx, 1);
+        }
+      })
+    }
+    // console.log(DND);
+    const newState = {
+      ...DND
+    };
+
+    setDND(newState);
+    updateUserBoard(newState);
+  }
+
   // Get all tasks of the logged in user
   const loadTasks = (userID) => {
     // console.log(userID);
@@ -297,7 +319,7 @@ function ReactDND(props) {
 
           return (
             <UpdateToDoContext.Provider value={addNewTask} key={column.id}>
-              <Column column={column} tasks={tasks} currState={DND} editTaskContentCB={editTaskContent}/>
+              <Column column={column} tasks={tasks} currState={DND} editTaskContentCB={editTaskContent} deleteTaskCB={deleteTask}/>
             </UpdateToDoContext.Provider>
           )
         })}

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Dropdown, Modal, Button } from 'react-bootstrap';
 
 const Container = styled.div`
@@ -34,6 +34,10 @@ function Task(props) {
 
   const handleShow = () => setShow(true);
 
+  const handleDelete = () => {
+    props.deleteTaskCB(props.task.id);
+  }
+
   return (
     <Draggable
       draggableId={props.task.id}
@@ -54,7 +58,7 @@ function Task(props) {
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={handleShow}>Edit</Dropdown.Item>
-              <Dropdown.Item>Delete</Dropdown.Item>
+              <Dropdown.Item onClick={handleDelete}>Delete</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           {props.task.content}
