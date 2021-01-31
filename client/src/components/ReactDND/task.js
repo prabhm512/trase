@@ -28,7 +28,7 @@ function Task(props) {
     setShow(false);
 
     // New content of task
-    const editedContent = event.target.parentElement.parentElement.querySelector(".modal-body").innerHTML;
+    const editedContent = document.querySelector(".content").value;
     props.editTaskContentCB(props.task.id, editedContent);
   };
 
@@ -72,9 +72,7 @@ function Task(props) {
             <Modal.Header closeButton>
               <Modal.Title>Edit Task</Modal.Title>
             </Modal.Header>
-            <Modal.Body contentEditable>
-              {props.task.content}
-            </Modal.Body>
+            <textarea class="content" defaultValue={props.task.content}></textarea>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Save
