@@ -9,6 +9,7 @@ const passport = require("passport");
 // Load input validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
+const validateRegisterTeamInput = require("../validation/register-team");
 
 // Load User model
 const db = require("../models");
@@ -56,6 +57,7 @@ module.exports = function(app) {
             }
         })
     })
+
     app.post('/api/login', (req, res) => {
         db.Users.findOne({
             email: req.body.email
@@ -120,6 +122,7 @@ module.exports = function(app) {
             res.send('error: ' + err);
         })
     })
+
     app.get('/api/users/:email', (req, res) => {
         console.log(req.params.email);
 
@@ -130,6 +133,56 @@ module.exports = function(app) {
         })
         .catch(err => {
             console.log(err);
+        })
+    })
+
+    app.get('/api/teams', (req, res) => {
+        db.Teams.find()
+        .then(response => {
+            res.json(response);
+        })
+        .catch(err => {
+            res.send('error: ' + err);
+        })
+    })    
+    
+    app.post('/api/teams', (req, res) => {
+        // Form validation
+        const { errors, isValid } = validateRegisterTeamInput(req.body);
+
+        // Check validation
+        if (!isValid) {
+            return res.status(400).json(errors);
+        }
+
+        db.Teams.findOne({
+            email: req.body.email
+        })
+        .then( response => {
+            if (response) {
+                res.status(400).json({ email: "Email already exists" });
+                return res.send("Email already exists");
+            }
+            else {
+                const today = new Date()
+                const userData = {
+                    teamName: req.body.teamName,
+                    email: req.body.email,
+                    password: req.body.password,
+                    created: today
+                }
+                bcrypt.hash(req.body.password, 10, (err, hash) => {
+                    if (err) throw err;
+                    userData.password = hash
+                    db.Teams.create(userData)
+                    .then(user => {
+                        res.json(user);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+                })
+            }
         })
     })
 }

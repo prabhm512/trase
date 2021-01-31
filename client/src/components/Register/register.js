@@ -1,7 +1,7 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-useless-escape */
 import React, { Component } from "react";
-import { registerUser, getUsers } from '../UserFunctions/userFunctions';
+import { registerUser, getUsers } from '../../utils/apis/userFunctions';
 
 class Register extends Component {
     constructor(props) {

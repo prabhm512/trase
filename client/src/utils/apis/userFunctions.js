@@ -32,7 +32,7 @@ export const loginUser = userData => {
     })
 }
 
-export const getUsers = userData => {
+export const getUsers = () => {
     return axios
     .get('/api/users', {})
     .then(response => {
@@ -49,6 +49,28 @@ export const getOneUser = userData => {
 
     return axios
     .get("/api/users/" + userData.email)
+    .then(response => {
+        return response.data
+    })
+}
+
+export const registerTeam = userData => {
+
+    return axios
+    .post("/api/teams", {
+        teamName: userData.teamName,
+        email: userData.email,
+        password: userData.password
+    })
+    .then(() => {
+        console.log("Team Registered!");
+    })
+}
+
+export const getTeams = () => {
+
+    return axios
+    .get("/api/teams")
     .then(response => {
         return response.data
     })
