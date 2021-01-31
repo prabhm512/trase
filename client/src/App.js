@@ -7,7 +7,6 @@ import Navbar from "./components/Navbar/Navbar";
 import Landing from "./pages/Landing/Landing";
 import Register from "./components/Register/register";
 import Login from "./components/Login/login";
-import Admin from './components/Admin/Admin';
 
 import Auth from './Auth';
 
@@ -24,7 +23,6 @@ function App() {
                             <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
                             <Route exact path="/register" component={Register} />
                             <Route exact path="/login" component={Login} />
-                            <Route exact path="/register-team" component={Admin}/>
                         </div>
                     </div>
             </Switch>

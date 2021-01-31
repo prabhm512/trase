@@ -12,7 +12,8 @@ class Home extends Component {
     //         first_name: '',
     //         last_name: '',
     //         email: '',
-    //         password: ''
+    //         password: '',
+    //         admin: ''
     //     }
     // }
     token = localStorage.usertoken;
@@ -22,17 +23,17 @@ class Home extends Component {
         this.props.history.push('/timesheet/' + this.decoded._id);
     };
 
-    componentDidMount() {
- 
+    async componentDidMount() {
         // this.setState({
         //     _id: this.decoded._id,
         //     first_name: this.decoded.first_name,
         //     last_name: this.decoded.last_name,
-        //     email: this.decoded.email
+        //     email: this.decoded.email,
+        //     admin: this.decoded.admin
         // })
-        // console.log(this.decoded._id);
+        // console.log(this.decoded);
         // Create a new user board only if it does not exist
-        API.getUserBoard(this.decoded._id).then(res => {
+        await API.getUserBoard(this.decoded._id).then(res => {
             // console.log(res);
             if (res.data === null) {
                 initialData._id = this.decoded._id;
@@ -47,8 +48,20 @@ class Home extends Component {
                 <h1>
                     Welcome { this.decoded.first_name } { this.decoded.last_name }
                 </h1>
-                <ReactDND userID={ this.decoded._id }></ReactDND>
-                <button onClick={this.handleClick}>Timesheet</button>
+                <ReactDND userID={ this.decoded._id } />
+                {this.decoded.admin ? (
+                    <div>
+                        <button onClick={this.handleClick}>Timesheet</button>
+                        <br></br>
+                        <br></br>
+                        <hr></hr>
+                        <h4>Add Team Members</h4>
+                        <input type="text"></input>
+                        <button>Create</button>
+                    </div>
+                ): (
+                    <button onClick={this.handleClick}>Timesheet</button>
+                )}
             </div>
         ) 
     }

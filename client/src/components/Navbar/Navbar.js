@@ -21,11 +21,6 @@ class Navbar extends Component {
                         Register
                     </Link>
                 </li>
-                <li>
-                    <Link className='btn btn-sm active' to='/register-team'>
-                        Register As Admin
-                    </Link>
-                </li>
             </ul>
         )
         const userLink = (

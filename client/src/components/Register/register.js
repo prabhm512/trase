@@ -1,12 +1,13 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-useless-escape */
 import React, { Component } from "react";
-import { registerUser, getUsers } from '../../utils/apis/userFunctions';
+import { registerUser, getUsers, getTeams, registerTeam } from '../../utils/apis/userFunctions';
 
 class Register extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            teamName: '',
             first_name: '',
             last_name: '',
             email: '',
@@ -20,6 +21,12 @@ class Register extends Component {
     handleValidation() {
         let errors = {};
         let formIsValid = true;
+        // team name
+        if (!this.state.teamName) {
+            formIsValid = false; 
+            errors["teamName"] = "Cannot be empty";
+        }
+
         // email
         const inputEmail = this.state.email;
         const emailRegex = /^\w+([\.-]?\w+)*@[a-z]+([\.-]?[a-z]+)*(\.[a-z]{2,4})+$/;
@@ -81,33 +88,55 @@ class Register extends Component {
         let errors = {};
         event.preventDefault();
         const userData = {
+            teamName: this.state.teamName,
             first_name: this.state.first_name,
             last_name: this.state.last_name,
             email: this.state.email,
-            password: this.state.password
-        }
+            password: this.state.password,
+            admin: true
+        };
+
+        const teamData = {
+            teamName: this.state.teamName,
+            adminEmail: this.state.email
+        };
+
         var result = this.handleValidation();
         console.log(result);
-        if (this.handleValidation()) {
-            getUsers().then(data => {
-                console.log(data);
 
+        if (this.handleValidation()) {
+            getTeams().then(async data => {
                 var destination = data.map(element => {
-                    if (element.email === this.state.email) {
-                        console.log('foundmatch');
+                    if (element.teamName.toLowerCase() === this.state.teamName.toLowerCase()) {
                         return true;
                     }
                 }).filter(item => { return item; })[0];
-                // Check if email exists in db or not
-                if (!destination) {
-                    registerUser(userData).then(res => {
-                        setTimeout(() => this.props.history.push('/login'), 200);
-                    })
-                    console.log("Form submitted");
+    
+                if (destination) {
+                    errors["teamName"] = "This name is already being used! Please try another name.";
+                    this.setState({ errors: errors });
                 }
                 else {
-                    errors["email"] = "Email already exists";
-                    this.setState({ errors: errors });
+                    await getUsers().then(async data => {
+                        var destination = data.map(element => {
+                            if (element.email === this.state.email) {
+                                console.log('foundmatch');
+                                return true;
+                            }
+                        }).filter(item => { return item; })[0];
+                        // Check if email exists in db or not
+                        if (!destination) {
+                            await registerTeam(teamData);
+                            registerUser(userData).then(res => {
+                                setTimeout(() => this.props.history.push('/login'), 200);
+                            })
+                            console.log("Form submitted");
+                        }
+                        else {
+                            errors["email"] = "Email already exists";
+                            this.setState({ errors: errors });
+                        }
+                    })                    
                 }
             })
         }
@@ -118,63 +147,76 @@ class Register extends Component {
 
     render() {
         return (
-            <div className='container'>
-                <div className='row'>
-                    <div className='col-md-6 mt-5 mx-auto'>
-                        <form noValidate onSubmit={this.onSubmit}>
-                            <h1 className='h3 mb-3 font-weight normal'>Please Sign in</h1>
-                            <div className='form-group'>
-                                <label htmlFor='first_name'>First Name</label>
-                                <input type='text'
-                                    refs='first_name'
-                                    className='form-control'
-                                    name='first_name'
-                                    placeholder='Enter First Name'
-                                    value={this.state.first_name}
-                                    onChange={this.onChange}
-                                />
-                                <span style={{ color: "red" }}>{this.state.errors["first_name"]}</span>
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='last_name'>Last Name</label>
-                                <input type='text'
-                                    refs='last_name'
-                                    className='form-control'
-                                    name='last_name'
-                                    placeholder='Enter Last Name'
-                                    value={this.state.last_name}
-                                    onChange={this.onChange}
-                                />
-                                <span style={{ color: "red" }}>{this.state.errors["last_name"]}</span>
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='email'>Email Address</label>
-                                <input type='email'
-                                    refs='email'
-                                    className='form-control'
-                                    name='email'
-                                    placeholder='Enter Email'
-                                    value={this.state.email}
-                                    onChange={this.onChange}
-                                />
-                                <span style={{ color: "red" }}>{this.state.errors["email"]}</span>
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='password'>Password</label>
-                                <input type='password'
-                                    refs='password'
-                                    className='form-control'
-                                    name='password'
-                                    placeholder='Enter Password'
-                                    value={this.state.password}
-                                    onChange={this.onChange}
-                                />
-                                <span style={{ color: "red" }}>{this.state.errors["password"]}</span>
-                            </div>
-                            <button type='submit' className='btn btn-lg btn-primary btn-block'>
-                                Register
-                            </button>
-                        </form>
+            <div className="register">
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-md-6 mt-5 mx-auto'>
+                            <form noValidate onSubmit={this.onSubmit}>
+                                <h1 className='h3 mb-3 font-weight normal'>Sign Up</h1>
+                                <div className='form-group'>
+                                    <label htmlFor='teamName'>Team Name</label>
+                                    <input type='text'
+                                        className='form-control'
+                                        name='teamName'
+                                        placeholder='Enter Team Name'
+                                        value={this.state.teamName}
+                                        onChange={this.onChange}
+                                    />
+                                    <span style={{ color: "red" }}>{this.state.errors["teamName"]}</span>
+                                </div>
+                                <div className='form-group'>
+                                    <label htmlFor='first_name'>First Name</label>
+                                    <input type='text'
+                                        refs='first_name'
+                                        className='form-control'
+                                        name='first_name'
+                                        placeholder='Enter First Name'
+                                        value={this.state.first_name}
+                                        onChange={this.onChange}
+                                    />
+                                    <span style={{ color: "red" }}>{this.state.errors["first_name"]}</span>
+                                </div>
+                                <div className='form-group'>
+                                    <label htmlFor='last_name'>Last Name</label>
+                                    <input type='text'
+                                        refs='last_name'
+                                        className='form-control'
+                                        name='last_name'
+                                        placeholder='Enter Last Name'
+                                        value={this.state.last_name}
+                                        onChange={this.onChange}
+                                    />
+                                    <span style={{ color: "red" }}>{this.state.errors["last_name"]}</span>
+                                </div>
+                                <div className='form-group'>
+                                    <label htmlFor='email'>Email Address</label>
+                                    <input type='email'
+                                        refs='email'
+                                        className='form-control'
+                                        name='email'
+                                        placeholder='Enter Email'
+                                        value={this.state.email}
+                                        onChange={this.onChange}
+                                    />
+                                    <span style={{ color: "red" }}>{this.state.errors["email"]}</span>
+                                </div>
+                                <div className='form-group'>
+                                    <label htmlFor='password'>Password</label>
+                                    <input type='password'
+                                        refs='password'
+                                        className='form-control'
+                                        name='password'
+                                        placeholder='Enter Password'
+                                        value={this.state.password}
+                                        onChange={this.onChange}
+                                    />
+                                    <span style={{ color: "red" }}>{this.state.errors["password"]}</span>
+                                </div>
+                                <button type='submit' className='btn btn-lg btn-primary btn-block'>
+                                    Register
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>

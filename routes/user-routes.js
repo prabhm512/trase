@@ -9,7 +9,6 @@ const passport = require("passport");
 // Load input validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
-const validateRegisterTeamInput = require("../validation/register-team");
 
 // Load User model
 const db = require("../models");
@@ -37,10 +36,12 @@ module.exports = function(app) {
             else {
                 const today = new Date()
                 const userData = {
+                    teamName: req.body.teamName,
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
                     email: req.body.email,
                     password: req.body.password,
+                    admin: req.body.admin,
                     created: today
                 }
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -69,7 +70,8 @@ module.exports = function(app) {
                         _id: response._id,
                         first_name: response.first_name,
                         last_name: response.last_name,
-                        email: response.email
+                        email: response.email,
+                        admin: response.admin
                     }
                     let token = jwt.sign(payload, process.env.SECRET_KEY, {
                         // 1 year in seconds
@@ -147,40 +149,30 @@ module.exports = function(app) {
     })    
     
     app.post('/api/teams', (req, res) => {
-        // Form validation
-        const { errors, isValid } = validateRegisterTeamInput(req.body);
 
-        // Check validation
-        if (!isValid) {
-            return res.status(400).json(errors);
-        }
-
+        console.log(req.body);
         db.Teams.findOne({
-            email: req.body.email
+            teamName: req.body.teamName
         })
         .then( response => {
             if (response) {
-                res.status(400).json({ email: "Email already exists" });
-                return res.send("Email already exists");
+                res.status(400).json({ teamName: "Team name already exists" });
+                return res.send("Team name already exists");
             }
             else {
                 const today = new Date()
-                const userData = {
+                const teamData = {
                     teamName: req.body.teamName,
-                    email: req.body.email,
-                    password: req.body.password,
+                    adminEmail: req.body.adminEmail,
                     created: today
                 }
-                bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if (err) throw err;
-                    userData.password = hash
-                    db.Teams.create(userData)
-                    .then(user => {
-                        res.json(user);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
+
+                db.Teams.create(teamData)
+                .then(team => {
+                    res.json(team);
+                })
+                .catch(err => {
+                    console.log(err);
                 })
             }
         })

@@ -9,11 +9,7 @@ const teamsSchema = new Schema({
         type: String,
         required: true
     },
-    email: {
-        type: String,
-        required: true
-    },
-    password: {
+    adminEmail: {
         type: String,
         required: true
     }

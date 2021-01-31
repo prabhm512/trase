@@ -6,10 +6,12 @@ export const registerUser = userData => {
     // console.log(userData);
     return axios
     .post('/api/register', {
+        teamName: userData.teamName,
         first_name: userData.first_name,
         last_name: userData.last_name,
         email: userData.email,
-        password: userData.password
+        password: userData.password,
+        admin: userData.admin
     })
     .then(res => {
         console.log('Registered!');
@@ -54,13 +56,12 @@ export const getOneUser = userData => {
     })
 }
 
-export const registerTeam = userData => {
+export const registerTeam = teamData => {
 
     return axios
     .post("/api/teams", {
-        teamName: userData.teamName,
-        email: userData.email,
-        password: userData.password
+        teamName: teamData.teamName,
+        adminEmail: teamData.adminEmail
     })
     .then(() => {
         console.log("Team Registered!");
