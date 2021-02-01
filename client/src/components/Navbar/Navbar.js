@@ -35,6 +35,11 @@ function TemporaryDrawer(props) {
     // Managing state of modal that allows password to be reset
     const [show, setShow] = useState(false);
 
+    // Manage state of errors
+    const [error, setError] = useState({
+        errors: {}
+    })
+
     const handleClose = event => { 
         
 
@@ -42,20 +47,43 @@ function TemporaryDrawer(props) {
         const decoded = jwt_decode(token);
 
         getOneUser(decoded).then(response => {
+            const newPwd = document.querySelector('.newPassword').value.trim();
+            const confirmNewPwd = document.querySelector('.confirmNewPassword').value.trim();
+
+            // Used for validation
+            let errors = {};
+            let formIsValid = true;
+
             // console.log(event.target.parentElement.parentElement);
             const updatePasswordData = {
                 _id: decoded._id,
-                newPwd: document.querySelector('.newPassword').value.trim()
+                newPwd: newPwd
             };
+            // password
+            if (newPwd.length < 6) {
+                formIsValid = false;
+                errors["newPwd"] = "Password must be at least 6 characters";
+            }
 
-            updatePassword(updatePasswordData);
-            setShow(false);
+            else if (confirmNewPwd !== newPwd) {
+                formIsValid = false;
+                errors["confirmNewPwd"] = "Password does not match the one above"
+            }
+
+            else {}
+
+            setError({
+                errors: errors
+            });
+
+            if (formIsValid) {
+                updatePassword(updatePasswordData);
+                setShow(false);
+            }
         })
     };
 
     const handleShow = () => setShow(true);
-
-
 
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -170,11 +198,13 @@ function TemporaryDrawer(props) {
                     <label htmlFor='newPassword'>New Password</label>
                     <br></br>
                     <input type="password" className="newPassword"></input>
+                    <span style={{ color: "red" }}>{error.errors["newPwd"]}</span>
                     <br></br>
                     <br></br>
                     <label htmlFor='confirmNewPassword'>Confirm Password</label>
                     <br></br>
                     <input type="password" className="confirmNewPassword"></input>
+                    <span style={{ color: "red" }}>{error.errors["confirmNewPwd"]}</span>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
