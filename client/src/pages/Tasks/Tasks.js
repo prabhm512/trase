@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
 import ReactDND from '../../components/ReactDND/ReactDND';
 import API from '../../utils/apis/API';
-import { registerUser, getUsers } from '../../utils/apis/userFunctions';
+import { registerUser, getUsers, updateLoginStatus } from '../../utils/apis/userFunctions';
 import initialData from '../../components/ReactDND/initial-data';
 import './Tasks.css';
 
@@ -16,6 +16,7 @@ class Home extends Component {
             email: '',
             password: '',
             admin: '',
+            firstLogin: '',
             errors: {}
         }
     }
@@ -81,14 +82,15 @@ class Home extends Component {
         let errors= {};
 
         event.preventDefault();
-        console.log(this.decoded);
+        // console.log(this.decoded);
         const userData = {
             teamName: this.decoded.teamName.trim(),
             first_name: this.state.first_name.trim(),
             last_name: this.state.last_name.trim(),
             email: this.state.email.trim(),
             password: 'init01',
-            admin: false
+            admin: false,
+            firstLogin: true
         };
 
         const validationResult = this.handleValidation();
@@ -103,8 +105,16 @@ class Home extends Component {
                 }).filter(item => { return item; })[0];
                 // Check if email exists in db or not
                 if (!destination) {
-                    registerUser(userData);
-                    console.log("Form submitted");
+                    registerUser(userData)
+                    .then(() => {
+                        // To clear form input fields on successful user registration
+                        this.setState({ 
+                            first_name: "",
+                            last_name: "",
+                            email: ""
+                        })
+                        console.log("Form submitted");
+                    })
                 }
                 else {
                     errors["email"] = "Email already exists";
@@ -112,8 +122,8 @@ class Home extends Component {
                 }
             })
         }
-
     }
+
     async componentDidMount() {
         // Create a new user board only if it does not exist
         await API.getUserBoard(this.decoded._id).then(res => {
@@ -123,6 +133,12 @@ class Home extends Component {
                 API.createBoard(initialData).catch(err => console.log(err));
             }
         })
+
+        if (this.decoded.firstLogin === true && this.decoded.admin === false) {
+            alert("Please change your password!");
+            
+            updateLoginStatus(this.decoded._id);
+        }
     }
 
     render() {

@@ -11,17 +11,24 @@ export const registerUser = userData => {
         last_name: userData.last_name,
         email: userData.email,
         password: userData.password,
-        admin: userData.admin
+        admin: userData.admin,
+        firstLogin: userData.firstLogin
     })
     .then(res => {
         console.log('Registered!');
     })
 }
 
-// Change user password
-export const updatePassword = (userData) => {
+// Change firstLogin to false after a user had logged in once
+export const updateLoginStatus = (userID) => {
     return axios
-    .put('/api/register/' + userData._id, userData)
+    .put('/api/register/' + userID)
+}
+
+// Change user password
+export const updatePassword = (userID) => {
+    return axios
+    .put('/api/register/' + userID)
 }
 
 export const loginUser = userData => {

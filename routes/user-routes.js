@@ -43,8 +43,10 @@ module.exports = function(app) {
                     email: req.body.email,
                     password: req.body.password,
                     admin: req.body.admin,
+                    firstLogin: req.body.firstLogin,
                     created: today
                 }
+                console.log(userData);
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if (err) throw err;
                     userData.password = hash
@@ -58,6 +60,19 @@ module.exports = function(app) {
                 })
             }
         })
+    })
+
+    app.put('/api/register/:id', (req, res) => {
+        // Update password of logged in user
+        db.Users
+            .findOneAndUpdate({ _id: req.params.id }, { firstLogin: false }, ((err, result) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(result);
+                }
+            })
+        )
     })
 
     app.put('/api/register/:id', (req, res) => {
@@ -90,7 +105,8 @@ module.exports = function(app) {
                         first_name: response.first_name,
                         last_name: response.last_name,
                         email: response.email,
-                        admin: response.admin
+                        admin: response.admin,
+                        firstLogin: response.firstLogin
                     }
                     let token = jwt.sign(payload, process.env.SECRET_KEY, {
                         // 1 year in seconds
