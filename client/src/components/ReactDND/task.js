@@ -72,7 +72,7 @@ function Task(props) {
             <Modal.Header closeButton>
               <Modal.Title>Edit Task</Modal.Title>
             </Modal.Header>
-            <textarea class="content" defaultValue={props.task.content}></textarea>
+            <textarea className="content" defaultValue={props.task.content}></textarea>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Save

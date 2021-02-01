@@ -12,6 +12,7 @@ const validateLoginInput = require("../validation/login");
 
 // Load User model
 const db = require("../models");
+const { de } = require("date-fns/locale");
 router.use(cors())
 process.env.SECRET_KEY = 'secret';
 
@@ -56,6 +57,23 @@ module.exports = function(app) {
                     })
                 })
             }
+        })
+    })
+
+    app.put('/api/register/:id', (req, res) => {
+        // console.log(req.params.id);
+        bcrypt.hash(req.body.newPwd, 10, (err, hash) => {
+            if (err) throw err;
+            // Update password of logged in user
+            db.Users
+                .findOneAndUpdate({ _id: req.params.id }, { password: hash }, ((err, result) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(result);
+                    }
+                })
+            )
         })
     })
 
@@ -127,11 +145,9 @@ module.exports = function(app) {
     })
 
     app.get('/api/users/:email', (req, res) => {
-        console.log(req.params.email);
 
         db.Users.find({ email: req.params.email })
         .then(response => {
-            console.log(response);
             res.json(response);   
         })
         .catch(err => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -9,8 +9,13 @@ import ListItem from '@material-ui/core/ListItem';
 // import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Modal } from 'react-bootstrap';
 
 import { Link, withRouter } from "react-router-dom";
+import { getOneUser, updatePassword } from '../../utils/apis/userFunctions';
+import jwt_decode from 'jwt-decode';
+
+import './style.css';
 
 const useStyles = makeStyles({
     list: {
@@ -26,6 +31,31 @@ function TemporaryDrawer(props) {
     const [state, setState] = React.useState({
         right: false
     });
+
+    // Managing state of modal that allows password to be reset
+    const [show, setShow] = useState(false);
+
+    const handleClose = event => { 
+        
+
+        const token = localStorage.usertoken;
+        const decoded = jwt_decode(token);
+
+        getOneUser(decoded).then(response => {
+            // console.log(event.target.parentElement.parentElement);
+            const updatePasswordData = {
+                _id: decoded._id,
+                newPwd: document.querySelector('.newPassword').value.trim()
+            };
+
+            updatePassword(updatePasswordData);
+            setShow(false);
+        })
+    };
+
+    const handleShow = () => setShow(true);
+
+
 
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -73,6 +103,9 @@ function TemporaryDrawer(props) {
                             <ListItemText primary='Tasks' />
                         </ListItem>
                     </Link>
+                    <ListItem button onClick={handleShow}>
+                        <ListItemText primary='Reset Pwd' />
+                    </ListItem>
                     <ListItem button onClick={logOut.bind(this)}>
                         <ListItemText primary='Logout' />
                     </ListItem>
@@ -111,18 +144,45 @@ function TemporaryDrawer(props) {
     );  
                 
     return (
-        <nav className='navbar navbar-expand-lg'>
-            <div className='collapse navbar-collapse d-flex justify-content-end' id='navbar1'>
-            {[`right`].map((anchor) => (
-                <React.Fragment key={anchor}>
-                    <Button onClick={toggleDrawer(anchor, true)}><MenuIcon /></Button>
-                    <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
-                        {userList(anchor)}
-                    </Drawer>
-                </React.Fragment>
-            ))}
-            </div>
-        </nav>
+        <div>
+            <nav className='navbar navbar-expand-lg'>
+                <div className='collapse navbar-collapse d-flex justify-content-end' id='navbar1'>
+                {[`right`].map((anchor) => (
+                    <React.Fragment key={anchor}>
+                        <Button onClick={toggleDrawer(anchor, true)}><MenuIcon /></Button>
+                        <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+                            {userList(anchor)}
+                        </Drawer>
+                    </React.Fragment>
+                ))}
+                </div>
+            </nav>
+            <Modal
+                show={show}
+                onHide={() => setShow(false)}
+                backdrop="static"
+                keyboard={false}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>Reset Password</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <label htmlFor='newPassword'>New Password</label>
+                    <br></br>
+                    <input type="password" className="newPassword"></input>
+                    <br></br>
+                    <br></br>
+                    <label htmlFor='confirmNewPassword'>Confirm Password</label>
+                    <br></br>
+                    <input type="password" className="confirmNewPassword"></input>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Save
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </div>
     );
 }
                     

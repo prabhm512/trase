@@ -18,6 +18,12 @@ export const registerUser = userData => {
     })
 }
 
+// Change user password
+export const updatePassword = (userData) => {
+    return axios
+    .put('/api/register/' + userData._id, userData)
+}
+
 export const loginUser = userData => {
     // console.log(userData);
     return axios
