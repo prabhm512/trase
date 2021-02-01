@@ -1,5 +1,5 @@
 import './App.css';
-import Tasks from './pages/Tasks';
+import Tasks from './pages/Tasks/Tasks';
 import Timesheet from './components/Timesheet/Timesheet';
 import { Route, Switch } from 'react-router-dom';
 

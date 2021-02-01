@@ -22,7 +22,7 @@ class Register extends Component {
         let errors = {};
         let formIsValid = true;
         // team name
-        if (!this.state.teamName) {
+        if (!this.state.teamName.trim()) {
             formIsValid = false; 
             errors["teamName"] = "Cannot be empty";
         }
@@ -31,7 +31,7 @@ class Register extends Component {
         const inputEmail = this.state.email;
         const emailRegex = /^\w+([\.-]?\w+)*@[a-z]+([\.-]?[a-z]+)*(\.[a-z]{2,4})+$/;
         const emailResult = emailRegex.test(inputEmail);
-        if (!this.state.email) {
+        if (!this.state.email.trim()) {
             formIsValid = false;
             errors["email"] = "Cannot be empty";
         }
@@ -42,7 +42,7 @@ class Register extends Component {
         else {}
 
         // password
-        if (!this.state.password) {
+        if (!this.state.password.trim()) {
             formIsValid = false;
             errors["password"] = "Cannot be empty";
         }
@@ -53,12 +53,12 @@ class Register extends Component {
         else {}
 
         // firstName
-        if (!this.state.first_name) {
+        if (!this.state.first_name.trim()) {
             formIsValid = false;
             errors["first_name"] = "Cannot be empty";
         }
         else if (typeof this.state.first_name !== "undefined") {
-            if (!this.state.first_name.match(/^[a-zA-Z]+$/)) {
+            if (!this.state.first_name.trim().match(/^[a-zA-Z]+$/)) {
                 formIsValid = false;
                 errors["first_name"] = "Only letters";
             }
@@ -66,7 +66,7 @@ class Register extends Component {
         else {}
 
         // lastName
-        if (!this.state.last_name) {
+        if (!this.state.last_name.trim()) {
             formIsValid = false;
             errors["last_name"] = "Cannot be empty";
         }
@@ -81,30 +81,30 @@ class Register extends Component {
     }
 
     onChange(event) {
-        this.setState({ [event.target.name]: event.target.value });
+        this.setState({ [event.target.name]: event.target.value.trim() });
     }
 
     onSubmit(event) {
         let errors = {};
         event.preventDefault();
         const userData = {
-            teamName: this.state.teamName,
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            email: this.state.email,
-            password: this.state.password,
+            teamName: this.state.teamName.trim(),
+            first_name: this.state.first_name.trim(),
+            last_name: this.state.last_name.trim(),
+            email: this.state.email.trim(),
+            password: this.state.password.trim(),
             admin: true
         };
 
         const teamData = {
-            teamName: this.state.teamName,
-            adminEmail: this.state.email
+            teamName: this.state.teamName.trim(),
+            adminEmail: this.state.email.trim()
         };
 
-        var result = this.handleValidation();
-        console.log(result);
+        var validationResult = this.handleValidation();
+        console.log(validationResult);
 
-        if (this.handleValidation()) {
+        if (validationResult) {
             getTeams().then(async data => {
                 var destination = data.map(element => {
                     if (element.teamName.toLowerCase() === this.state.teamName.toLowerCase()) {

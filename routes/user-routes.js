@@ -68,6 +68,7 @@ module.exports = function(app) {
                 if (bcrypt.compareSync(req.body.password, response.password)) {
                     const payload = {
                         _id: response._id,
+                        teamName: response.teamName,
                         first_name: response.first_name,
                         last_name: response.last_name,
                         email: response.email,
