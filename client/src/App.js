@@ -4,6 +4,7 @@ import Timesheet from './components/Timesheet/Timesheet';
 import { Route, Switch } from 'react-router-dom';
 
 import Navbar from "./components/Navbar/Navbar";
+
 import Landing from "./pages/Landing/Landing";
 import Register from "./components/Register/register";
 import Login from "./components/Login/login";

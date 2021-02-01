@@ -7,6 +7,9 @@
     color: #FFFFFF !important;
 }
 
+path {
+    color: white;
+}
 /* .controlBtn {
     background-color: #001f3f;
     color: #FFFFFF;
