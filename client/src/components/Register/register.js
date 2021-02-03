@@ -1,7 +1,9 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-useless-escape */
 import React, { Component } from "react";
-import { registerUser, getUsers, getTeams, registerTeam } from '../../utils/apis/userFunctions';
+import { registerUser, getUsers, getTeams, registerTeam, getOneUser } from '../../utils/apis/userFunctions';
+import API from '../../utils/apis/API';
+import initialData from '../ReactDND/initial-data';
 
 class Register extends Component {
     constructor(props) {
@@ -81,7 +83,7 @@ class Register extends Component {
     }
 
     onChange(event) {
-        this.setState({ [event.target.name]: event.target.value.trim() });
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     onSubmit(event) {
@@ -102,7 +104,6 @@ class Register extends Component {
         };
 
         var validationResult = this.handleValidation();
-        console.log(validationResult);
 
         if (validationResult) {
             getTeams().then(async data => {
@@ -127,8 +128,14 @@ class Register extends Component {
                         // Check if email exists in db or not
                         if (!destination) {
                             await registerTeam(teamData);
-                            registerUser(userData).then(res => {
-                                setTimeout(() => this.props.history.push('/login'), 200);
+                            registerUser(userData).then(() => {
+                                getOneUser(userData).then(async res => {
+                                    initialData._id = res[0]._id;
+                                    await API.createBoard(initialData).catch(err => console.log(err));
+                                })
+                            })
+                            .then(() => {
+                                this.props.history.push('/login');
                             })
                             console.log("Form submitted");
                         }

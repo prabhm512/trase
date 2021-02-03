@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
 import ReactDND from '../../components/ReactDND/ReactDND';
 import API from '../../utils/apis/API';
-import { registerUser, getUsers, updateLoginStatus } from '../../utils/apis/userFunctions';
+import { registerUser, getUsers, updateLoginStatus, getOneUser } from '../../utils/apis/userFunctions';
 import initialData from '../../components/ReactDND/initial-data';
 import './Tasks.css';
 
@@ -75,7 +75,7 @@ class Home extends Component {
     }
 
     onChange = event => {
-        this.setState({ [event.target.name]: event.target.value.trim() });
+        this.setState({ [event.target.name]: event.target.value });
     }
 
     onSubmit = (event) => {
@@ -105,7 +105,13 @@ class Home extends Component {
                 }).filter(item => { return item; })[0];
                 // Check if email exists in db or not
                 if (!destination) {
-                    registerUser(userData)
+                    registerUser(userData).then(() => {
+                        getOneUser(userData).then(async res => {
+                            // console.log(res);
+                            initialData._id = res[0]._id;
+                            await API.createBoard(initialData).catch(err => console.log(err));
+                        })
+                    })
                     .then(() => {
                         // To clear form input fields on successful user registration
                         this.setState({ 
@@ -124,15 +130,7 @@ class Home extends Component {
         }
     }
 
-    async componentDidMount() {
-        // Create a new user board only if it does not exist
-        await API.getUserBoard(this.decoded._id).then(res => {
-            // console.log(res);
-            if (res.data === null) {
-                initialData._id = this.decoded._id;
-                API.createBoard(initialData).catch(err => console.log(err));
-            }
-        })
+    componentDidMount() {
 
         if (this.decoded.firstLogin === true && this.decoded.admin === false) {
             this.props.handleShowCB();
