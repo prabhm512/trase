@@ -53,9 +53,7 @@ function Task(props) {
           // isDragDisabled={isDragDisabled}
         >
           <Dropdown>
-            <Dropdown.Toggle id="dropdown-basic">
-              ...
-            </Dropdown.Toggle>
+            <Dropdown.Toggle id="dropdown-basic"></Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={handleShow}>Edit</Dropdown.Item>
               <Dropdown.Item onClick={handleDelete}>Delete</Dropdown.Item>

@@ -135,7 +135,7 @@ class Home extends Component {
         })
 
         if (this.decoded.firstLogin === true && this.decoded.admin === false) {
-            alert("Please change your password!");
+            this.props.handleShowCB();
             
             updateLoginStatus(this.decoded._id);
         }
@@ -144,67 +144,73 @@ class Home extends Component {
     render() {
         return (
             <div className="home">
-                <h1 className="team">Team <em>{this.decoded.teamName}</em></h1>
-                <h1>
-                    Welcome { this.decoded.first_name } { this.decoded.last_name }
-                </h1>
-                <ReactDND userID={ this.decoded._id } />
-                {this.decoded.admin ? (
-                    <div>
-                        <button onClick={this.handleClick}>Timesheet</button>
-                        <br></br>
-                        <br></br>
-                        <hr></hr>
-                        <div className="container">
-                            <div className="row">
-                                <div className="col-md-6">
-                                    <form onSubmit={this.onSubmit}>
-                                        <h3>Add Team Members</h3>
-                                        <div className='form-group'>
-                                            <label htmlFor='first_name'>First Name</label>
-                                            <input type='text'
-                                                refs='first_name'
-                                                className='form-control'
-                                                name='first_name'
-                                                placeholder='Enter First Name'
-                                                value={this.state.first_name}
-                                                onChange={this.onChange}
-                                            />
-                                            <span style={{ color: "red" }}>{this.state.errors["first_name"]}</span>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-sm-12">
+                            {/* <h1 className="team">Team <em>{this.decoded.teamName}</em></h1> */}
+                            <h1>
+                                Welcome { this.decoded.first_name } { this.decoded.last_name }
+                            </h1>
+                            <ReactDND userID={ this.decoded._id } />
+                            {this.decoded.admin ? (
+                                <div>
+                                    <button onClick={this.handleClick}>Timesheet</button>
+                                    <br></br>
+                                    <br></br>
+                                    <hr></hr>
+                                    <div className="container">
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <form onSubmit={this.onSubmit}>
+                                                    <h3>Add Team Members</h3>
+                                                    <div className='form-group'>
+                                                        <label htmlFor='first_name'>First Name</label>
+                                                        <input type='text'
+                                                            refs='first_name'
+                                                            className='form-control'
+                                                            name='first_name'
+                                                            placeholder='Enter First Name'
+                                                            value={this.state.first_name}
+                                                            onChange={this.onChange}
+                                                        />
+                                                        <span style={{ color: "red" }}>{this.state.errors["first_name"]}</span>
+                                                    </div>
+                                                    <div className='form-group'>
+                                                        <label htmlFor='last_name'>Last Name</label>
+                                                        <input type='text'
+                                                            refs='last_name'
+                                                            className='form-control'
+                                                            name='last_name'
+                                                            placeholder='Enter Last Name'
+                                                            value={this.state.last_name}
+                                                            onChange={this.onChange}
+                                                        />
+                                                        <span style={{ color: "red" }}>{this.state.errors["last_name"]}</span>
+                                                    </div>
+                                                    <div className='form-group'>
+                                                        <label htmlFor='email'>Email Address</label>
+                                                        <input type='email'
+                                                            refs='email'
+                                                            className='form-control'
+                                                            name='email'
+                                                            placeholder='Enter Email'
+                                                            value={this.state.email}
+                                                            onChange={this.onChange}
+                                                        />
+                                                        <span style={{ color: "red" }}>{this.state.errors["email"]}</span>
+                                                    </div>
+                                                    <button type='submit' className='btn btn-lg btn-primary btn-block'>Add</button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div className='form-group'>
-                                            <label htmlFor='last_name'>Last Name</label>
-                                            <input type='text'
-                                                refs='last_name'
-                                                className='form-control'
-                                                name='last_name'
-                                                placeholder='Enter Last Name'
-                                                value={this.state.last_name}
-                                                onChange={this.onChange}
-                                            />
-                                            <span style={{ color: "red" }}>{this.state.errors["last_name"]}</span>
-                                        </div>
-                                        <div className='form-group'>
-                                            <label htmlFor='email'>Email Address</label>
-                                            <input type='email'
-                                                refs='email'
-                                                className='form-control'
-                                                name='email'
-                                                placeholder='Enter Email'
-                                                value={this.state.email}
-                                                onChange={this.onChange}
-                                            />
-                                            <span style={{ color: "red" }}>{this.state.errors["email"]}</span>
-                                        </div>
-                                        <button type='submit' className='btn btn-lg btn-primary btn-block'>Add</button>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
+                            ): (
+                                <button onClick={this.handleClick}>Timesheet</button>
+                            )}
                         </div>
                     </div>
-                ): (
-                    <button onClick={this.handleClick}>Timesheet</button>
-                )}
+                </div>
             </div>
         ) 
     }
