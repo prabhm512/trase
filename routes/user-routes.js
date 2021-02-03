@@ -62,7 +62,7 @@ module.exports = function(app) {
         })
     })
 
-    app.put('/api/register/:id', (req, res) => {
+    app.put('/api/status/:id', (req, res) => {
         // Update password of logged in user
         db.Users
             .findOneAndUpdate({ _id: req.params.id }, { firstLogin: false }, ((err, result) => {
@@ -75,9 +75,9 @@ module.exports = function(app) {
         )
     })
 
-    app.put('/api/register/:id', (req, res) => {
-        // console.log(req.params.id);
-        bcrypt.hash(req.body.newPwd, 10, (err, hash) => {
+    app.put('/api/password/:id', (req, res) => {
+        console.log(req.body);
+        bcrypt.hash(req.body.updatePasswordData.newPwd, 10, (err, hash) => {
             if (err) throw err;
             // Update password of logged in user
             db.Users

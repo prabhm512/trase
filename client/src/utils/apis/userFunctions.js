@@ -22,13 +22,13 @@ export const registerUser = userData => {
 // Change firstLogin to false after a user had logged in once
 export const updateLoginStatus = (userID) => {
     return axios
-    .put('/api/register/' + userID)
+    .put('/api/status/' + userID)
 }
 
 // Change user password
-export const updatePassword = (userID) => {
+export const updatePassword = (updatePasswordData) => {
     return axios
-    .put('/api/register/' + userID)
+    .put('/api/password/' + updatePasswordData._id, {updatePasswordData})
 }
 
 export const loginUser = userData => {

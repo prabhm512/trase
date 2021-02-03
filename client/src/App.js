@@ -30,14 +30,13 @@ function App() {
         const decoded = jwt_decode(token);
 
         getOneUser(decoded).then(response => {
-            const newPwd = document.querySelector('.newPassword').value.trim();
-            const confirmNewPwd = document.querySelector('.confirmNewPassword').value.trim();
+            const newPwd = document.querySelector('.new-password').value.trim();
+            const confirmNewPwd = document.querySelector('.confirm-new-password').value.trim();
 
             // Used for validation
             let errors = {};
             let formIsValid = true;
 
-            // console.log(event.target.parentElement.parentElement);
             const updatePasswordData = {
                 _id: decoded._id,
                 newPwd: newPwd
@@ -60,6 +59,7 @@ function App() {
             });
 
             if (formIsValid) {
+                // console.log(updatePasswordData);
                 updatePassword(updatePasswordData);
                 setShow(false);
             }
@@ -92,16 +92,18 @@ function App() {
                     <Modal.Title>Reset Password</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <label htmlFor='newPassword'>New Password</label>
-                    <br></br>
-                    <input type="password" className="newPassword"></input>
-                    <span style={{ color: "red" }}>{error.errors["newPwd"]}</span>
-                    <br></br>
-                    <br></br>
-                    <label htmlFor='confirmNewPassword'>Confirm Password</label>
-                    <br></br>
-                    <input type="password" className="confirmNewPassword"></input>
-                    <span style={{ color: "red" }}>{error.errors["confirmNewPwd"]}</span>
+                    <form>
+                        <label htmlFor='new-password'>New Password</label>
+                        <br></br>
+                        <input type="password" className="new-password"></input>
+                        <span style={{ color: "red" }}>{error.errors["newPwd"]}</span>
+                        <br></br>
+                        <br></br>
+                        <label htmlFor='confirm-new-password'>Confirm Password</label>
+                        <br></br>
+                        <input type="password" className="confirm-new-password"></input>
+                        <span style={{ color: "red" }}>{error.errors["confirmNewPwd"]}</span>
+                    </form>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
