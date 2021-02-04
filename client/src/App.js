@@ -8,6 +8,8 @@ import Navbar from "./components/Navbar/Navbar";
 import Landing from "./pages/Landing/Landing";
 import Register from "./components/Register/register";
 import Login from "./components/Login/login";
+import Admin from './pages/Admin/Admin';
+import Team from './pages/Team/Team';
 import Auth from './Auth';
 
 import { getOneUser, updatePassword } from './utils/apis/userFunctions';
@@ -77,6 +79,8 @@ function App() {
                         <div className='container-fluid m-0 p-0'>
                             <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
                             <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
+                            <Route exact path="/admin" component={Auth(Admin)} />
+                            <Route exact path="/team" component={Auth(Team)} />
                             <Route exact path="/register" component={Register} />
                             <Route exact path="/login" component={Login} />
                         </div>

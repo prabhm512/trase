@@ -89,3 +89,12 @@ export const getTeams = () => {
         return response.data
     })
 }
+
+export const getTeamMembers = teamName => {
+
+    return axios 
+    .get("/api/members/" + teamName)
+    .then(response => {
+        return response.data
+    })
+}

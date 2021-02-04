@@ -9,7 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 // import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuIcon from '@material-ui/icons/Menu';
-
+import jwt_decode from 'jwt-decode';
 import { Link, withRouter } from "react-router-dom";
 
 import './style.css';
@@ -24,10 +24,18 @@ const useStyles = makeStyles({
 });
 
 function TemporaryDrawer(props) {
+
     const classes = useStyles();
     const [state, setState] = useState({
         right: false
     });
+
+    let token, decoded;
+    
+    if (localStorage.usertoken) {
+        token = localStorage.usertoken;
+        decoded = jwt_decode(token);
+    }
 
     const toggleDrawer = (anchor, open) => (event) => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -81,8 +89,28 @@ function TemporaryDrawer(props) {
                     <ListItem button onClick={logOut.bind(this)}>
                         <ListItemText primary='Logout' />
                     </ListItem>
-                </List>
+                    {decoded.admin ? (
+                        <div>
+                            <Link to={'/admin'}>
+                                <ListItem>
+                                    <ListItemText primary='Admin' />
+                                </ListItem>
+                            </Link>
+                            <Link to={'/team'}>
+                                <ListItem>
+                                    <ListItemText primary='Team' />
+                                </ListItem>
+                            </Link>
+                        </div>
+                    ) : (
+                        <Link to={'/team'}>
+                            <ListItem>
+                                <ListItemText primary='Team' />
+                            </ListItem>
+                        </Link>
+                    )}
 
+                </List>
             ): 
             (
                 <List>

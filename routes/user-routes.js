@@ -210,4 +210,14 @@ module.exports = function(app) {
             }
         })
     })
+
+    app.get('/api/members/:teamName', (req, res) => {
+        db.Users.find({ teamName: req.params.teamName })
+        .then(response => {
+            res.json(response)
+        })
+        .catch(err => {
+            res.send('error: ' + err);
+        })
+    })
 }
