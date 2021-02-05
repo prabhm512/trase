@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
+import jwt_decode from 'jwt-decode';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Dropdown, Modal, Button } from 'react-bootstrap';
@@ -24,6 +25,8 @@ function Task(props) {
   // Managing state of modal that allows tasks to be edited
   const [show, setShow] = useState(false);
 
+  const token = localStorage.usertoken;
+  const decoded = jwt_decode(token);
   const handleClose = event => { 
     setShow(false);
 
@@ -42,7 +45,7 @@ function Task(props) {
     <Draggable
       draggableId={props.task.id}
       index={props.index}
-      // isDragDisabled={isDragDisabled}
+      isDragDisabled={props.userID === decoded._id ? false : true}
     >
       {(provided, snapshot) => (
         <Container

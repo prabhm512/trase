@@ -1,14 +1,12 @@
 
 const initialData = {
   _id: '',
-  tasks: {
-    'task-1': { id: 'task-1', content: 'Demo Task', inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, totalTaskTime: 0 }
-  },
+  tasks: {},
   columns: {
     'column-1': {
       id: 'column-1',
       title: 'To do',
-      taskIds: ['task-1']
+      taskIds: []
     },
     'column-2': {
       id: 'column-2',

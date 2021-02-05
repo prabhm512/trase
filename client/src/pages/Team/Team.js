@@ -1,35 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { getTeamMembers } from '../../utils/apis/userFunctions';
-import { Link, withRouter } from "react-router-dom";
-import {List, ListItem, ListItemText} from '@material-ui/core';
-
+import { useHistory } from 'react-router-dom';
+import './style.css';
 
 function Team() {
     
+    const history = useHistory();
+
     const token = localStorage.usertoken;
     const decoded = jwt_decode(token);
 
     const [members, setMembers] = useState([]);
-    const tempMembersArray = []
     
     useEffect(() => {
+        const tempMemberArr = [];
         getTeamMembers(decoded.teamName).then(res => {
             res.forEach(el => {
-                tempMembersArray.push(el.first_name);
+                tempMemberArr.push({
+                    _id: el._id,
+                    name: el.first_name + " " + el.last_name
+                });
             })
-            setMembers(tempMembersArray);
+            setMembers(tempMemberArr);
         })
-    })
+    }, [])
+
+    const handleClick = event => {
+        const id = event.target.id;
+        history.push('/member/' + id);
+    }
 
     return (
         <div className="container">
             <div className="row">
                 <div className="col-sm-12">
                     <h1>{decoded.teamName}</h1>
-                    <ul>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-sm-6">
+                    <ul className="member-list" type="none">
                         {members.map(el => {
-                            return <li>{el}</li>
+                            return <li><button id={el._id} onClick={handleClick}>{el.name}</button></li>
                         })}
                     </ul>
                 </div>
@@ -38,4 +51,4 @@ function Team() {
     )
 }
 
-export default withRouter(Team);
+export default Team;

@@ -1,0 +1,9 @@
+.member-list button { 
+    background-color: white;
+    border: none;
+}
+
+li { 
+    /* border: 1px solid lightgrey; */
+    margin-bottom: 7px;
+}

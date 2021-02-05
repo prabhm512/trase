@@ -10,6 +10,7 @@ import Register from "./components/Register/register";
 import Login from "./components/Login/login";
 import Admin from './pages/Admin/Admin';
 import Team from './pages/Team/Team';
+import TeamMember from './pages/Team/TeamMember';
 import Auth from './Auth';
 
 import { getOneUser, updatePassword } from './utils/apis/userFunctions';
@@ -26,11 +27,11 @@ function App() {
         errors: {}
     })
 
+    const token = localStorage.usertoken;
+    const decoded = jwt_decode(token);
+
     const handleClose = event => { 
         
-        const token = localStorage.usertoken;
-        const decoded = jwt_decode(token);
-
         getOneUser(decoded).then(response => {
             const newPwd = document.querySelector('.new-password').value.trim();
             const confirmNewPwd = document.querySelector('.confirm-new-password').value.trim();
@@ -81,6 +82,7 @@ function App() {
                             <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
                             <Route exact path="/admin" component={Auth(Admin)} />
                             <Route exact path="/team" component={Auth(Team)} />
+                            <Route exact path="/member/:userID" component={Auth(TeamMember)} />
                             <Route exact path="/register" component={Register} />
                             <Route exact path="/login" component={Login} />
                         </div>

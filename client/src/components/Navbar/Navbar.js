@@ -83,12 +83,6 @@ function TemporaryDrawer(props) {
                             <ListItemText primary='Tasks' />
                         </ListItem>
                     </Link>
-                    <ListItem button onClick={props.handleShowCB}>
-                        <ListItemText primary='Reset Pwd' />
-                    </ListItem>
-                    <ListItem button onClick={logOut.bind(this)}>
-                        <ListItemText primary='Logout' />
-                    </ListItem>
                     {decoded.admin ? (
                         <div>
                             <Link to={'/admin'}>
@@ -109,6 +103,12 @@ function TemporaryDrawer(props) {
                             </ListItem>
                         </Link>
                     )}
+                    <ListItem button onClick={props.handleShowCB}>
+                        <ListItemText primary='Reset Pwd' />
+                    </ListItem>
+                    <ListItem button onClick={logOut.bind(this)}>
+                        <ListItemText primary='Logout' />
+                    </ListItem>
 
                 </List>
             ): 

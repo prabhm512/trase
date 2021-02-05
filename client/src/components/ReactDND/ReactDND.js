@@ -319,7 +319,7 @@ function ReactDND(props) {
 
           return (
             <UpdateToDoContext.Provider value={addNewTask} key={column.id}>
-              <Column column={column} tasks={tasks} currState={DND} editTaskContentCB={editTaskContent} deleteTaskCB={deleteTask}/>
+              <Column column={column} tasks={tasks} userID={props.userID} currState={DND} editTaskContentCB={editTaskContent} deleteTaskCB={deleteTask}/>
             </UpdateToDoContext.Provider>
           )
         })}
