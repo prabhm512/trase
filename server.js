@@ -50,7 +50,7 @@ require("./config/passport")(passport);
 
 // Use apiRoutes
 require("./routes/apiRoutes")(app);
-require("./routes/user-routes")(app);
+require("./routes/userRoutes")(app);
 
 // Send every request to the React app
 // Define any API routes before this runs

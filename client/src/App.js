@@ -26,9 +26,11 @@ function App() {
     const [error, setError] = useState({
         errors: {}
     })
-
-    const token = localStorage.usertoken;
-    const decoded = jwt_decode(token);
+    let token, decoded;
+    if (localStorage.usertoken) {
+        token = localStorage.usertoken;
+        decoded = jwt_decode(token);
+    }
 
     const handleClose = event => { 
         
