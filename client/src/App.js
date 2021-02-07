@@ -2,7 +2,7 @@ import React , { useState } from 'react';
 import './App.css';
 import Tasks from './pages/Tasks/Tasks';
 import Timesheet from './components/Timesheet/Timesheet';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 
 import Navbar from "./components/Navbar/Navbar";
 import Landing from "./pages/Landing/Landing";
@@ -19,8 +19,13 @@ import { Modal, Button } from 'react-bootstrap';
 
 function App() {
 
+    const history = useHistory();
+
     // Managing state of modal that allows password to be reset
     const [show, setShow] = useState(false);
+
+    // Managing state of modal that alerts user on successful password change
+    const [alertShow, setAlertShow] = useState(false);
 
     // Manage state of errors
     const [error, setError] = useState({
@@ -67,11 +72,18 @@ function App() {
                 // console.log(updatePasswordData);
                 updatePassword(updatePasswordData);
                 setShow(false);
+                
+                //Log user out
+                localStorage.removeItem('usertoken');
+                history.push('/login');
+                setAlertShow(true);
             }
         })
     };
 
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        setShow(true)
+    }; 
 
     return (
         <div className="App">
@@ -118,6 +130,12 @@ function App() {
                         Save
                     </Button>
                 </Modal.Footer>
+            </Modal>
+            <Modal
+                show={alertShow}
+                onHide={() => setAlertShow(false)}
+                keyboard={false}>
+                <Modal.Header className="pwdChangeAlert" closeButton><b>Password changed successfully!</b></Modal.Header>
             </Modal>
         </div>
     )

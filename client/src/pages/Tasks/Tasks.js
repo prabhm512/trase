@@ -14,7 +14,6 @@ class Home extends Component {
             email: '',
             password: '',
             admin: '',
-            firstLogin: '',
             errors: {}
         }
     }
@@ -28,8 +27,9 @@ class Home extends Component {
     componentDidMount() {
 
         if (this.decoded.firstLogin === true && this.decoded.admin === false) {
+
             this.props.handleShowCB();
-            
+
             updateLoginStatus(this.decoded._id);
         }
     }

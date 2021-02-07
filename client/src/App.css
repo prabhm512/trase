@@ -1,3 +1,7 @@
 .new-password, .confirm-new-password {
     width: 100%
 }
+
+.pwdChangeAlert { 
+    background-color: lightgreen;
+}
