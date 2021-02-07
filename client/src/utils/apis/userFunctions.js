@@ -102,12 +102,12 @@ export const getTeamMembers = teamName => {
 export const registerEng = engData => {
 
     return axios
-    .post("/api/engagements/" + engData.teamName, {
+    .post("/api/engagements/" + engData.teamName.toLowerCase(), {
         teamName: engData.teamName,
         engName: engData.engName
     })
 }
 
-export const getEngs = engData => {
-    return axios.get("/api/engagements/" + engData.teamName);
+export const getEngs = teamName => {
+    return axios.get("/api/engagements/" + teamName.toLowerCase());
 }

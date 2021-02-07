@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
-import { getTeamMembers } from '../../utils/apis/userFunctions';
+import { getTeamMembers, getEngs } from '../../utils/apis/userFunctions';
 import { useHistory } from 'react-router-dom';
 import './style.css';
 
@@ -12,9 +12,12 @@ function Team() {
     const decoded = jwt_decode(token);
 
     const [members, setMembers] = useState([]);
+    const [engs, setEngs] = useState([]);
     
     useEffect(() => {
         const tempMemberArr = [];
+        const tempEngArr = [];
+
         getTeamMembers(decoded.teamName).then(res => {
             res.forEach(el => {
                 tempMemberArr.push({
@@ -23,6 +26,14 @@ function Team() {
                 });
             })
             setMembers(tempMemberArr);
+        })
+
+        getEngs(decoded.teamName).then(res => {
+
+            res.data.forEach(el => {
+                tempEngArr.push({ engName: el.engName })
+            })
+            setEngs(tempEngArr);
         })
     }, [])
 
@@ -43,6 +54,16 @@ function Team() {
                     <ul className="member-list" type="none">
                         {members.map(el => {
                             return <li><button id={el._id} onClick={handleClick}>{el.name}</button></li>
+                        })}
+                    </ul>
+                </div>
+            </div>
+            <h3>Engagements</h3>
+            <div className="row">
+                <div className="col-sm-6">
+                    <ul className="engagement-list" type="none">
+                        {engs.map(el => {
+                            return <li>{el.engName}</li>
                         })}
                     </ul>
                 </div>

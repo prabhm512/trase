@@ -139,7 +139,7 @@ class Admin extends Component {
             teamName: this.decoded.teamName.toLowerCase()
         }
 
-        getEngs(engData).then(data => {
+        getEngs(this.decoded.teamName).then(data => {
             const destination = data.data.map(el => {
                 if (el.engName === this.state.engagement.toLowerCase() && el.teamName === this.decoded.teamName.toLowerCase()) {
                     errors['engagement'] = "Your team is already using this name";
