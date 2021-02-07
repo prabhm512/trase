@@ -26,7 +26,7 @@ class Home extends Component {
     
     componentDidMount() {
 
-        if (this.decoded.firstLogin === true && this.decoded.admin === false) {
+        if (this.decoded.firstLogin === true) {
 
             this.props.handleShowCB();
 

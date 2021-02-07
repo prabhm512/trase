@@ -46,7 +46,7 @@ module.exports = function(app) {
                     firstLogin: req.body.firstLogin,
                     created: today
                 }
-                console.log(userData);
+                // console.log(userData);
                 bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if (err) throw err;
                     userData.password = hash
@@ -68,15 +68,13 @@ module.exports = function(app) {
             .findOneAndUpdate({ _id: req.params.id }, { firstLogin: false }, ((err, result) => {
                 if (err) {
                     console.log(err);
-                } else {
-                    console.log(result);
-                }
+                } 
             })
         )
     })
 
     app.put('/api/password/:id', (req, res) => {
-        console.log(req.body);
+
         bcrypt.hash(req.body.updatePasswordData.newPwd, 10, (err, hash) => {
             if (err) throw err;
             // Update password of logged in user
@@ -84,8 +82,6 @@ module.exports = function(app) {
                 .findOneAndUpdate({ _id: req.params.id }, { password: hash }, ((err, result) => {
                     if (err) {
                         console.log(err);
-                    } else {
-                        console.log(result);
                     }
                 })
             )

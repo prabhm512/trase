@@ -15,7 +15,7 @@ class Admin extends Component {
             last_name: '',
             email: '',
             password: '',
-            admin: '',
+            admin: false,
             firstLogin: '',
             engagement: '',
             errors: {}
@@ -75,19 +75,28 @@ class Admin extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
+    onAdminChange = event => {
+
+        if (event.target.value === "Yes") {
+            this.setState({ admin: true })
+        } else {
+            this.setState({ admin: false })
+        }
+    }
+
     // Add new team member to db
     onTeamMemberSubmit = (event) => {
         let errors= {};
 
         event.preventDefault();
-        // console.log(this.decoded);
+
         const userData = {
             teamName: this.decoded.teamName.trim().toLowerCase(),
             first_name: this.state.first_name.trim(),
             last_name: this.state.last_name.trim(),
             email: this.state.email.trim().toLowerCase(),
             password: 'init01',
-            admin: false,
+            admin: this.state.admin,
             firstLogin: true
         };
 
@@ -208,6 +217,13 @@ class Admin extends Component {
                                     onChange={this.onChange}
                                 />
                                 <span style={{ color: "red" }}>{this.state.errors["email"]}</span>
+                            </div>
+                            <div className='form-group'>
+                                <label>Admin</label>&nbsp;
+                                <select name="admin" onChange={this.onAdminChange}>
+                                    <option>No</option>
+                                    <option>Yes</option>
+                                </select>
                             </div>
                             <button type='submit' className='btn btn-lg btn-primary btn-block'>Add</button>
                         </form>
