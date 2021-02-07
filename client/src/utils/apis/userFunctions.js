@@ -98,3 +98,16 @@ export const getTeamMembers = teamName => {
         return response.data
     })
 }
+
+export const registerEng = engData => {
+
+    return axios
+    .post("/api/engagements/" + engData.teamName, {
+        teamName: engData.teamName,
+        engName: engData.engName
+    })
+}
+
+export const getEngs = engData => {
+    return axios.get("/api/engagements/" + engData.teamName);
+}

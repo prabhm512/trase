@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
 import API from '../../utils/apis/API';
-import { registerUser, getUsers, getOneUser } from '../../utils/apis/userFunctions';
+import { registerUser, getUsers, getOneUser, registerEng, getEngs } from '../../utils/apis/userFunctions';
 import initialData from '../../components/ReactDND/initial-data';
 import './Admin.css';
 
@@ -17,6 +17,7 @@ class Admin extends Component {
             password: '',
             admin: '',
             firstLogin: '',
+            engagement: '',
             errors: {}
         }
     }
@@ -74,16 +75,17 @@ class Admin extends Component {
         this.setState({ [event.target.name]: event.target.value });
     }
 
-    onSubmit = (event) => {
+    // Add new team member to db
+    onTeamMemberSubmit = (event) => {
         let errors= {};
 
         event.preventDefault();
         // console.log(this.decoded);
         const userData = {
-            teamName: this.decoded.teamName.trim(),
+            teamName: this.decoded.teamName.trim().toLowerCase(),
             first_name: this.state.first_name.trim(),
             last_name: this.state.last_name.trim(),
-            email: this.state.email.trim(),
+            email: this.state.email.trim().toLowerCase(),
             password: 'init01',
             admin: false,
             firstLogin: true
@@ -93,8 +95,8 @@ class Admin extends Component {
 
         if (validationResult) {
             getUsers().then(async data => {
-                var destination = data.map(element => {
-                    if (element.email === this.state.email) {
+                const destination = data.map(element => {
+                    if (element.email === this.state.email.trim().toLowerCase()) {
                         console.log('foundmatch');
                         return true;
                     }
@@ -126,6 +128,38 @@ class Admin extends Component {
         }
     }
 
+    // Add new engagement to db
+    onEngagementsSubmit = event => {
+        let errors = {};
+
+        event.preventDefault();
+
+        const engData = {
+            engName: this.state.engagement.toLowerCase(),
+            teamName: this.decoded.teamName.toLowerCase()
+        }
+
+        getEngs(engData).then(data => {
+            const destination = data.data.map(el => {
+                if (el.engName === this.state.engagement.toLowerCase() && el.teamName === this.decoded.teamName.toLowerCase()) {
+                    errors['engagement'] = "Your team is already using this name";
+                    this.setState({ errors: errors });
+                    return true;
+                } 
+            }).filter(item => { return item; })[0];
+
+            if (!destination) {
+                registerEng(engData).then(res => {
+                    this.setState({ 
+                        engagement: "",
+                        errors: ""
+                    });
+                })
+            }
+        })
+
+    }
+
     render() {
         return (
             <div className="container">
@@ -137,7 +171,7 @@ class Admin extends Component {
                 <br></br>
                 <div className="row">
                     <div className="col-sm-8">
-                        <form onSubmit={this.onSubmit}>
+                        <form onSubmit={this.onTeamMemberSubmit}>
                             <h3>Add Team Members</h3>
                             <div className='form-group'>
                                 <label htmlFor='first_name'>First Name</label>
@@ -182,7 +216,22 @@ class Admin extends Component {
                 <br></br> 
                 <div className="row">
                     <div className="col-sm-8">
-                        <h3>Employee Timesheets</h3>
+                        <h3>Add New Engagement</h3>
+                        <form onSubmit={this.onEngagementsSubmit}>
+                            <div className='form-group'>
+                                <label htmlFor='engagement'>Engagement Name</label>
+                                <input type='engagement'
+                                    refs='engagement'
+                                    className='form-control'
+                                    name='engagement'
+                                    placeholder='Enter Engagement Name'
+                                    value={this.state.engagement}
+                                    onChange={this.onChange}
+                                />
+                                <span style={{ color: "red" }}>{this.state.errors["engagement"]}</span>
+                            </div>
+                            <button type='submit' className='btn btn-lg btn-primary btn-block'>Add</button>
+                        </form>
                     </div>
                 </div>          
             </div>

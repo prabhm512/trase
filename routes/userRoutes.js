@@ -183,7 +183,6 @@ module.exports = function(app) {
     
     app.post('/api/teams', (req, res) => {
 
-        console.log(req.body);
         db.Teams.findOne({
             teamName: req.body.teamName
         })
@@ -201,12 +200,12 @@ module.exports = function(app) {
                 }
 
                 db.Teams.create(teamData)
-                .then(team => {
-                    res.json(team);
-                })
-                .catch(err => {
-                    console.log(err);
-                })
+                    .then(team => {
+                        res.json(team);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
             }
         })
     })
@@ -219,5 +218,34 @@ module.exports = function(app) {
         .catch(err => {
             res.send('error: ' + err);
         })
+    })
+
+    app.post('/api/engagements/:teamName', (req, res) => {
+
+        db.Engagements.findOne({ engName: req.body.engName })
+            .then(response => {
+                if (response) {
+                    res.status(400).json({ engName: "This engagement name is already being used by your team"});
+                    return res.send("This engagement name is already being used by your team");
+                } else {
+                    const today = new Date();
+                    const engData = {
+                        engName: req.body.engName,
+                        teamName: req.params.teamName,
+                        created: today
+                    }
+
+                    db.Engagements.create(engData)
+                        .then(eng => res.json(eng))
+                        .catch(err => console.log(err))
+                }
+            })
+    })
+
+    app.get('/api/engagements/:teamName', (req, res) => {
+
+        db.Engagements.find({ teamName: req.params.teamName })
+            .then(response => res.json(response))
+            .catch(err => res.send('error: ' + err))
     })
 }
