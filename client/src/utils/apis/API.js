@@ -16,6 +16,9 @@ const methods = {
   // Creates new task board
   createBoard: (taskData) => {
     return axios.post("/api/boards", taskData);
+  },
+  deleteBoard: id => {
+    return axios.delete("/api/boards/" + id);
   }
 }
 

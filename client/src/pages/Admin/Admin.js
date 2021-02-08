@@ -132,6 +132,7 @@ class Admin extends Component {
                             addAlertShow: true
                         })
                     })
+                    .catch(err => console.log(err))
                 }
                 else {
                     errors["email"] = "Email already exists";
@@ -210,12 +211,14 @@ class Admin extends Component {
                     this.setState({ errors: errors });
                 }
                 else {
+                    getOneUser({ email: this.state.removeEmail }).then(res => {
+                        API.deleteBoard(res[0]._id);
+                    })
                     removeUser(this.state.removeEmail);
                     this.setState({ 
                         removeAlertShow: true,
                         removeEmail: ""
                     });
-
                 }
             })  
         }

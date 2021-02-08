@@ -137,24 +137,6 @@ module.exports = function(app) {
         })
     })
 
-    // app.get('/api/profile', (req, res) => {
-    //     var decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
-    //     db.Users.findOne({
-    //         _id: decoded._id
-    //     })
-    //     .then(response => {
-    //         if (response) {
-    //             res.json(response)
-    //         }
-    //         else {
-    //             res.status(400).json({ error: "User does not exist" });
-    //         }
-    //     })
-    //     .catch(err => {
-    //         res.send('error: ' + err);
-    //     })
-    // })
-
     app.delete('/api/users/:email', (req, res) => {
 
         db.Users.findOneAndDelete({ email: req.params.email }, (err, res) => {

@@ -35,4 +35,16 @@ module.exports = function(app) {
         })
         .catch(err => res.status(422).json(err));
     })
+
+    // Delete task board
+    app.delete("/api/boards/:id", (req, res) => {
+
+        db.Tasks.findOneAndDelete({ _id: req.params.id }, (err, res) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('Deleted KanBan for ' + req.params.email);
+            }
+        })
+    })
 }
