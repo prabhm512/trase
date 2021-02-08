@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
 import API from '../../utils/apis/API';
-import { registerUser, getUsers, getOneUser, registerEng, getEngs, removeUser } from '../../utils/apis/userFunctions';
+import { registerUser, getUsers, getOneUser, registerEng, getOneTeam, removeUser } from '../../utils/apis/userFunctions';
 import initialData from '../../components/ReactDND/initial-data';
 import './Admin.css';
 import { Modal } from 'react-bootstrap';
@@ -149,12 +149,13 @@ class Admin extends Component {
 
         const engData = {
             engName: this.state.engagement.toLowerCase(),
-            teamName: this.decoded.teamName.toLowerCase()
+            teamName: this.decoded.teamName
         }
 
-        getEngs(this.decoded.teamName).then(data => {
-            const destination = data.data.map(el => {
-                if (el.engName === this.state.engagement.toLowerCase() && el.teamName === this.decoded.teamName.toLowerCase()) {
+        getOneTeam(engData.teamName).then(data => {
+
+            const destination = data.engagements.map(el => {
+                if (el === this.state.engagement.toLowerCase()) {
                     errors['engagement'] = "Your team is already using this name";
                     this.setState({ errors: errors });
                     return true;

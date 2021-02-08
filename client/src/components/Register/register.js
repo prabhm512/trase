@@ -100,7 +100,8 @@ class Register extends Component {
 
         const teamData = {
             teamName: this.state.teamName.trim(),
-            adminEmail: this.state.email.trim()
+            adminEmail: this.state.email.trim(),
+            engagements: []
         };
 
         var validationResult = this.handleValidation();

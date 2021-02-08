@@ -12,7 +12,8 @@ const teamsSchema = new Schema({
     adminEmail: {
         type: String,
         required: true
-    }
+    },
+    engagements: { type: Array }
 });
 
 const teams = mongoose.model("Teams", teamsSchema);

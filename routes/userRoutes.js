@@ -17,6 +17,34 @@ router.use(cors())
 process.env.SECRET_KEY = 'secret';
 
 module.exports = function(app) {
+
+    // --------Users--------------
+    app.get('/api/users', (req, res) => {
+        db.Users.find()
+        .then(response => {
+            if (response) {
+                res.json(response)
+            }
+            else {
+                res.status(400).json({ error: "Users do not exist" });
+            }
+        })
+        .catch(err => {
+            res.send('error: ' + err);
+        })
+    })
+
+    app.get('/api/users/:email', (req, res) => {
+
+        db.Users.find({ email: req.params.email })
+        .then(response => {
+            res.json(response);   
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    })
+
     app.post('/api/register', (req, res) => {
         // Form validation
         const { errors, isValid } = validateRegisterInput(req.body);
@@ -73,20 +101,6 @@ module.exports = function(app) {
         )
     })
 
-    app.put('/api/password/:id', (req, res) => {
-
-        bcrypt.hash(req.body.updatePasswordData.newPwd, 10, (err, hash) => {
-            if (err) throw err;
-            // Update password of logged in user
-            db.Users
-                .findOneAndUpdate({ _id: req.params.id }, { password: hash }, ((err, result) => {
-                    if (err) {
-                        console.log(err);
-                    }
-                })
-            )
-        })
-    })
 
     app.post('/api/login', (req, res) => {
         db.Users.findOne({
@@ -123,49 +137,52 @@ module.exports = function(app) {
         })
     })
 
-    app.get('/api/profile', (req, res) => {
-        var decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
-        db.Users.findOne({
-            _id: decoded._id
-        })
-        .then(response => {
-            if (response) {
-                res.json(response)
+    // app.get('/api/profile', (req, res) => {
+    //     var decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
+    //     db.Users.findOne({
+    //         _id: decoded._id
+    //     })
+    //     .then(response => {
+    //         if (response) {
+    //             res.json(response)
+    //         }
+    //         else {
+    //             res.status(400).json({ error: "User does not exist" });
+    //         }
+    //     })
+    //     .catch(err => {
+    //         res.send('error: ' + err);
+    //     })
+    // })
+
+    app.delete('/api/users/:email', (req, res) => {
+
+        db.Users.findOneAndDelete({ email: req.params.email }, (err, res) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('Deleted: ' + req.params.email);
             }
-            else {
-                res.status(400).json({ error: "User does not exist" });
-            }
-        })
-        .catch(err => {
-            res.send('error: ' + err);
         })
     })
 
-    app.get('/api/users', (req, res) => {
-        db.Users.find()
-        .then(response => {
-            if (response) {
-                res.json(response)
-            }
-            else {
-                res.status(400).json({ error: "Users do not exist" });
-            }
-        })
-        .catch(err => {
-            res.send('error: ' + err);
+    app.put('/api/password/:id', (req, res) => {
+
+        bcrypt.hash(req.body.updatePasswordData.newPwd, 10, (err, hash) => {
+            if (err) throw err;
+            // Update password of logged in user
+            db.Users
+                .findOneAndUpdate({ _id: req.params.id }, { password: hash }, ((err, result) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                })
+            )
         })
     })
 
-    app.get('/api/users/:email', (req, res) => {
 
-        db.Users.find({ email: req.params.email })
-        .then(response => {
-            res.json(response);   
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    })
+    // ---------Teams-------------
 
     app.get('/api/teams', (req, res) => {
         db.Teams.find()
@@ -176,6 +193,16 @@ module.exports = function(app) {
             res.send('error: ' + err);
         })
     })    
+
+    app.get('/api/teams/:teamName', (req, res) => {
+        db.Teams.findOne({ teamName: req.params.teamName })
+        .then(response => {
+            res.json(response);
+        })
+        .catch(err => {
+            res.send('error: ' + err);
+        })
+    })
     
     app.post('/api/teams', (req, res) => {
 
@@ -192,6 +219,7 @@ module.exports = function(app) {
                 const teamData = {
                     teamName: req.body.teamName,
                     adminEmail: req.body.adminEmail,
+                    engagements: req.body.engagements,
                     created: today
                 }
 
@@ -206,6 +234,17 @@ module.exports = function(app) {
         })
     })
 
+    app.put('/api/teams/:teamName', (req, res) => {
+
+        db.Teams.findOneAndUpdate({ teamName: req.params.teamName }, { $push: { engagements: req.body.engName }}, (err, result) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(result);
+            }
+        })
+    })
+
     app.get('/api/members/:teamName', (req, res) => {
         db.Users.find({ teamName: req.params.teamName })
         .then(response => {
@@ -213,46 +252,6 @@ module.exports = function(app) {
         })
         .catch(err => {
             res.send('error: ' + err);
-        })
-    })
-
-    app.post('/api/engagements/:teamName', (req, res) => {
-
-        db.Engagements.findOne({ engName: req.body.engName })
-            .then(response => {
-                if (response) {
-                    res.status(400).json({ engName: "This engagement name is already being used by your team"});
-                    return res.send("This engagement name is already being used by your team");
-                } else {
-                    const today = new Date();
-                    const engData = {
-                        engName: req.body.engName,
-                        teamName: req.params.teamName,
-                        created: today
-                    }
-
-                    db.Engagements.create(engData)
-                        .then(eng => res.json(eng))
-                        .catch(err => console.log(err))
-                }
-            })
-    })
-
-    app.get('/api/engagements/:teamName', (req, res) => {
-
-        db.Engagements.find({ teamName: req.params.teamName })
-            .then(response => res.json(response))
-            .catch(err => res.send('error: ' + err))
-    })
-
-    app.delete('/api/users/:email', (req, res) => {
-
-        db.Users.findOneAndDelete({ email: req.params.email }, (err, res) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('Deleted: ' + req.params.email);
-            }
         })
     })
 }
