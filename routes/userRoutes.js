@@ -244,4 +244,15 @@ module.exports = function(app) {
             .then(response => res.json(response))
             .catch(err => res.send('error: ' + err))
     })
+
+    app.delete('/api/users/:email', (req, res) => {
+
+        db.Users.findOneAndDelete({ email: req.params.email }, (err, res) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log('Deleted: ' + req.params.email);
+            }
+        })
+    })
 }

@@ -111,3 +111,7 @@ export const registerEng = engData => {
 export const getEngs = teamName => {
     return axios.get("/api/engagements/" + teamName.toLowerCase());
 }
+
+export const removeUser = email => {
+    return axios.delete("/api/users/" + email.toLowerCase());
+}

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
 import API from '../../utils/apis/API';
-import { registerUser, getUsers, getOneUser, registerEng, getEngs } from '../../utils/apis/userFunctions';
+import { registerUser, getUsers, getOneUser, registerEng, getEngs, removeUser } from '../../utils/apis/userFunctions';
 import initialData from '../../components/ReactDND/initial-data';
 import './Admin.css';
+import { Modal } from 'react-bootstrap';
 
 class Admin extends Component {
 
@@ -18,6 +19,9 @@ class Admin extends Component {
             admin: false,
             firstLogin: '',
             engagement: '',
+            removeEmail: '',
+            removeAlertShow: false,
+            addAlertShow: false,
             errors: {}
         }
     }
@@ -124,9 +128,9 @@ class Admin extends Component {
                         this.setState({ 
                             first_name: "",
                             last_name: "",
-                            email: ""
+                            email: "",
+                            addAlertShow: true
                         })
-                        console.log("Form submitted");
                     })
                 }
                 else {
@@ -167,6 +171,53 @@ class Admin extends Component {
             }
         })
 
+    }
+
+    onTeamMemberRemove = event => {
+        let errors = {};
+        let formIsValid = true;
+
+        event.preventDefault();
+
+        // Validate email
+        const inputEmail = this.state.removeEmail;
+        const emailRegex = /^\w+([\.-]?\w+)*@[a-z]+([\.-]?[a-z]+)*(\.[a-z]{2,4})+$/;
+        const emailResult = emailRegex.test(inputEmail);
+
+        if (!this.state.removeEmail.trim()) {
+            formIsValid = false;
+            errors["removeEmail"] = "Cannot be empty";
+        }
+        else if (!emailResult) {
+            formIsValid = false;
+            errors["removeEmail"] = "Email is not valid";
+        }
+        else {}
+
+        this.setState({ errors: errors });
+
+        if (formIsValid) {
+            getUsers().then(async data => {
+                const destination = data.map(element => {
+                    if (element.email === this.state.removeEmail.trim().toLowerCase()) {
+                        return true;
+                    }
+                }).filter(item => { return item; })[0];
+                // Check if email exists in db or not
+                if (!destination) {
+                    errors["removeEmail"] = "No team member is registered with this email";
+                    this.setState({ errors: errors });
+                }
+                else {
+                    removeUser(this.state.removeEmail);
+                    this.setState({ 
+                        removeAlertShow: true,
+                        removeEmail: ""
+                    });
+
+                }
+            })  
+        }
     }
 
     render() {
@@ -228,6 +279,24 @@ class Admin extends Component {
                             <button type='submit' className='btn btn-lg btn-primary btn-block'>Add</button>
                         </form>
                     </div>
+                    <div className="col-sm-4">
+                        <form onSubmit={this.onTeamMemberRemove}>
+                            <h3>Remove Team Members</h3>
+                            <div className='form-group'>
+                                <label htmlFor='removeEmail'>Email Address</label>
+                                <input type='email'
+                                    refs='removeEmail'
+                                    className='form-control'
+                                    name='removeEmail'
+                                    placeholder='Enter Email'
+                                    value={this.state.removeEmail}
+                                    onChange={this.onChange}
+                                />
+                                <span style={{ color: "red" }}>{this.state.errors["removeEmail"]}</span>
+                            </div>
+                            <button type='submit' className='btn btn-lg btn-danger btn-block'>Remove</button>
+                        </form>
+                    </div>
                 </div>
                 <br></br> 
                 <div className="row">
@@ -236,7 +305,7 @@ class Admin extends Component {
                         <form onSubmit={this.onEngagementsSubmit}>
                             <div className='form-group'>
                                 <label htmlFor='engagement'>Engagement Name</label>
-                                <input type='engagement'
+                                <input type='text'
                                     refs='engagement'
                                     className='form-control'
                                     name='engagement'
@@ -249,7 +318,19 @@ class Admin extends Component {
                             <button type='submit' className='btn btn-lg btn-primary btn-block'>Add</button>
                         </form>
                     </div>
-                </div>          
+                </div> 
+                <Modal                 
+                    show={this.state.addAlertShow}
+                    onHide={() => this.setState({ addAlertShow: false })}
+                    keyboard={false}>
+                    <Modal.Header className="addMemberAlert" closeButton><b>Team Member successfully added!</b></Modal.Header>
+                </Modal>   
+                <Modal                 
+                    show={this.state.removeAlertShow}
+                    onHide={() => this.setState({ removeAlertShow: false })}
+                    keyboard={false}>
+                    <Modal.Header className="removeMemberAlert" closeButton><b>Team Member successfully removed!</b></Modal.Header>
+                </Modal>         
             </div>
         )
     }

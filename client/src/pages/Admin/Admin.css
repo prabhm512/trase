@@ -1,3 +1,13 @@
 .heading { 
     text-align: center;
 }
+
+.removeMemberAlert {
+    background-color: red;
+    color: white;
+}
+
+.addMemberAlert { 
+    background-color: green;
+    color: white;
+}
