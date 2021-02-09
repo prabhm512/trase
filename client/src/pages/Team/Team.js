@@ -1,46 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
-import { getTeamMembers, getOneTeam } from '../../utils/apis/userFunctions';
-import { useHistory } from 'react-router-dom';
+import { getOneTeam } from '../../utils/apis/userFunctions';
 import './style.css';
+import EngAccordion from './Accordion';
 
 function Team() {
-    
-    const history = useHistory();
 
     const token = localStorage.usertoken;
     const decoded = jwt_decode(token);
-
-    const [members, setMembers] = useState([]);
     const [engs, setEngs] = useState([]);
     
     useEffect(() => {
-        const tempMemberArr = [];
         const tempEngArr = [];
-
-        getTeamMembers(decoded.teamName).then(res => {
-            res.forEach(el => {
-                tempMemberArr.push({
-                    _id: el._id,
-                    name: el.first_name + " " + el.last_name
-                });
-            })
-            setMembers(tempMemberArr);
-        })
 
         getOneTeam(decoded.teamName).then(res => {
 
             res.engagements.forEach(el => {
-                tempEngArr.push({ engName: el })
+                tempEngArr.push({ engName: el, teamName: decoded.teamName })
             })
             setEngs(tempEngArr);
         })
     }, [])
-
-    const handleClick = event => {
-        const id = event.target.id;
-        history.push('/member/' + id);
-    }
 
     return (
         <div className="container">
@@ -50,20 +30,12 @@ function Team() {
                 </div>
             </div>
             <div className="row">
-                <div className="col-sm-6">
-                    <ul className="member-list" type="none">
-                        {members.map(el => {
-                            return <li><button id={el._id} onClick={handleClick}>{el.name}</button></li>
-                        })}
-                    </ul>
-                </div>
-            </div>
-            <h3>Engagements</h3>
-            <div className="row">
-                <div className="col-sm-6">
+                <div className="col-sm-12">
+                    <h3>Engagements</h3>
                     <ul className="engagement-list" type="none">
                         {engs.map(el => {
-                            return <li>{el.engName}</li>
+                            const name = el.teamName.toLowerCase() + "_" + el.engName;
+                            return <li><EngAccordion name={name} /></li>
                         })}
                     </ul>
                 </div>

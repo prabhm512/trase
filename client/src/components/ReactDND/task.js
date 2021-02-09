@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
-import jwt_decode from 'jwt-decode';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { Dropdown, Modal, Button } from 'react-bootstrap';
+import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 
 const Container = styled.div`
   border: 1px solid lightgrey;
@@ -25,9 +25,13 @@ function Task(props) {
   // Managing state of modal that allows tasks to be edited
   const [show, setShow] = useState(false);
 
-  const token = localStorage.usertoken;
-  const decoded = jwt_decode(token);
-  const handleClose = event => { 
+  // Manage state of modal that allows tasks to be assigned to enagagements
+  const [assignShow, setAssignShow] = useState(false);
+
+  // Manage state of radio that shows inside assign tasks modal
+  const [radioValue, setRadioValue] = useState('female');
+
+  const handleEditClose = event => { 
     setShow(false);
 
     // New content of task
@@ -41,11 +45,29 @@ function Task(props) {
     props.deleteTaskCB(props.task.id);
   }
 
+  const handleAssignInTasks = () => {
+    if (assignShow === true && props.engagements.length !== 0) {
+      props.handleAssignCB(props.task.id, radioValue);
+      setAssignShow(false);
+    }
+
+    else if (assignShow == false) {
+      setAssignShow(true);
+    }
+    
+    else {}
+  };
+
+  
+  const handleChange = event => {
+    setRadioValue(event.target.value);
+  }
+
   return (
     <Draggable
       draggableId={props.task.id}
       index={props.index}
-      isDragDisabled={props.userID === decoded._id ? false : true}
+      isDragDisabled={false}
     >
       {(provided, snapshot) => (
         <Container
@@ -60,6 +82,7 @@ function Task(props) {
             <Dropdown.Menu>
               <Dropdown.Item onClick={handleShow}>Edit</Dropdown.Item>
               <Dropdown.Item onClick={handleDelete}>Delete</Dropdown.Item>
+              <Dropdown.Item onClick={handleAssignInTasks}>Assign</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           {props.task.content}
@@ -75,8 +98,38 @@ function Task(props) {
             </Modal.Header>
             <textarea className="content" defaultValue={props.task.content}></textarea>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
+              <Button variant="secondary" onClick={handleEditClose}>
                 Save
+              </Button>
+            </Modal.Footer>
+          </Modal>
+          <Modal
+            show={assignShow}
+            onHide={() => setAssignShow(false)}
+            backdrop="static"
+            keyboard={false}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Assign Task</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <FormControl component="fieldset">
+                {props.engagements.length === 0 ? "Your team has not added any engagements yet!" : (
+                  <div>
+                    <FormLabel component="legend">Engagement</FormLabel>
+                    <RadioGroup aria-label="engagement" name="engagement1" value={radioValue} onChange={handleChange}>
+                      {props.engagements.map(el => {
+                          // const name = el.teamName.toLowerCase() + "_" + el.engName;
+                          return <FormControlLabel value={el.engName} control={<Radio />} label={el.engName} />
+                      })}
+                    </RadioGroup>
+                  </div>
+                )}
+              </FormControl>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleAssignInTasks}>
+                Assign
               </Button>
             </Modal.Footer>
           </Modal>

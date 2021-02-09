@@ -9,6 +9,8 @@ import Column from './column';
 // Utils
 import UpdateToDoContext from '../../utils/contexts/UpdateToDoContext';
 import API from '../../utils/apis/API';
+import { getOneTeam } from '../../utils/apis/userFunctions';
+import jwt_decode from 'jwt-decode';
 
 // Styling
 import styled from 'styled-components';
@@ -26,9 +28,25 @@ function ReactDND(props) {
 
   const [ DND, setDND ] = useState(initialData);
 
+  // List of all enagagements of the team that the logged in user works for
+  const [engs, setEngs] = useState([]);
+
+  const token = localStorage.usertoken;
+  const decoded = jwt_decode(token);
+
   useEffect(() => {
     // Load tasks on component mount
     loadTasks(props.userID);
+
+    // Store all engagements of the logged in user's team
+    getOneTeam(decoded.teamName).then(res => {
+      const tempEngArr = [];
+
+      res.engagements.forEach(el => {
+        tempEngArr.push({ engName: el })
+      })
+      setEngs(tempEngArr);
+    })
   }, []);
   
   // Updates state to reflect drag & drop result
@@ -216,7 +234,7 @@ function ReactDND(props) {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, totalTaskTime: 0 };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, totalTaskTime: 0, engagement: '' };
 
       // ID of new task gets inserted into first column
       const newToDos = {
@@ -261,7 +279,7 @@ function ReactDND(props) {
       ...DND, 
       tasks: {
         ...DND.tasks,
-        [taskID]: { ...DND.tasks[taskID], content: content}
+        [taskID]: { ...DND.tasks[taskID], content: content }
       }
     }
 
@@ -308,6 +326,19 @@ function ReactDND(props) {
     .catch(err => console.log(err));
   }
 
+  const handleAssign = (taskID, radioValue) => {
+    const newState = {
+      ...DND, 
+      tasks: {
+        ...DND.tasks,
+        [taskID]: { ...DND.tasks[taskID], engagement: radioValue }
+      }
+    }
+
+    setDND(newState);
+    updateUserBoard(newState);
+}
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Container>
@@ -319,7 +350,7 @@ function ReactDND(props) {
 
           return (
             <UpdateToDoContext.Provider value={addNewTask} key={column.id}>
-              <Column column={column} tasks={tasks} userID={props.userID} currState={DND} editTaskContentCB={editTaskContent} deleteTaskCB={deleteTask}/>
+              <Column column={column} tasks={tasks} userID={props.userID} currState={DND} editTaskContentCB={editTaskContent} deleteTaskCB={deleteTask} handleAssignCB={handleAssign} engagements={engs}/>
             </UpdateToDoContext.Provider>
           )
         })}

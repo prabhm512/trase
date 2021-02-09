@@ -153,7 +153,7 @@ class Admin extends Component {
             teamName: this.decoded.teamName
         }
 
-        getOneTeam(engData.teamName).then(data => {
+        getOneTeam(engData.teamName).then(async data => {
 
             const destination = data.engagements.map(el => {
                 if (el === this.state.engagement.toLowerCase()) {
@@ -164,15 +164,14 @@ class Admin extends Component {
             }).filter(item => { return item; })[0];
 
             if (!destination) {
-                registerEng(engData).then(res => {
-                    this.setState({ 
-                        engagement: "",
-                        errors: ""
-                    });
+                registerEng(engData);
+
+                this.setState({ 
+                    engagement: "",
+                    errors: ""
                 })
             }
         })
-
     }
 
     onTeamMemberRemove = event => {
