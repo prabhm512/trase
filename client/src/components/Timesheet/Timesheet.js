@@ -27,31 +27,33 @@ function Timesheet() {
                 for (let key in res.data.tasks) {
 
                     if (res.data.tasks.hasOwnProperty(key)) {
-
-                        let newTableRow = `
-                        <tr>
-                            <th>${res.data.tasks[key].content}</th>
-                        `;
-
-                        for (let i=1; i<6; i++) {
-                            if (res.data.tasks[key].timesheet[i] === 0) {
-                                newTableRow += `<td></td>`;
-                            } else {
-                                newTableRow += `<td>${res.data.tasks[key].timesheet[i]}</td>`;
+                        if (key === 'task-1') {
+                            continue;
+                        } else {
+                            let newTableRow = `
+                            <tr>
+                                <th>${res.data.tasks[key].content}</th>
+                            `;
+    
+                            for (let i=1; i<6; i++) {
+                                if (res.data.tasks[key].timesheet[i] === 0) {
+                                    newTableRow += `<td></td>`;
+                                } else {
+                                    newTableRow += `<td>${res.data.tasks[key].timesheet[i]}</td>`;
+                                }
                             }
+                            
+                            newTableRow += '</tr>';
+                            
+                            document.querySelector(".timesheet-body").innerHTML += newTableRow;
+    
+                            // Calculate the total time the employee for each day
+                            totalTimeMon += parseInt(res.data.tasks[key].timesheet[1]);
+                            totalTimeTues += parseInt(res.data.tasks[key].timesheet[2]);
+                            totalTimeWed += parseInt(res.data.tasks[key].timesheet[3]);
+                            totalTimeThurs += parseInt(res.data.tasks[key].timesheet[4]);
+                            totalTimeFri += parseInt(res.data.tasks[key].timesheet[5]);
                         }
-                        
-                        newTableRow += '</tr>';
-                        
-                        document.querySelector(".timesheet-body").innerHTML += newTableRow;
-
-                        // Calculate the total time the employee for each day
-                        totalTimeMon += parseInt(res.data.tasks[key].timesheet[1]);
-                        totalTimeTues += parseInt(res.data.tasks[key].timesheet[2]);
-                        totalTimeWed += parseInt(res.data.tasks[key].timesheet[3]);
-                        totalTimeThurs += parseInt(res.data.tasks[key].timesheet[4]);
-                        totalTimeFri += parseInt(res.data.tasks[key].timesheet[5]);
-
                     }
                 }
 
