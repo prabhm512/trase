@@ -26,13 +26,14 @@ function ReactDND(props) {
   // One task may be worked on for multiple days
   let dayToday = new Date().getDay();
 
+  const token = localStorage.usertoken;
+  const decoded = jwt_decode(token);
+
+  initialData.teamName = decoded.teamName;
   const [ DND, setDND ] = useState(initialData);
 
   // List of all enagagements of the team that the logged in user works for
   const [engs, setEngs] = useState([]);
-
-  const token = localStorage.usertoken;
-  const decoded = jwt_decode(token);
 
   useEffect(() => {
     // Load tasks on component mount
@@ -263,6 +264,7 @@ function ReactDND(props) {
           },            
         },
         columnOrder: [...DND.columnOrder],
+        teamName: decoded.teamName
       }
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newToDos);

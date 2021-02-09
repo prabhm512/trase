@@ -95,7 +95,7 @@ class Admin extends Component {
         event.preventDefault();
 
         const userData = {
-            teamName: this.decoded.teamName.trim().toLowerCase(),
+            teamName: this.decoded.teamName.trim(),
             first_name: this.state.first_name.trim(),
             last_name: this.state.last_name.trim(),
             email: this.state.email.trim().toLowerCase(),
@@ -120,6 +120,7 @@ class Admin extends Component {
                         getOneUser(userData).then(async res => {
                             // console.log(res);
                             initialData._id = res[0]._id;
+                            initialData.teamName = res[0].teamName;
                             await API.createBoard(initialData).catch(err => console.log(err));
                         })
                     })

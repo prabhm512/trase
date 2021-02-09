@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { getOneTeam } from '../../utils/apis/userFunctions';
+import API from '../../utils/apis/API';
 import './style.css';
 import EngAccordion from './Accordion';
 
@@ -10,16 +11,45 @@ function Team() {
     const decoded = jwt_decode(token);
     const [engs, setEngs] = useState([]);
     
-    useEffect(() => {
-        const tempEngArr = [];
+    let tempEngArr = [];
 
+    const storeEngagementNames = () => {
+
+        // Store content of each task with the same engagement name
         getOneTeam(decoded.teamName).then(res => {
 
-            res.engagements.forEach(el => {
-                tempEngArr.push({ engName: el, teamName: decoded.teamName })
+            res.engagements.forEach(eng => {
+                tempEngArr.push({ engName: eng, tasks: [] });
             })
+        }).then(() => {
+            renderEngagements();
+        }).then(() => {
             setEngs(tempEngArr);
         })
+    }
+    
+    const renderEngagements = async () => {
+        await API.getBoards().then(response => {    
+                response.data.forEach(el => {
+                    if (el.teamName === decoded.teamName) {
+                        for (let key in el.tasks) {
+                            if (el.tasks[key].engagement !== "") {
+                                tempEngArr.map((eng, idx) => {
+                                    if (eng.engName === el.tasks[key].engagement) {
+                                        // tempEngArr[idx].tasks.push(el.tasks[key].content);
+                                        tempEngArr[idx].tasks.push(el.tasks[key].content);
+                                    }
+                                })
+                            }
+                        }
+                    }
+                })
+            })  
+    }
+
+    useEffect(() => {
+        storeEngagementNames()
+
     }, [])
 
     return (
@@ -33,9 +63,9 @@ function Team() {
                 <div className="col-sm-12">
                     <h3>Engagements</h3>
                     <ul className="engagement-list" type="none">
-                        {engs.map(el => {
-                            const name = el.teamName.toLowerCase() + "_" + el.engName;
-                            return <li><EngAccordion name={name} /></li>
+                        {engs.map((el, idx) => {
+                            // const name = Object.keys(el);
+                            return <li><EngAccordion key={idx} name={el.engName} tasks={[el.tasks]}></EngAccordion></li>
                         })}
                     </ul>
                 </div>

@@ -132,6 +132,7 @@ class Register extends Component {
                             registerUser(userData).then(() => {
                                 getOneUser(userData).then(async res => {
                                     initialData._id = res[0]._id;
+                                    initialData.teamName = res[0].teamName;
                                     await API.createBoard(initialData).catch(err => console.log(err));
                                 })
                             })
