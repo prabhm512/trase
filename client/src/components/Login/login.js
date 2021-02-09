@@ -6,7 +6,8 @@ class Login extends Component {
         super()
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            errors: ''
         }
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -17,6 +18,8 @@ class Login extends Component {
     }
 
     onSubmit(e) {
+        let errors = {};
+
         e.preventDefault();
         const user = {
             email: this.state.email,
@@ -29,7 +32,8 @@ class Login extends Component {
                     this.props.history.push('/tasks');
                 }
                 else {
-                    console.log("Incorrect email or password");
+                    errors['incorrect-login'] = "Incorrect email or password";
+                    this.setState({ errors: errors });
                 }
             })
         })
@@ -61,6 +65,7 @@ class Login extends Component {
                                 value={ this.state.password }
                                 onChange={ this.onChange }
                                 />
+                                <span style={{ color: "red" }}>{this.state.errors["incorrect-login"]}</span>
                             </div>
                             <button type='submit' className='btn btn-lg btn-primary btn-block'>
                                 Sign in
