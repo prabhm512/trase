@@ -31,6 +31,10 @@ function Task(props) {
   // Manage state of radio that shows inside assign tasks modal
   const [radioValue, setRadioValue] = useState('female');
 
+  const [transferShow, setTransferShow] = useState(false);
+  // Manage state of radio that shows inside transfer tasks modal
+  const [transfer, setTransfer] = useState('');
+
   const handleEditClose = event => { 
     setShow(false);
 
@@ -58,9 +62,25 @@ function Task(props) {
     else {}
   };
 
-  
-  const handleChange = event => {
+  const handleTransfer = () => {
+    if (transferShow === true && props.members.length !== 0) {
+      setTransferShow(false);
+      props.handleTransferCB(props.task.id, transfer);
+    }
+
+    else if (transferShow === false) {
+      setTransferShow(true);
+    }
+
+    else {}
+  }
+
+  const handleAssignChange = event => {
     setRadioValue(event.target.value);
+  }
+
+  const handleTransferChange = event => {
+    setTransfer(event.target.value);
   }
 
   return (
@@ -83,6 +103,7 @@ function Task(props) {
               <Dropdown.Item onClick={handleShow}>Edit</Dropdown.Item>
               <Dropdown.Item onClick={handleDelete}>Delete</Dropdown.Item>
               <Dropdown.Item onClick={handleAssignInTasks}>Assign</Dropdown.Item>
+              <Dropdown.Item onClick={handleTransfer}>Transfer</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           {props.task.content}
@@ -117,7 +138,7 @@ function Task(props) {
                 {props.engagements.length === 0 ? "Your team has not added any engagements yet!" : (
                   <div>
                     <FormLabel component="legend">Engagement</FormLabel>
-                    <RadioGroup aria-label="engagement" name="engagement1" value={radioValue} onChange={handleChange}>
+                    <RadioGroup aria-label="engagement" name="engagement1" value={radioValue} onChange={handleAssignChange}>
                       {props.engagements.map(el => {
                           // const name = el.teamName.toLowerCase() + "_" + el.engName;
                           return <FormControlLabel value={el.engName} control={<Radio />} label={el.engName} />
@@ -133,6 +154,35 @@ function Task(props) {
               </Button>
             </Modal.Footer>
           </Modal>
+          <Modal
+          show={transferShow}
+          onHide={() => setTransferShow(false)}
+          backdrop="static"
+          keyboard={false}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Transfer Task</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <FormControl component="fieldset">
+              {props.members.length === 0 ? "Your team has not added any members yet!" : (
+                <div>
+                  <FormLabel component="legend">Team Members</FormLabel>
+                  <RadioGroup aria-label="members" name="members1" value={transfer} onChange={handleTransferChange}>
+                    {props.members.map(el => {
+                        return <FormControlLabel value={el} control={<Radio />} label={el} />
+                    })}
+                  </RadioGroup>
+                </div>
+              )}
+            </FormControl>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleTransfer}>
+              Transfer
+            </Button>
+          </Modal.Footer>
+        </Modal>
         </Container>
       )}
     </Draggable>

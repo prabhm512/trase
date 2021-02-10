@@ -61,7 +61,7 @@ function Column(props) {
           isDraggingOver={snapshot.isDraggingOver}
           >
             {props.tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} userID={props.userID} currState={props.currState} editTaskContentCB={props.editTaskContentCB} deleteTaskCB={props.deleteTaskCB} handleAssignCB={props.handleAssignCB} engagements={props.engagements}/>
+              <Task key={task.id} task={task} index={index} userID={props.userID} currState={props.currState} editTaskContentCB={props.editTaskContentCB} deleteTaskCB={props.deleteTaskCB} handleAssignCB={props.handleAssignCB} engagements={props.engagements} members={props.members} handleTransferCB={props.handleTransferCB}/>
             ))}
             {provided.placeholder} {/* Increase available space in a droppable whenever needed during a drag*/}
           </TaskList>

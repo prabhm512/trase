@@ -9,7 +9,7 @@ import Column from './column';
 // Utils
 import UpdateToDoContext from '../../utils/contexts/UpdateToDoContext';
 import API from '../../utils/apis/API';
-import { getOneTeam } from '../../utils/apis/userFunctions';
+import { getOneTeam, getTeamMembers, getOneUser } from '../../utils/apis/userFunctions';
 import jwt_decode from 'jwt-decode';
 
 // Styling
@@ -35,6 +35,9 @@ function ReactDND(props) {
   // List of all enagagements of the team that the logged in user works for
   const [engs, setEngs] = useState([]);
 
+  // List of all members in team
+  const [members, setMembers] = useState([]);
+
   useEffect(() => {
     // Load tasks on component mount
     loadTasks(props.userID);
@@ -47,6 +50,18 @@ function ReactDND(props) {
         tempEngArr.push({ engName: el })
       })
       setEngs(tempEngArr);
+    })
+
+    getTeamMembers(decoded.teamName).then(res => {
+
+      const tempMembersArr = [];
+
+      res.forEach(el => {
+        if (el.email !== decoded.email) {
+          tempMembersArr.push(el.email);
+        }
+      })
+      setMembers(tempMembersArr);
     })
   }, []);
   
@@ -352,7 +367,76 @@ function ReactDND(props) {
 
     setDND(newState);
     updateUserBoard(newState);
-}
+  }
+
+  const handleTransfer = (taskID, transferEmail) => {
+    getOneUser({email: transferEmail}).then(response => {
+      API.getUserBoard(response[0]._id).then(res => {
+        const storeAllIDs = [];
+        let newTaskID;
+
+        console.log(res.data);
+        // Loop through initial data to find out value of last key
+        for (let key in res.data.tasks) {
+          if (res.data.tasks.hasOwnProperty(key)) {
+              // console.log(`${key} : ${DND.tasks[key].content}`);
+              storeAllIDs.push(key.slice(-1));
+          }
+        }
+        
+        if (storeAllIDs.length !== 0) {
+          newTaskID = `task-${parseInt(Math.max(...storeAllIDs)) + 1}`;
+        } else {
+          newTaskID = 'task-1';
+        }
+
+
+        const newStateForTransferUser = {
+          ...res.data,
+          _id: res.data._id, 
+          tasks: { [newTaskID]: {
+            id: newTaskID, 
+            content: DND.tasks[taskID].content, 
+            inProgressDate: DND.tasks[taskID].inProgressDate, 
+            pausedDate: DND.tasks[taskID].pausedDate, 
+            doneDate: DND.tasks[taskID].doneDate, 
+            timesheet: {'1': DND.tasks[taskID].timesheet[1], '2': DND.tasks[taskID].timesheet[2], '3': DND.tasks[taskID].timesheet[3], '4': DND.tasks[taskID].timesheet[4], '5': DND.tasks[taskID].timesheet[5]}, 
+            totalTaskTime: DND.tasks[taskID].totalTaskTime, 
+            engagement: DND.tasks[taskID].engagement, 
+            cost: DND.tasks[taskID].cost,
+          }, ...res.data.tasks },
+          columns: {
+            'column-1': {
+              id: 'column-1',
+              title: 'To do',
+              taskIds: [newTaskID, ...res.data.columns['column-1'].taskIds]
+            },
+            'column-2': {
+              id: res.data.columns['column-2'].id,
+              title: res.data.columns['column-2'].title,
+              taskIds: [...res.data.columns['column-2'].taskIds]
+            },
+            'column-3': {
+              id: res.data.columns['column-3'].id,
+              title: res.data.columns['column-3'].title,
+              taskIds: [...res.data.columns['column-3'].taskIds]
+            },
+            'column-4': {
+              id: res.data.columns['column-4'].id,
+              title: res.data.columns['column-4'].title,
+              taskIds: [...res.data.columns['column-4'].taskIds]
+            },
+          }
+        }
+
+        // console.log(newStateForTransferUser);
+        updateUserBoard(newStateForTransferUser);
+
+        // Delete task from logged in users board
+        deleteTask(taskID);
+      })
+    })
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -365,7 +449,7 @@ function ReactDND(props) {
 
           return (
             <UpdateToDoContext.Provider value={addNewTask} key={column.id}>
-              <Column column={column} tasks={tasks} userID={props.userID} currState={DND} editTaskContentCB={editTaskContent} deleteTaskCB={deleteTask} handleAssignCB={handleAssign} engagements={engs}/>
+              <Column column={column} tasks={tasks} userID={props.userID} currState={DND} editTaskContentCB={editTaskContent} deleteTaskCB={deleteTask} handleAssignCB={handleAssign} engagements={engs} members={members} handleTransferCB={handleTransfer}/>
             </UpdateToDoContext.Provider>
           )
         })}
