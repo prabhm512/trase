@@ -11,6 +11,7 @@ import UpdateToDoContext from '../../utils/contexts/UpdateToDoContext';
 import API from '../../utils/apis/API';
 import { getOneTeam, getTeamMembers, getOneUser } from '../../utils/apis/userFunctions';
 import jwt_decode from 'jwt-decode';
+import uniqid from 'uniqid';
 
 // Styling
 import styled from 'styled-components';
@@ -107,7 +108,7 @@ function ReactDND(props) {
 
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
-      updateUserBoard(newState);
+      API.updateUserBoard(newState);
       return
     }
 
@@ -230,34 +231,19 @@ function ReactDND(props) {
       // console.log(newState);
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
-      updateUserBoard(newState);
+      API.updateUserBoard(newState);
     }
   } 
 
   // Add new task to To do list 
   const addNewTask = () => {
-    const storeAllIDs = [];
-    let newTaskID;
-
-    // Loop through initial data to find out value of last key
-    for (let key in DND.tasks) {
-      if (DND.tasks.hasOwnProperty(key)) {
-          // console.log(`${key} : ${DND.tasks[key].content}`);
-          storeAllIDs.push(key.slice(-1));
-      }
-    }
-    
-    if (storeAllIDs.length !== 0) {
-      newTaskID = `task-${parseInt(Math.max(...storeAllIDs)) + 1}`;
-    } else {
-      newTaskID = 'task-1';
-    }
+    let newTaskID = uniqid();
 
     if (document.querySelector('.inputNewTaskContent').value !== "") {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, engagement: '', employees: [], transferred: false };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, engagement: '', employees: {}, transferred: false };
 
       // ID of new task gets inserted into first column
       const newToDos = {
@@ -286,11 +272,13 @@ function ReactDND(props) {
           },            
         },
         columnOrder: [...DND.columnOrder],
-        teamName: decoded.teamName
+        teamName: decoded.teamName,
+        transferredTasks: { ...DND.transferredTasks },
+        empCost: decoded.empCost
       }
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newToDos);
-      updateUserBoard(newToDos);
+      API.updateUserBoard(newToDos);
 
       // console.log(newToDos);
       document.querySelector('.inputNewTaskContent').value = "";
@@ -317,11 +305,13 @@ function ReactDND(props) {
     }
 
     setDND(newState);
-    updateUserBoard(newState);
+    API.updateUserBoard(newState);
   }
 
   // Called from component inside task.js (2 levels down). Allows task to be deleted
-  const deleteTask = (taskID) => {
+  // Second parameted optional because it is only needed when task is being transferred
+  const deleteTask = (taskID, newStateForLoggedInUser = 0) => {
+    let newState = {};
     // console.log(taskID);
     delete DND.tasks[taskID];
 
@@ -333,13 +323,20 @@ function ReactDND(props) {
         }
       })
     }
-    // console.log(DND);
-    const newState = {
-      ...DND
-    };
+
+    if (newStateForLoggedInUser === 0) {
+      newState = {
+        ...DND
+      };
+    } 
+    else {
+      newState = {
+        ...newStateForLoggedInUser
+      }
+    }
 
     setDND(newState);
-    updateUserBoard(newState);
+    API.updateUserBoard(newState);
   }
 
   // Get all tasks of the logged in user
@@ -353,12 +350,6 @@ function ReactDND(props) {
     .catch(err => console.log(err));
   }
 
-  // Post task to /api/tasks route
-  const updateUserBoard = (taskData) => {
-    API.updateUserBoard(taskData)
-    .catch(err => console.log(err));
-  }
-
   const handleAssign = (taskID, radioValue) => {
     const newState = {
       ...DND, 
@@ -369,44 +360,27 @@ function ReactDND(props) {
     }
 
     setDND(newState);
-    updateUserBoard(newState);
+    API.updateUserBoard(newState);
   }
 
   const handleTransfer = (taskID, transferEmail) => {
     getOneUser({email: transferEmail}).then(response => {
       API.getUserBoard(response[0]._id).then(res => {
-        const storeAllIDs = [];
-        let newTaskID;
-
-        // console.log(res.data);
-        // Loop through initial data to find out value of last key
-        for (let key in res.data.tasks) {
-          if (res.data.tasks.hasOwnProperty(key)) {
-              // console.log(`${key} : ${DND.tasks[key].content}`);
-              storeAllIDs.push(key.slice(-1));
-          }
-        }
-        
-        if (storeAllIDs.length !== 0) {
-          newTaskID = `task-${parseInt(Math.max(...storeAllIDs)) + 1}`;
-        } else {
-          newTaskID = 'task-1';
-        }
 
         // Disable drag for task that is being transferred on logged in users board
         const newStateForLoggedInUser = {
           ...DND,
-          tasks: {
-            ...DND.tasks, 
-            [taskID]: { ...DND.tasks[taskID], transferred: true }
+          transferredTasks: {
+            ...DND.transferredTasks,
+            [taskID]: { id: taskID, transferredToId: res.data._id, transferredToEmail: transferEmail }
           }
         }
 
         const newStateForTransferUser = {
           ...res.data,
           _id: res.data._id, 
-          tasks: { [newTaskID]: {
-            id: newTaskID, 
+          tasks: { [taskID]: {
+            id: taskID, 
             content: DND.tasks[taskID].content, 
             inProgressDate: DND.tasks[taskID].inProgressDate, 
             pausedDate: DND.tasks[taskID].pausedDate, 
@@ -420,7 +394,7 @@ function ReactDND(props) {
             'column-1': {
               id: 'column-1',
               title: 'To do',
-              taskIds: [newTaskID, ...res.data.columns['column-1'].taskIds]
+              taskIds: [taskID, ...res.data.columns['column-1'].taskIds]
             },
             'column-2': {
               id: res.data.columns['column-2'].id,
@@ -436,16 +410,17 @@ function ReactDND(props) {
               id: res.data.columns['column-4'].id,
               title: res.data.columns['column-4'].title,
               taskIds: [...res.data.columns['column-4'].taskIds]
-            },
+            }
           }
         }
 
-        // console.log(newStateForTransferUser);
-        updateUserBoard(newStateForLoggedInUser);
-        updateUserBoard(newStateForTransferUser);
-
         // Delete task from logged in users board
-        // deleteTask(taskID);
+        // This also updates the transferred object of the logged in users board
+        deleteTask(taskID, newStateForLoggedInUser);
+
+        // Update board of user who the task is beign transferred to
+        API.updateUserBoard(newStateForTransferUser);
+
       })
     })
   }

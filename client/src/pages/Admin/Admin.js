@@ -72,6 +72,12 @@ class Admin extends Component {
         }
         else {}
 
+        // empCost
+        if (this.state.empCost === 0) {
+            formIsValid = false;
+            errors["empCost"] = "Cannot be equal to 0";
+        }
+
         this.setState({ errors: errors });
         return formIsValid;
     }

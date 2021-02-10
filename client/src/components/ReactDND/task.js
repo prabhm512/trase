@@ -29,7 +29,7 @@ function Task(props) {
   const [assignShow, setAssignShow] = useState(false);
 
   // Manage state of radio that shows inside assign tasks modal
-  const [radioValue, setRadioValue] = useState('female');
+  const [radioValue, setRadioValue] = useState('');
 
   const [transferShow, setTransferShow] = useState(false);
   // Manage state of radio that shows inside transfer tasks modal
