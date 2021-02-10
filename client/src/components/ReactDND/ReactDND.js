@@ -180,7 +180,7 @@ function ReactDND(props) {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime, cost: cost }
+            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
           },
           columns: {
             ...DND.columns,
@@ -217,7 +217,7 @@ function ReactDND(props) {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime, cost: cost }
+            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
           },
           columns: {
             ...DND.columns,
@@ -257,7 +257,7 @@ function ReactDND(props) {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, totalTaskTime: 0, engagement: '', cost: 0 };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, engagement: '', employees: [], transferred: false };
 
       // ID of new task gets inserted into first column
       const newToDos = {
@@ -298,7 +298,10 @@ function ReactDND(props) {
   }
 
   const calculateCost = (empCost, taskTime) => {
-    const cost = empCost * (taskTime/3600);
+
+    let cost = 0; 
+
+    cost = empCost * (taskTime/3600);
     
     return cost.toFixed(2);
   }
@@ -375,7 +378,7 @@ function ReactDND(props) {
         const storeAllIDs = [];
         let newTaskID;
 
-        console.log(res.data);
+        // console.log(res.data);
         // Loop through initial data to find out value of last key
         for (let key in res.data.tasks) {
           if (res.data.tasks.hasOwnProperty(key)) {
@@ -390,6 +393,14 @@ function ReactDND(props) {
           newTaskID = 'task-1';
         }
 
+        // Disable drag for task that is being transferred on logged in users board
+        const newStateForLoggedInUser = {
+          ...DND,
+          tasks: {
+            ...DND.tasks, 
+            [taskID]: { ...DND.tasks[taskID], transferred: true }
+          }
+        }
 
         const newStateForTransferUser = {
           ...res.data,
@@ -400,10 +411,10 @@ function ReactDND(props) {
             inProgressDate: DND.tasks[taskID].inProgressDate, 
             pausedDate: DND.tasks[taskID].pausedDate, 
             doneDate: DND.tasks[taskID].doneDate, 
-            timesheet: {'1': DND.tasks[taskID].timesheet[1], '2': DND.tasks[taskID].timesheet[2], '3': DND.tasks[taskID].timesheet[3], '4': DND.tasks[taskID].timesheet[4], '5': DND.tasks[taskID].timesheet[5]}, 
-            totalTaskTime: DND.tasks[taskID].totalTaskTime, 
+            timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, 
             engagement: DND.tasks[taskID].engagement, 
-            cost: DND.tasks[taskID].cost,
+            employees: { ...DND.tasks[taskID].employees },
+            transferred: false,
           }, ...res.data.tasks },
           columns: {
             'column-1': {
@@ -430,10 +441,11 @@ function ReactDND(props) {
         }
 
         // console.log(newStateForTransferUser);
+        updateUserBoard(newStateForLoggedInUser);
         updateUserBoard(newStateForTransferUser);
 
         // Delete task from logged in users board
-        deleteTask(taskID);
+        // deleteTask(taskID);
       })
     })
   }

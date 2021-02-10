@@ -66,6 +66,7 @@ function Task(props) {
     if (transferShow === true && props.members.length !== 0) {
       setTransferShow(false);
       props.handleTransferCB(props.task.id, transfer);
+      // window.location.reload();
     }
 
     else if (transferShow === false) {
@@ -87,7 +88,7 @@ function Task(props) {
     <Draggable
       draggableId={props.task.id}
       index={props.index}
-      isDragDisabled={false}
+      isDragDisabled={props.task.transferred ? true : false }
     >
       {(provided, snapshot) => (
         <Container
