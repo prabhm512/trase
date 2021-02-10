@@ -32,6 +32,7 @@ export const registerUser = userData => {
         last_name: userData.last_name,
         email: userData.email,
         password: userData.password,
+        empCost: userData.empCost,
         admin: userData.admin,
         firstLogin: userData.firstLogin
     })

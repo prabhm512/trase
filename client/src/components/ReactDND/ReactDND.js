@@ -137,7 +137,6 @@ function ReactDND(props) {
             [newFinish.id]: newFinish
           }
         }
-        console.log(newState);
       } 
 
       // Record the date task was moved FROM 'In Progress' column into 'Paused' column 
@@ -159,18 +158,22 @@ function ReactDND(props) {
         }
         totalTaskTime+=timeInSeconds;
 
+        // Calculate cost of task
+        const cost = calculateCost(decoded.empCost, totalTaskTime);
+
         newState = {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime }
+            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime, cost: cost }
           },
           columns: {
             ...DND.columns,
             [newStart.id]: newStart,
             [newFinish.id]: newFinish
           }
-        } 
+        }
+
       }
 
       // Record the date task was moved FROM 'In Progress' column into 'Done' column 
@@ -192,18 +195,22 @@ function ReactDND(props) {
         }
         totalTaskTime+=timeInSeconds;
 
+         // Calculate cost of task
+        const cost = calculateCost(decoded.empCost, totalTaskTime); 
+
         newState = {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime }
+            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, totalTaskTime: totalTaskTime, cost: cost }
           },
           columns: {
             ...DND.columns,
             [newStart.id]: newStart,
             [newFinish.id]: newFinish
           }
-        } 
+        }
+
       }
       // console.log(newState);
       // Do not set state inside method that does an axios call as task movement lags.
@@ -235,7 +242,7 @@ function ReactDND(props) {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, totalTaskTime: 0, engagement: '' };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, totalTaskTime: 0, engagement: '', cost: 0 };
 
       // ID of new task gets inserted into first column
       const newToDos = {
@@ -273,6 +280,12 @@ function ReactDND(props) {
       // console.log(newToDos);
       document.querySelector('.inputNewTaskContent').value = "";
     }
+  }
+
+  const calculateCost = (empCost, taskTime) => {
+    const cost = empCost * (taskTime/3600);
+    
+    return cost.toFixed(2);
   }
 
   // Called from component inside task.js (2 levels down). Allows task content to be edited

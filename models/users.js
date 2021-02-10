@@ -21,6 +21,9 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  empCost: {
+    type: Number
+  },
   admin: {
     type: Boolean
   },

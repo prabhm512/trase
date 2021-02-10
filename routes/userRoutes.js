@@ -70,6 +70,7 @@ module.exports = function(app) {
                     last_name: req.body.last_name,
                     email: req.body.email,
                     password: req.body.password,
+                    empCost: req.body.empCost,
                     admin: req.body.admin,
                     firstLogin: req.body.firstLogin,
                     created: today
@@ -115,6 +116,7 @@ module.exports = function(app) {
                         first_name: response.first_name,
                         last_name: response.last_name,
                         email: response.email,
+                        empCost: response.empCost,
                         admin: response.admin,
                         firstLogin: response.firstLogin
                     }

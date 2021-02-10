@@ -20,6 +20,7 @@ class Admin extends Component {
             firstLogin: '',
             engagement: '',
             removeEmail: '',
+            empCost: 0,
             removeAlertShow: false,
             addAlertShow: false,
             errors: {}
@@ -100,6 +101,7 @@ class Admin extends Component {
             last_name: this.state.last_name.trim(),
             email: this.state.email.trim().toLowerCase(),
             password: 'init01',
+            empCost: this.state.empCost,
             admin: this.state.admin,
             firstLogin: true
         };
@@ -121,6 +123,7 @@ class Admin extends Component {
                             // console.log(res);
                             initialData._id = res[0]._id;
                             initialData.teamName = res[0].teamName;
+                            initialData.empCost = res[0].empCost;
                             await API.createBoard(initialData).catch(err => console.log(err));
                         })
                     })
@@ -130,6 +133,7 @@ class Admin extends Component {
                             first_name: "",
                             last_name: "",
                             email: "",
+                            empCost: 0,
                             addAlertShow: true
                         })
                     })
@@ -272,6 +276,18 @@ class Admin extends Component {
                                     onChange={this.onChange}
                                 />
                                 <span style={{ color: "red" }}>{this.state.errors["email"]}</span>
+                            </div>
+                            <div className='form-group'>
+                                <label htmlFor='empCost'>Cost per hour</label>
+                                <input type='number'
+                                    refs='empCost'
+                                    className='form-control'
+                                    name='empCost'
+                                    placeholder='Enter Employee Cost (per hour)'
+                                    value={this.state.empCost}
+                                    onChange={this.onChange}
+                                />
+                                <span style={{ color: "red" }}>{this.state.errors["empCost"]}</span>
                             </div>
                             <div className='form-group'>
                                 <label>Admin</label>&nbsp;

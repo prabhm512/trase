@@ -51,7 +51,7 @@ function Task(props) {
       setAssignShow(false);
     }
 
-    else if (assignShow == false) {
+    else if (assignShow === false) {
       setAssignShow(true);
     }
     

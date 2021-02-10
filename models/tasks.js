@@ -1,3 +1,4 @@
+const { Decimal128 } = require("mongodb");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -5,7 +6,8 @@ const tasksSchema = new Schema({
   tasks: { type: Object },
   columns: { type: Object },
   columnOrder: { type: Array },
-  teamName: { type: String }
+  teamName: { type: String },
+  empCost: { type: Number }
 });
 
 const Tasks = mongoose.model("Tasks", tasksSchema);

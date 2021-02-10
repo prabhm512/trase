@@ -14,6 +14,7 @@ class Register extends Component {
             last_name: '',
             email: '',
             password: '',
+            empCost: 0,
             errors: {}
         }
         this.onChange = this.onChange.bind(this);
@@ -95,6 +96,7 @@ class Register extends Component {
             last_name: this.state.last_name.trim(),
             email: this.state.email.trim(),
             password: this.state.password.trim(),
+            empCost: this.state.empCost,
             admin: true
         };
 
@@ -133,6 +135,7 @@ class Register extends Component {
                                 getOneUser(userData).then(async res => {
                                     initialData._id = res[0]._id;
                                     initialData.teamName = res[0].teamName;
+                                    initialData.empCost = res[0].empCost;
                                     await API.createBoard(initialData).catch(err => console.log(err));
                                 })
                             })
@@ -208,6 +211,18 @@ class Register extends Component {
                                         onChange={this.onChange}
                                     />
                                     <span style={{ color: "red" }}>{this.state.errors["email"]}</span>
+                                </div>
+                                <div className='form-group'>
+                                    <label htmlFor='empCost'>Cost per hour</label>
+                                    <input type='number'
+                                        refs='empCost'
+                                        className='form-control'
+                                        name='empCost'
+                                        placeholder='Enter Employee Cost (per hour)'
+                                        value={this.state.empCost}
+                                        onChange={this.onChange}
+                                    />
+                                    <span style={{ color: "red" }}>{this.state.errors["empCost"]}</span>
                                 </div>
                                 <div className='form-group'>
                                     <label htmlFor='password'>Password</label>
