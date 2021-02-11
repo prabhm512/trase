@@ -372,7 +372,7 @@ function ReactDND(props) {
           ...DND,
           transferredTasks: {
             ...DND.transferredTasks,
-            [taskID]: { id: taskID, transferredToId: res.data._id, transferredToEmail: transferEmail }
+            [taskID]: { id: taskID, transferredToId: res.data._id, transferredToEmail: transferEmail, timesheet: {...DND.tasks[taskID].timesheet} }
           }
         }
 
@@ -382,9 +382,9 @@ function ReactDND(props) {
           tasks: { [taskID]: {
             id: taskID, 
             content: DND.tasks[taskID].content, 
-            inProgressDate: DND.tasks[taskID].inProgressDate, 
-            pausedDate: DND.tasks[taskID].pausedDate, 
-            doneDate: DND.tasks[taskID].doneDate, 
+            inProgressDate: 0, 
+            pausedDate: 0, 
+            doneDate: 0, 
             timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, 
             engagement: DND.tasks[taskID].engagement, 
             employees: { ...DND.tasks[taskID].employees },

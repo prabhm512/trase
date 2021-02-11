@@ -93,7 +93,7 @@ function App() {
                         <Route exact path="/" component={Landing} />
                         <div className='container-fluid m-0 p-0'>
                             <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
-                            <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
+                            <Route exact path="/timesheet/:teamName/:id" component={Auth(Timesheet)}/>
                             <Route exact path="/admin" component={Auth(Admin)} />
                             <Route exact path="/team" component={Auth(Team)} />
                             <Route exact path="/member/:userID" component={Auth(TeamMember)} />

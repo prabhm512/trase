@@ -10,6 +10,12 @@ module.exports = function(app) {
         .catch(err => res.status(422).json(err));
     })
 
+    app.get("/api/team/boards/:teamName", (req, res) => {
+        db.Tasks.find({ teamName: req.params.teamName })
+        .then(dbModel => res.json(dbModel))
+        .catch(err => res.status(422).json(err))
+    })
+
     // Get board for the logged in user
     app.get("/api/boards/:id", (req, res) => {
         db.Tasks.findOne({ _id: req.params.id })
