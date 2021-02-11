@@ -7,3 +7,12 @@ li {
     /* border: 1px solid lightgrey; */
     margin-bottom: 7px;
 }
+
+.pdfViewer {
+    height: 520px;
+    width: 380px;
+}
+
+.pdfDownloadLink {
+    margin-bottom: 50px;
+}

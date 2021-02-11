@@ -3,7 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
+// Create styles
+const styles = StyleSheet.create({
+    page: {
+        flexDirection: 'row',
+        backgroundColor: '#E4E4E4'
+    },
+    section: {
+        margin: 10,
+        padding: 10,
+        flexGrow: 1
+    }
+});
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,11 +54,19 @@ export default function EngAccordion(props) {
                     </div>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <ul>
-                        {props.tasks.map((task, idx) => {
-                            return <li key={idx}>{task}</li>
-                        })}
-                    </ul>
+                    <Document>
+                        <Page size="A4" style={styles.page}>
+                            <View style={styles.section}>
+                                {props.tasks.map((task, idx) => {
+                                    console.log(task[0]);
+                                    <div>{task[0]}</div>
+                                })}
+                            </View>
+                            {/* <View style={styles.section}>
+                                <Text>Section #2</Text>
+                            </View> */}
+                        </Page>
+                    </Document>
                 </AccordionDetails>
             </Accordion>
         </div>
