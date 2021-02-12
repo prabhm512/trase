@@ -289,9 +289,9 @@ function ReactDND(props) {
 
     let cost = 0; 
 
-    cost = empCost * (taskTime/3600);
+    cost = Math.round((empCost * (taskTime/3600)) * (10^2)) / (10^2);
     
-    return cost.toFixed(2);
+    return cost;
   }
 
   // Called from component inside task.js (2 levels down). Allows task content to be edited

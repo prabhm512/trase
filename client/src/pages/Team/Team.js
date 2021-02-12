@@ -6,19 +6,25 @@ import './style.css';
 // import EngAccordion from './Accordion';
 import MyDocument from './engagementPDF';
 import { PDFViewer, PDFDownloadLink } from '@react-pdf/renderer';
-// import ReactPDF from '@react-pdf/renderer';
+import { startOfWeek, endOfWeek } from 'date-fns';
 
 function Team() {
 
-
     const token = localStorage.usertoken;
     const decoded = jwt_decode(token);
+
     const [engs, setEngs] = useState([]);
+
+    const dateToday = new Date();
+    const month = dateToday.getMonth() + 1;
+    const fullDate = dateToday.getDate() + '/' + month + '/' + dateToday.getFullYear();
 
     // Show different report based on which button is clicked
     const [showReport, setShowReport] = useState({
         name: '',
         tasks: {},
+        weekStart: '', 
+        weekEnd: '',
         view: false
     });
     
@@ -50,8 +56,8 @@ function Team() {
                                     // tempEngArr[idx].tasks.push(el.tasks[key].content);
                                     tempEngArr[idx].tasks = {
                                         ...tempEngArr[idx].tasks,
-                                        [el.tasks[key].id]: el.tasks[key].content
-                                    };
+                                        [el.tasks[key].id]: { employees: { ...el.tasks[key].employees }, content: el.tasks[key].content }
+                                    }
                                 }
                             })
                         }
@@ -66,6 +72,11 @@ function Team() {
         
         let tasks = {};
 
+        const date = new Date();
+
+        const weekStart = startOfWeek(date, { weekStartsOn: 1 }).getDate() + '/' + month + '/' + date.getFullYear();
+        const weekEnd = endOfWeek(date, { weekStartsOn: 1 }).getDate() - 2 + '/' + month + '/' + date.getFullYear();
+
         engs.forEach(el => {
             if (el.engName === event.target.id) {
                 tasks = {
@@ -76,12 +87,14 @@ function Team() {
         setShowReport({
             name: event.target.id,
             tasks: tasks,
+            weekStart: weekStart, 
+            weekEnd: weekEnd,
             view: true
         })
     }
 
     useEffect(() => {
-        storeEngagementNames()
+        storeEngagementNames();
     }, [])
 
     return (
@@ -102,15 +115,20 @@ function Team() {
                     </ul>
                 </div>
             </div>
-            {showReport.view ? ( <div>
-                <PDFViewer className="pdfViewer">
-                    <MyDocument name={showReport.name} tasks={showReport.tasks}/>
-                </PDFViewer>
-                <br></br>
-                <PDFDownloadLink className="btn btn-primary pdfDownloadLink" document={<MyDocument name={showReport.name} tasks={showReport.tasks} />} fileName="somename.pdf">
-                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : `${showReport.name.toUpperCase()} Report`)}
-                </PDFDownloadLink>
-                </div> ) : ''}
+            <div className="row">
+                <div className="col-sm-12">
+                    {showReport.view ? ( <div>
+                        <h3>{showReport.name.toUpperCase()} Report</h3>
+                        <PDFViewer className="pdfViewer">
+                            <MyDocument name={showReport.name.toUpperCase()} tasks={showReport.tasks} weekStart={showReport.weekStart} weekEnd={showReport.weekEnd}/>
+                        </PDFViewer>
+                        <br></br>
+                        <PDFDownloadLink className="btn btn-primary pdfDownloadLink" document={<MyDocument name={showReport.name.toUpperCase()} tasks={showReport.tasks} weekStart={showReport.weekStart} weekEnd={showReport.weekEnd}/>} fileName={showReport.name + '-' + fullDate + '.pdf'}>
+                            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : `Download`)}
+                        </PDFDownloadLink>
+                        </div> ) : ''}
+                </div>
+            </div>
         </div>
     )
 }
