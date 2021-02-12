@@ -53,7 +53,7 @@ function Team() {
 
     // Variables for MUI Table
     const classes = useStyles();
-    const [order, setOrder] = React.useState('asc');
+    const [order, setOrder] = React.useState('desc');
     const [orderBy, setOrderBy] = React.useState('cost');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
@@ -93,7 +93,6 @@ function Team() {
                         if (el.tasks[key].engagement !== "") {
                             tempEngArr.map((eng, idx) => {
                                 if (eng.engName === el.tasks[key].engagement) {
-                                    // tempEngArr[idx].tasks.push(el.tasks[key].content);
                                     tempEngArr[idx].tasks.push({employees: { ...el.tasks[key].employees }, content: el.tasks[key].content })
                                 }
                             })
@@ -118,9 +117,7 @@ function Team() {
 
         engs.forEach(el => {
             if (el.engName === event.target.id) {
-                tasks = {
-                    ...el.tasks
-                };
+                tasks = {...el.tasks};
             }
         })
         setShowReport({

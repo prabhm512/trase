@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         marginBottom: 7
     },
     heading: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'ultrabold',
         alignSelf: 'flex-start',
         marginBottom: 10
@@ -65,9 +65,10 @@ function MyDocument(props) {
                 time += parseInt(props.tasks[key].employees[empsKey].overallTime);
 
             }
-            tempTasksArr.push({ taskTime: time, taskCost: cost, content: props.tasks[key].content })
+            if (cost !== 0) {
+                tempTasksArr.push({ taskTime: time, taskCost: cost, content: props.tasks[key].content })
+            }
         }
-
         setTasks(tempTasksArr);
     }, [props.tasks]);
 
