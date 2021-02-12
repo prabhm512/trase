@@ -15,4 +15,21 @@ li {
 
 .pdfDownloadLink {
     margin-bottom: 50px;
+    float: right;
 }
+
+.engName {
+    text-align: center;
+}
+
+/* .taskContentView {
+    width: 500px;
+}
+
+.taskHoursView {
+    margin-left: 100px;
+}
+
+.totalValues {
+    border: 1px solid black;
+} */
