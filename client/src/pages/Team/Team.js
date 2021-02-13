@@ -110,11 +110,9 @@ function Team() {
         
         // PDF Print
         let tasks = {};
-
-        const date = new Date();
-
-        const weekStart = startOfWeek(new Date()).getDate() + 1 + '/' + month + '/' + date.getFullYear();
-        const weekEnd = endOfWeek(new Date()).getDate() - 1 + '/' + month + '/' + date.getFullYear();
+        
+        const weekStart = startOfWeek(new Date()).getDate() + 1 + '/' + month + '/' + dateToday.getFullYear();
+        const weekEnd = endOfWeek(new Date()).getDate() - 1 + '/' + month + '/' + dateToday.getFullYear();
 
         engs.forEach(el => {
             if (el.engName === event.target.id) {
