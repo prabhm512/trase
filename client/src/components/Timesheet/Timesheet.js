@@ -1,8 +1,8 @@
 /* eslint-disable no-loop-func */
 import React, { useEffect } from 'react';
 import API from '../../utils/apis/API';
-import * as startOfWeek from 'date-fns';
-import * as endOfWeek from 'date-fns';
+import startOfWeek from 'date-fns/startOfWeek';
+import endOfWeek from 'date-fns/endOfWeek';
 import { useParams } from 'react-router-dom';
 import './Timesheet.css';
 
@@ -128,8 +128,8 @@ function Timesheet() {
         const date = new Date();
 
         // Make sure that only dates from Mon-Fri get rendered every time component is mounted
-        const weekStart = startOfWeek(date, { weekStartsOn: 1 }).getDate();
-        const weekEnd = endOfWeek(date, { weekStartsOn: 1 }).getDate() - 2;
+        const weekStart = startOfWeek(new Date()).getDate() + 1;
+        const weekEnd = endOfWeek(new Date()).getDate() - 1;
 
         for (let i=weekStart; i<=weekEnd; i++) {
             const tableHeading = `<th>${i + '/' + (date.getMonth() + 1)}</th>`;
@@ -146,13 +146,19 @@ function Timesheet() {
 
     return (
         <div className="timesheet">
-            <h1>Timesheet</h1>
-            <table className="table">
-                <thead>
-                    <tr className="dates"></tr>
-                </thead>
-                <tbody className="timesheet-body"></tbody>
-            </table>
+            <div className="container">
+                <div className="row">
+                    <div className="col-sm-12">
+                        <h1>Timesheet</h1>
+                        <table className="table">
+                            <thead>
+                                <tr className="dates"></tr>
+                            </thead>
+                            <tbody className="timesheet-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

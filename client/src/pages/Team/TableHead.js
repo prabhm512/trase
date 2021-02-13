@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TableHead, TableSortLabel, TableRow, TableCell } from '@material-ui/core';
+import { TableHead, TableSortLabel, TableRow, TableCell, Box } from '@material-ui/core';
 
 const headCells = [
     { id: 'task', numeric: false, disablePadding: false, label: 'Task' },
@@ -19,12 +19,36 @@ function EnhancedTableHead(props) {
         <TableHead>
             <TableRow>
                 {headCells.map((headCell) => (
+                    headCell.id === 'task' ? (
+                <Box pl={2}>
+                    <TableCell
+                        key={headCell.id}
+                        align={headCell.id === 'task' ? 'left': 'center'}
+                        style={{fontWeight: 'bold'}}
+                        padding={headCell.disablePadding ? 'none' : 'default'}
+                        sortDirection={orderBy === headCell.id ? order : false}
+                    >
+                        <TableSortLabel
+                        active={orderBy === headCell.id}
+                        direction={orderBy === headCell.id ? order : 'asc'}
+                        onClick={createSortHandler(headCell.id)}
+                        >
+                        {headCell.label}
+                        {orderBy === headCell.id ? (
+                            <span className={classes.visuallyHidden}>
+                            {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                            </span>
+                        ) : null}
+                        </TableSortLabel>
+                    </TableCell>
+                </Box>
+                ) :  
                 <TableCell
-                    key={headCell.id}
-                    align={'center'}
-                    style={{fontWeight: 'bold'}}
-                    padding={headCell.disablePadding ? 'none' : 'default'}
-                    sortDirection={orderBy === headCell.id ? order : false}
+                key={headCell.id}
+                align={headCell.id === 'task' ? 'left': 'center'}
+                style={{fontWeight: 'bold'}}
+                padding={headCell.disablePadding ? 'none' : 'default'}
+                sortDirection={orderBy === headCell.id ? order : false}
                 >
                     <TableSortLabel
                     active={orderBy === headCell.id}
@@ -39,7 +63,7 @@ function EnhancedTableHead(props) {
                     ) : null}
                     </TableSortLabel>
                 </TableCell>
-                ))}
+            ))}
             </TableRow>
         </TableHead>
     );    

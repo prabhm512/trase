@@ -6,10 +6,10 @@ import './style.css';
 // import EngAccordion from './Accordion';
 import MyDocument from './engagementPDF';
 import {PDFDownloadLink } from '@react-pdf/renderer';
-import * as startOfWeek from 'date-fns';
-import * as endOfWeek from 'date-fns';
+import startOfWeek from 'date-fns/startOfWeek';
+import endOfWeek from 'date-fns/endOfWeek';
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Paper, FormControlLabel, Switch } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Paper, FormControlLabel, Switch, Box } from '@material-ui/core';
 import EnhancedTableHead from './TableHead';
 
 const useStyles = makeStyles((theme) => ({
@@ -113,8 +113,8 @@ function Team() {
 
         const date = new Date();
 
-        const weekStart = startOfWeek(date, { weekStartsOn: 1 }).getDate() + '/' + month + '/' + date.getFullYear();
-        const weekEnd = endOfWeek(date, { weekStartsOn: 1 }).getDate() - 2 + '/' + month + '/' + date.getFullYear();
+        const weekStart = startOfWeek(new Date()).getDate() + 1 + '/' + month + '/' + date.getFullYear();
+        const weekEnd = endOfWeek(new Date()).getDate() - 1 + '/' + month + '/' + date.getFullYear();
 
         engs.forEach(el => {
             if (el.engName === event.target.id) {
@@ -295,8 +295,10 @@ function Team() {
                                                 key={index}
                                                 selected={isItemSelected}
                                                 >
-                                                    <TableCell component="td" id={labelId} scope="row" align="center">
-                                                        {row.task}
+                                                    <TableCell component="td" id={labelId} scope="row" align="left">
+                                                        <Box pl={3}>
+                                                            {row.task}
+                                                        </Box>
                                                     </TableCell>
                                                     <TableCell align="center">{row.hours}</TableCell>
                                                     <TableCell align="center">{row.cost}</TableCell>
