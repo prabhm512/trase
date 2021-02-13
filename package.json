@@ -1,7 +1,7 @@
 {
-  "name": "3-project",
+  "name": "trase",
   "version": "1.0.0",
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "description": "This app tracks each task performed for an engagement.",
   "main": "server.js",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
