@@ -21,7 +21,7 @@ class Home extends Component {
     decoded = jwt_decode(this.token);
 
     handleClick = () => {
-        this.props.history.push('/timesheet/' + this.decoded.teamName + '/' + this.decoded._id);
+        this.props.history.push('/timesheet/' + this.decoded._id);
     };
     
     componentDidMount() {

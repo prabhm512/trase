@@ -372,7 +372,7 @@ function ReactDND(props) {
           ...DND,
           transferredTasks: {
             ...DND.transferredTasks,
-            [taskID]: { id: taskID, transferredToId: res.data._id, transferredToEmail: transferEmail, timesheet: {...DND.tasks[taskID].timesheet} }
+            [taskID]: { id: taskID, content: DND.tasks[taskID].content, transferredToId: res.data._id, transferredToEmail: transferEmail, timesheet: {...DND.tasks[taskID].timesheet} }
           }
         }
 
