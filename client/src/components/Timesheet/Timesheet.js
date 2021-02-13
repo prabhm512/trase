@@ -1,7 +1,8 @@
 /* eslint-disable no-loop-func */
 import React, { useEffect } from 'react';
 import API from '../../utils/apis/API';
-import { startOfWeek, endOfWeek } from 'date-fns';
+import * as startOfWeek from 'date-fns';
+import * as endOfWeek from 'date-fns';
 import { useParams } from 'react-router-dom';
 import './Timesheet.css';
 
