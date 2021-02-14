@@ -1,3 +1,12 @@
 .team {
     text-align: center;
 }
+
+.loggedInUserName {
+    text-align: center;
+    color: #43cd80;
+}
+
+.timesheetButton {
+    float: right;
+}

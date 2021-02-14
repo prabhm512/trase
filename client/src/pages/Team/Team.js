@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { getOneTeam } from '../../utils/apis/userFunctions';
 import API from '../../utils/apis/API';
-import './style.css';
+import './Team.css';
 // import EngAccordion from './Accordion';
 import MyDocument from './engagementPDF';
 import {PDFDownloadLink } from '@react-pdf/renderer';
 import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Paper, FormControlLabel, Switch, Box } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Paper, FormControlLabel, Switch, Box, Menu, MenuItem, Button } from '@material-ui/core';
 import EnhancedTableHead from './TableHead';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         width: '100%',
         marginBottom: theme.spacing(2),
+        border: '1px solid #ff7256'
     },
     table: {
         minWidth: 750,
@@ -111,8 +112,8 @@ function Team() {
         // PDF Print
         let tasks = {};
         
-        const weekStart = startOfWeek(new Date()).getDate() + 1 + '/' + month + '/' + dateToday.getFullYear();
-        const weekEnd = endOfWeek(new Date()).getDate() - 1 + '/' + month + '/' + dateToday.getFullYear();
+        const weekStart = startOfWeek(new Date(), {weekStartsOn: 1}).getDate()+ '/' + month + '/' + dateToday.getFullYear();
+        const weekEnd = endOfWeek(new Date(), {weekStartsOn: 1}).getDate() - 2 + '/' + month + '/' + dateToday.getFullYear();
 
         engs.forEach(el => {
             if (el.engName === event.target.id) {
@@ -230,6 +231,20 @@ function Team() {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+    // Required for Engagements Menu
+    const ITEM_HEIGHT = 48;
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
     useEffect(() => {
         storeEngagementNames();
     }, [])
@@ -238,26 +253,42 @@ function Team() {
         <div className="container">
             <div className="row">
                 <div className="col-sm-12">
-                    <h1>{decoded.teamName}</h1>
+                    <h1 className="teamNameEngPage">{decoded.teamName}</h1>
                 </div>
             </div>
             <div className="row">
                 <div className="col-sm-12">
-                    <h3>Engagements</h3>
-                    <ul className="engagement-list" type="none">
-                        {engs.map((el, idx) => {
-                            // return <li><EngAccordion key={idx} name={el.engName} tasks={[el.tasks]} /></li>
-                            return <li><button id={el.engName} onClick={renderClickedEngReport}>{el.engName}</button></li>
-                        })}
-                    </ul>
+                    {/* <h3>Engagements</h3> */}
+                    <Button aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleMenuClick} variant="contained" color="primary">
+                        View Engagements
+                    </Button>
+                    <Menu
+                        id="long-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={open}
+                        onClose={handleMenuClose}
+                        PaperProps={{
+                        style: {
+                            maxHeight: ITEM_HEIGHT * 4.5,
+                            width: '30ch',
+                        },
+                        }}
+                    >
+                        {engs.map((el, idx) => (
+                        <MenuItem key={el.engName} id={el.engName} onClick={renderClickedEngReport}>
+                            {el.engName}
+                        </MenuItem>
+                        ))}
+                    </Menu>
                 </div>
             </div>
             <hr></hr>
             <div className="row">
                 <div className="col-sm-12">
                     {showReport.view ? ( <div>
-                        <h3 className="engName">{showReport.name.toUpperCase()} Report</h3>
-
+                        <h2 className="engName">{showReport.name.toUpperCase()} Report</h2>
+                        <br></br>
                         <div className={classes.root}>
                             <Paper className={classes.paper}>
                                 <TableContainer>

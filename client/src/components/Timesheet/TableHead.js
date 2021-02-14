@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { TableHead, TableSortLabel, TableRow, TableCell, Box } from '@material-ui/core';
+import { TableHead, TableRow, TableCell, Box } from '@material-ui/core';
 import startOfWeek from 'date-fns/startOfWeek';
 import endOfWeek from 'date-fns/endOfWeek';
 
@@ -10,8 +10,8 @@ function EnhancedTableHead() {
 
     useEffect(() => {
         // Make sure that only dates from Mon-Fri get rendered every time component is mounted
-        const weekStart = startOfWeek(new Date()).getDate() + 1;
-        const weekEnd = endOfWeek(new Date()).getDate() - 1;
+        const weekStart = startOfWeek(new Date(), {weekStartsOn: 1}).getDate();
+        const weekEnd = endOfWeek(new Date(), {weekStartsOn: 1}).getDate() - 2;
     
         const tempDatesArr = [{id: 'task', numeric: false, disablePadding: false, label: 'Task'}];
     

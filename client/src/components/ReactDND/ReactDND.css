@@ -15,7 +15,7 @@
     height: 10px;
     width: 10px;
     float: right;
-    background-color: red;
+    background-color: #ff7256;
 }
 
 #dropdown-basic.dropdown-toggle::after {

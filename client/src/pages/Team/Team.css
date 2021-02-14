@@ -18,18 +18,16 @@ li {
     float: right;
 }
 
+.btn.btn-primary {
+    background-color: #1874cd;  
+}
+
 .engName {
     text-align: center;
+    color: #ff7256;
 }
 
-/* .taskContentView {
-    width: 500px;
+.teamNameEngPage { 
+    text-align: center;
+    color: #43cd80;
 }
-
-.taskHoursView {
-    margin-left: 100px;
-}
-
-.totalValues {
-    border: 1px solid black;
-} */

@@ -9,16 +9,21 @@ import './ReactDND.css';
 
 const Container = styled.div`
   margin: 8px;
-  border: 1px solid lightgrey;
-  border-radius: 2px;
-  width: 220px;
+  width: 275px;
 
   display: flex;
   flex-direction: column;
 `
+
 const Title = styled.h3`
+  border: ${(props) => 
+    props.title === 'To Do' ? '1px solid #1874cd;' : props.title === 'In Progress' ? '1px solid red;' : props.title === 'Paused' ? '1px solid #D4AF37;' : '1px solid green;'}
+  border-radius: 2px;
   padding: 8px;
+  color: ${props => 
+    props.title === 'To Do' ? '#1874cd' : props.title === 'In Progress' ? '#ff0000' : props.title === 'Paused' ? '#D4AF37' : 'green'}
 `
+
 const TaskList = styled.div`
   padding: 8px;
   transition: background-color 0.2s ease;
@@ -29,6 +34,10 @@ const TaskList = styled.div`
   position: relative;
 `
 
+// const TitleText = styled.div`
+
+// `
+
 function Column(props) {
 
   // Show hidden text area
@@ -38,17 +47,18 @@ function Column(props) {
         
   return (
     <Container>
-
-      <Title>{ props.column.title === 'To do' 
-      ? 
-      <div>
-        { props.column.title }
-        <h4 className="openTextArea"><FontAwesomeIcon icon={faPlus} onClick={displayTextArea}></FontAwesomeIcon></h4>
-        <NewTask></NewTask>
-      </div>
-      : 
-      props.column.title }
-      </Title>
+        <Title title={props.column.title}>{ props.column.title === 'To Do' 
+        ? 
+        <div>
+          {/* <TitleText title={props.column.title}> */}
+            { props.column.title }
+          {/* </TitleText> */}
+          <h4 className="openTextArea"><FontAwesomeIcon icon={faPlus} onClick={displayTextArea}></FontAwesomeIcon></h4>
+          <NewTask></NewTask>
+        </div>
+        : 
+        props.column.title }
+        </Title>
 
       {/* Child of Droppable has to be a function that returns a react component */}
       <Droppable droppableId={props.column.id} type="TASK">
@@ -61,7 +71,7 @@ function Column(props) {
           isDraggingOver={snapshot.isDraggingOver}
           >
             {props.tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} userID={props.userID} currState={props.currState} editTaskContentCB={props.editTaskContentCB} deleteTaskCB={props.deleteTaskCB} handleAssignCB={props.handleAssignCB} engagements={props.engagements} members={props.members} handleTransferCB={props.handleTransferCB}/>
+              <Task key={task.id} column={props.column} task={task} index={index} userID={props.userID} currState={props.currState} editTaskContentCB={props.editTaskContentCB} deleteTaskCB={props.deleteTaskCB} handleAssignCB={props.handleAssignCB} engagements={props.engagements} members={props.members} handleTransferCB={props.handleTransferCB}/>
             ))}
             {provided.placeholder} {/* Increase available space in a droppable whenever needed during a drag*/}
           </TaskList>

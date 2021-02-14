@@ -1,5 +1,6 @@
 .heading { 
     text-align: center;
+    color: #43cd80;
 }
 
 .removeMemberAlert {
@@ -10,4 +11,8 @@
 .addMemberAlert { 
     background-color: green;
     color: white;
+}
+
+.adminForms h3 {
+    color: #ff7256;
 }

@@ -252,7 +252,7 @@ function ReactDND(props) {
         columns: {
           'column-1': {
             id: 'column-1',
-            title: 'To do',
+            title: 'To Do',
             taskIds: [newTaskID, ...DND.columns['column-1'].taskIds]
           },
           'column-2': {
@@ -393,7 +393,7 @@ function ReactDND(props) {
           columns: {
             'column-1': {
               id: 'column-1',
-              title: 'To do',
+              title: 'To Do',
               taskIds: [taskID, ...res.data.columns['column-1'].taskIds]
             },
             'column-2': {

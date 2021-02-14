@@ -94,7 +94,7 @@ function App() {
                             <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
                             <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
                             <Route exact path="/admin" component={Auth(Admin)} />
-                            <Route exact path="/team" component={Auth(Team)} />
+                            <Route exact path="/engagements" component={Auth(Team)} />
                             <Route exact path="/register" component={Register} />
                             <Route exact path="/login" component={Login} />
                         </div>
@@ -107,7 +107,7 @@ function App() {
                 keyboard={false}
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Reset Password</Modal.Title>
+                    <Modal.Title style={{color: '#1874cd'}}>Reset Password</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form>
@@ -124,7 +124,7 @@ function App() {
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="primary" style={{bgcolor: '#1874cd', color: 'white'}} onClick={handleClose}>
                         Save
                     </Button>
                 </Modal.Footer>

@@ -236,10 +236,10 @@ class Admin extends Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="container adminForms">
                 <div className="row">
                     <div className="col-sm-12">
-                        <h1 className="heading">Admin ( {this.decoded.teamName} )</h1>
+                        <h1 className="heading">Admin</h1>
                     </div>
                 </div>
                 <br></br>

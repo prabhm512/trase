@@ -1,7 +1,7 @@
-.table thead tr th {
-    padding-right: 0px;
+.tasksButton {
+    float: right;
 }
 
-.totals {
-    background-color: lightgreen;
+.timesheet-heading {
+    color: #43cd80;
 }

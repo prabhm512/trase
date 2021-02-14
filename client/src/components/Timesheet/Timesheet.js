@@ -1,10 +1,10 @@
 /* eslint-disable no-loop-func */
 import React, { useEffect, useState } from 'react';
 import API from '../../utils/apis/API';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import './Timesheet.css';
 import { makeStyles } from '@material-ui/core/styles';
-import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Paper, FormControlLabel, Switch, Box } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Paper, FormControlLabel, Switch, Box, Button } from '@material-ui/core';
 import EnhancedTableHead from './TableHead';
 
 const useStyles = makeStyles((theme) => ({
@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     paper: {
         width: '100%',
         marginBottom: theme.spacing(2),
+        border: '1px solid #1874cd'
     },
     table: {
         minWidth: 750,
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Timesheet() {
-    // const dayToday = new Date().getDay();
+    const history = useHistory();
 
     // ID of the users unique board is extracted from the location pathname
     const { id } = useParams();
@@ -145,6 +146,10 @@ function Timesheet() {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+    const handleTaskBtnClick = () => {
+        history.push("/tasks");
+    } 
+
     useEffect(() => {
         renderTasks();
     }, []);
@@ -154,7 +159,7 @@ function Timesheet() {
             <div className="container">
                 <div className="row">
                     <div className="col-sm-12">
-                        <h2>Timesheet</h2>
+                        <h2 className="timesheet-heading">Timesheet</h2>
                         <br></br>
                         <Paper className={classes.paper}>
                             <TableContainer>
@@ -222,6 +227,7 @@ function Timesheet() {
                         />
                     </div>
                 </div>
+                <Button onClick={handleTaskBtnClick} className="tasksButton" variant="contained" color="primary">Tasks</Button>
             </div>
         </div>
     )

@@ -7,7 +7,8 @@ import { Dropdown, Modal, Button } from 'react-bootstrap';
 import { FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 
 const Container = styled.div`
-  border: 1px solid lightgrey;
+  border: ${props => 
+    props.columnTitle === 'To Do' ? '1px solid #1874cd;' : props.columnTitle === 'In Progress' ? '1px solid red;' : props.columnTitle === 'Paused' ? '1px solid #D4AF37;' : '1px solid green;'}
   border-radius: 2px;
   padding: 8px;
   margin-bottom: 8px;
@@ -91,7 +92,7 @@ function Task(props) {
       isDragDisabled={props.task.transferred ? true : false }
     >
       {(provided, snapshot) => (
-        <Container
+        <Container columnTitle={props.column.title}
           {...provided.draggableProps}
           {...provided.dragHandleProps} // Applied to part of component that we want to control the drag with. 
           ref={provided.innerRef}

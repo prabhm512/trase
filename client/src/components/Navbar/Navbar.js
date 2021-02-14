@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import List from '@material-ui/core/List';
-// import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-// import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import { Divider, Drawer, Button, List, ListItem, ListItemText } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import jwt_decode from 'jwt-decode';
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, useHistory } from "react-router-dom";
 
-import './style.css';
+import './Navbar.css';
+import { Typography } from '@material-ui/core';
+
+const font = "'Lobster', cursive";
 
 const useStyles = makeStyles({
     list: {
@@ -23,14 +20,24 @@ const useStyles = makeStyles({
     },
 });
 
+const prodNameTheme = createMuiTheme({
+    typography: {
+        fontFamily: font,
+        color: '#2094B9',
+        paddingLeft: 10
+    }
+})
+
 function TemporaryDrawer(props) {
 
     const classes = useStyles();
     const [state, setState] = useState({
         right: false
     });
-
-    let token, decoded;
+    
+    const history = useHistory();
+    let token;
+    let decoded = null;
     
     if (localStorage.usertoken) {
         token = localStorage.usertoken;
@@ -62,47 +69,39 @@ function TemporaryDrawer(props) {
         onKeyDown={toggleDrawer(anchor, false)}
         >
             {localStorage.usertoken ? (
-                // <List>
-                //     {['Home', 'Tasks', 'Logout'].map((text, index) => (
-                //         <Link key={text} to={text}>
-                //             <ListItem button key={text}>                    
-                //                     {/* <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon> */}
-                //                     <ListItemText primary={text} />
-                //             </ListItem>
-                //         </Link>
-                //     ))}
-                // </List>
                 <List>
-                    <Link to={'/'}>
-                        <ListItem button>
-                            <ListItemText primary='Home' />
-                        </ListItem>
-                    </Link>
                     <Link to={'/tasks'}>
                         <ListItem button>
                             <ListItemText primary='Tasks' />
                         </ListItem>
                     </Link>
+                    <Link to={'/timesheet/' + decoded._id}>
+                        <ListItem button>
+                            <ListItemText primary='Timesheet' />
+                        </ListItem>
+                    </Link>
                     {decoded.admin ? (
                         <div>
+                            <Link to={'/engagements'}>
+                                <ListItem>
+                                    <ListItemText primary='Engagements' />
+                                </ListItem>
+                            </Link>
+                            <Divider />
                             <Link to={'/admin'}>
                                 <ListItem>
                                     <ListItemText primary='Admin' />
                                 </ListItem>
                             </Link>
-                            <Link to={'/team'}>
-                                <ListItem>
-                                    <ListItemText primary='Team' />
-                                </ListItem>
-                            </Link>
                         </div>
                     ) : (
-                        <Link to={'/team'}>
+                        <Link to={'/engagements'}>
                             <ListItem>
-                                <ListItemText primary='Team' />
+                                <ListItemText primary='Engagements' />
                             </ListItem>
                         </Link>
                     )}
+                    <Divider />
                     <ListItem button onClick={props.handleShowCB}>
                         <ListItemText primary='Reset Pwd' />
                     </ListItem>
@@ -131,21 +130,23 @@ function TemporaryDrawer(props) {
                     </Link>
                 </List>
             )}
-            {/* <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List> */}
         </div>
     );  
-                
+
+    const handleProdNameBtnClick = () => {
+        if (decoded === null) {
+            history.push('/')
+        } else {
+            history.push('/tasks');
+        }
+    }
+    
     return (
         <div>
             <nav className='navbar navbar-expand-lg'>
+                <Typography style={prodNameTheme.typography}>
+                    <button className="productNameButton" onClick={handleProdNameBtnClick}><h1 className="productName">Trase</h1></button> 
+                </Typography>
                 <div className='collapse navbar-collapse d-flex justify-content-end' id='navbar1'>
                 {[`right`].map((anchor) => (
                     <React.Fragment key={anchor}>

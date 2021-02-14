@@ -3,8 +3,9 @@ import jwt_decode from 'jwt-decode';
 import ReactDND from '../../components/ReactDND/ReactDND';
 import { updateLoginStatus } from '../../utils/apis/userFunctions';
 import './Tasks.css';
+import { Button } from "@material-ui/core";
 
-class Home extends Component {
+class Tasks extends Component {
     constructor() {
         super()
         this.state = {
@@ -36,17 +37,17 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="home">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-sm-12">
-                            {/* <h1 className="team">Team <em>{this.decoded.teamName}</em></h1> */}
-                            <h1>
-                                Welcome { this.decoded.first_name } { this.decoded.last_name }
-                            </h1>
-                            <ReactDND userID={ this.decoded._id } />
-                            <button onClick={this.handleClick}>Timesheet</button>
-                        </div>
+            <div className="container">
+                <div className="row">
+                    <div className="col-sm-12">
+                        {/* <h1 className="team">Team <em>{this.decoded.teamName}</em></h1> */}
+                        <h1 className="loggedInUserName">
+                            { this.decoded.first_name } { this.decoded.last_name }
+                        </h1>
+                        <br></br>
+                        <ReactDND userID={ this.decoded._id } />
+                        <br></br>
+                        <Button onClick={this.handleClick} className="timesheetButton" variant="contained" color="primary">Timesheet</Button>
                     </div>
                 </div>
             </div>
@@ -54,4 +55,4 @@ class Home extends Component {
     }
 }
 
-export default Home;
+export default Tasks;
