@@ -1,6 +1,7 @@
 .openTextArea {
     float: right;
     cursor: pointer;
+    color: white;
 }
 
 .taskActions {

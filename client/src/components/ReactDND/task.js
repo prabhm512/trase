@@ -11,6 +11,7 @@ const Container = styled.div`
     props.columnTitle === 'To Do' ? '1px solid #1874cd;' : props.columnTitle === 'In Progress' ? '1px solid red;' : props.columnTitle === 'Paused' ? '1px solid #D4AF37;' : '1px solid green;'}
   border-radius: 2px;
   padding: 8px;
+  padding-bottom: 0px;
   margin-bottom: 8px;
   transition: background-color 0.2s ease;
   background-color: ${(props) =>
@@ -19,6 +20,12 @@ const Container = styled.div`
       : props.isDragging
       ? 'lightgreen'
       : 'white'};
+`
+
+const Content = styled.div`
+    color: gray;
+    text-align: right;
+    font-size: 12px;
 `
 
 function Task(props) {
@@ -108,8 +115,11 @@ function Task(props) {
               <Dropdown.Item onClick={handleTransfer}>Transfer</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          {props.task.content}
-
+          {props.task.engagement === "" 
+          ? <p>{props.task.content}</p>
+          : <p>{props.task.content}<Content><span>{props.task.engagement}</span></Content></p>
+        }
+          
           <Modal
             show={show}
             onHide={() => setShow(false)}

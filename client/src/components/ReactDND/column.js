@@ -10,7 +10,6 @@ import './ReactDND.css';
 const Container = styled.div`
   margin: 8px;
   width: 275px;
-
   display: flex;
   flex-direction: column;
 `
@@ -20,23 +19,23 @@ const Title = styled.h3`
     props.title === 'To Do' ? '1px solid #1874cd;' : props.title === 'In Progress' ? '1px solid red;' : props.title === 'Paused' ? '1px solid #D4AF37;' : '1px solid green;'}
   border-radius: 2px;
   padding: 8px;
-  color: ${props => 
+  background-color: ${props => 
     props.title === 'To Do' ? '#1874cd' : props.title === 'In Progress' ? '#ff0000' : props.title === 'Paused' ? '#D4AF37' : 'green'}
 `
 
 const TaskList = styled.div`
   padding: 8px;
-  transition: background-color 0.2s ease;
-  background-color: ${(props) =>
-    props.isDraggingOver ? 'skyblue' : 'white'}
   flex-grow: 1;
+  transition: background-color 0.2s ease;
   min-height: 100px;
   position: relative;
 `
 
-// const TitleText = styled.div`
+  // color: ${props => 
+  //   props.title === 'To Do' ? '#1874cd' : props.title === 'In Progress' ? '#ff0000' : props.title === 'Paused' ? '#D4AF37' : 'green'}
 
-// `
+  // background-color: ${(props) =>
+  //   props.isDraggingOver ? 'skyblue' : 'white'}
 
 function Column(props) {
 
@@ -47,7 +46,7 @@ function Column(props) {
         
   return (
     <Container>
-        <Title title={props.column.title}>{ props.column.title === 'To Do' 
+        <Title title={props.column.title} style={{color: 'white', textAlign: 'center'}}>{ props.column.title === 'To Do' 
         ? 
         <div>
           {/* <TitleText title={props.column.title}> */}

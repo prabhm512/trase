@@ -47,7 +47,7 @@ class Tasks extends Component {
                         <br></br>
                         <ReactDND userID={ this.decoded._id } />
                         <br></br>
-                        <Button onClick={this.handleClick} className="timesheetButton" variant="contained" color="primary">Timesheet</Button>
+                        <Button onClick={this.handleClick} className="timesheetButton" style={{marginBottom: 40}} variant="contained" color="primary">Timesheet</Button>
                     </div>
                 </div>
             </div>

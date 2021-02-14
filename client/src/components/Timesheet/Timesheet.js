@@ -30,6 +30,10 @@ const useStyles = makeStyles((theme) => ({
         top: 20,
         width: 1,
     },
+    button: {
+        marginBottom: 40,
+        float: 'right'
+    }
 }));
 
 function Timesheet() {
@@ -227,7 +231,7 @@ function Timesheet() {
                         />
                     </div>
                 </div>
-                <Button onClick={handleTaskBtnClick} className="tasksButton" variant="contained" color="primary">Tasks</Button>
+                <Button onClick={handleTaskBtnClick} className={classes.button} variant="contained" color="primary">Tasks</Button>
             </div>
         </div>
     )
