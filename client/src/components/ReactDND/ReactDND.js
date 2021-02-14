@@ -167,12 +167,14 @@ function ReactDND(props) {
         }
 
         const timeInSeconds = Math.round(taskTime / 1000);
+        const timeInHours = (timeInSeconds / 3600).toFixed(3);
+        const parsedTimeInHours = parseFloat(timeInHours);
       
         // Calculate total time it took to complete task
         for (let i=1; i<6; i++) {
           totalTaskTime += DND.tasks[draggableId].timesheet[i];
         }
-        totalTaskTime+=timeInSeconds;
+        totalTaskTime+=parsedTimeInHours;
 
         // Calculate cost of task
         const cost = calculateCost(decoded.empCost, totalTaskTime);
@@ -181,7 +183,7 @@ function ReactDND(props) {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
+            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + parsedTimeInHours }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
           },
           columns: {
             ...DND.columns,
@@ -204,12 +206,14 @@ function ReactDND(props) {
         }
 
         const timeInSeconds = Math.round(taskTime / 1000);
+        const timeInHours = (timeInSeconds / 3600).toFixed(3);
+        const parsedTimeInHours = parseFloat(timeInHours);
 
         // Calculate total time it took to complete task
         for (let i=1; i<6; i++) {
           totalTaskTime += DND.tasks[draggableId].timesheet[i];
         }
-        totalTaskTime+=timeInSeconds;
+        totalTaskTime+=parsedTimeInHours;
 
          // Calculate cost of task
         const cost = calculateCost(decoded.empCost, totalTaskTime); 
@@ -218,7 +222,7 @@ function ReactDND(props) {
           ...DND, 
           tasks: { 
             ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + timeInSeconds }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
+            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + parsedTimeInHours }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
           },
           columns: {
             ...DND.columns,
@@ -289,7 +293,7 @@ function ReactDND(props) {
 
     let cost = 0; 
 
-    cost = Math.round((empCost * (taskTime/3600)) * (10^2)) / (10^2);
+    cost = Math.round((empCost * taskTime) * (10^2)) / (10^2);
     
     return cost;
   }

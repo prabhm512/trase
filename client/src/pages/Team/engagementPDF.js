@@ -51,21 +51,21 @@ function MyDocument(props) {
 
     const [tasks, setTasks] = useState([]);
 
-    let totalHours=0;
-    let totalCost=0;
+    let totalHours=0.00;
+    let totalCost=0.00;
 
     useEffect(() => {
         const tempTasksArr = [];
         for (let key in props.tasks) {
-            let cost = 0;
-            let time = 0;
+            let cost = 0.00;
+            let time = 0.00;
 
             for (let empsKey in props.tasks[key].employees) {
                 cost += parseFloat(props.tasks[key].employees[empsKey].cost);
-                time += parseInt(props.tasks[key].employees[empsKey].overallTime);
+                time += parseFloat(props.tasks[key].employees[empsKey].overallTime);
 
             }
-            if (cost !== 0) {
+            if (cost !== 0.00) {
                 tempTasksArr.push({ taskTime: time, taskCost: cost, content: props.tasks[key].content })
             }
         }
@@ -79,25 +79,25 @@ function MyDocument(props) {
                 <Text style={styles.title}>{props.name}</Text>
                 <View style={styles.section}>
                     <Text style={[styles.heading]}>Task</Text>
-                    <Text style={[styles.heading, {paddingLeft: 270}]}>Hours</Text>
-                    <Text style={[styles.heading, {paddingLeft: 75}]}>Cost</Text>
+                    <Text style={[styles.heading, {paddingLeft: 285}]}>Hours</Text>
+                    <Text style={[styles.heading, {paddingLeft: 92}]}>Cost</Text>
                 </View>
                 {tasks.map((el, idx) => {
                     totalCost += parseFloat(el.taskCost);
-                    totalHours += parseInt(el.taskTime);
-
+                    totalHours += parseFloat(el.taskTime);
+                    
                     return <View key={idx} style={{flexDirection: 'row', borderBottom: 1, paddingTop: 8, paddingBottom: 8, fontSize: 14}}>
                         <Text>{idx+1 + "."}</Text>
                         <Text style={{paddingLeft: 10, width: 300}}>{el.content}</Text>
-                        <Text style={{paddingLeft: 15}}>{el.taskTime}</Text>
+                        <Text style={{paddingLeft: 15, width: 40}}>{el.taskTime}</Text>
                         <Text style={{paddingLeft: 97}}>{'$ ' + el.taskCost}</Text>
                     </View>
                 })}
                 <View style={{flexDirection: 'row'}}>
-                    <View style={{paddingLeft: 324, fontStyle: 'italic'}}>
-                        <Text style={{paddingTop: 15}}>{totalHours}</Text>
+                    <View style={{paddingLeft: 324}}>
+                        <Text style={{paddingTop: 15, width: 40}}>{totalHours}</Text>
                     </View>
-                    <View style={{paddingLeft: 97, fontStyle: 'italic'}}>
+                    <View style={{paddingLeft: 82}}>
                         <Text style={{paddingTop: 15}}>{'$ ' + totalCost}</Text>
                     </View>
                 </View>

@@ -136,10 +136,10 @@ function Team() {
             if (el.engName === event.target.id) {
                 el.tasks.forEach(task => {
                     let taskCost = 0.00;
-                    let taskTime = 0;
+                    let taskTime = 0.00;
                     for (let empsKey in task.employees) {
                         taskCost += parseFloat(task.employees[empsKey].cost);
-                        taskTime += parseInt(task.employees[empsKey].overallTime);
+                        taskTime += parseFloat(task.employees[empsKey].overallTime);
                     }
                     tempRowArr.push(createData(task.content, taskTime, taskCost));
                 })
