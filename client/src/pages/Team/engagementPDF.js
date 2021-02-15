@@ -87,7 +87,7 @@ function MyDocument(props) {
                     totalHours += parseFloat(el.taskTime);
                     
                     return <View key={idx} style={{flexDirection: 'row', borderBottom: 1, paddingTop: 8, paddingBottom: 8, fontSize: 14}}>
-                        <Text>{idx+1 + "."}</Text>
+                        <Text style={{width: 20}}>{idx+1 + "."}</Text>
                         <Text style={{paddingLeft: 10, width: 300}}>{el.content}</Text>
                         <Text style={{paddingLeft: 15, width: 40}}>{el.taskTime}</Text>
                         <Text style={{paddingLeft: 97}}>{'$ ' + el.taskCost}</Text>
@@ -95,10 +95,10 @@ function MyDocument(props) {
                 })}
                 <View style={{flexDirection: 'row'}}>
                     <View style={{paddingLeft: 324}}>
-                        <Text style={{paddingTop: 15, width: 40}}>{totalHours}</Text>
+                        <Text style={{paddingTop: 15, width: 40}}>{totalHours.toFixed(3)}</Text>
                     </View>
-                    <View style={{paddingLeft: 82}}>
-                        <Text style={{paddingTop: 15}}>{'$ ' + totalCost}</Text>
+                    <View style={{paddingLeft: 90}}>
+                        <Text style={{paddingTop: 15}}>{'$ ' + totalCost.toFixed(2)}</Text>
                     </View>
                 </View>
                 <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => (
