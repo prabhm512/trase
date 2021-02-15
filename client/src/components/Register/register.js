@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { registerUser, getUsers, getTeams, registerTeam, getOneUser } from '../../utils/apis/userFunctions';
 import API from '../../utils/apis/API';
 import initialData from '../ReactDND/initial-data';
+import './Register.css';
 
 class Register extends Component {
     constructor(props) {
@@ -170,7 +171,7 @@ class Register extends Component {
                     <div className='row'>
                         <div className='col-md-6 mt-5 mx-auto'>
                             <form noValidate onSubmit={this.onSubmit}>
-                                <h1 className='h3 mb-3 font-weight normal'>Sign Up</h1>
+                                <h1 className='h3 mb-3 font-weight normal signUpText'>Sign Up</h1>
                                 <div className='form-group'>
                                     <label htmlFor='teamName'>Team Name</label>
                                     <input type='text'
@@ -242,7 +243,7 @@ class Register extends Component {
                                     />
                                     <span style={{ color: "red" }}>{this.state.errors["password"]}</span>
                                 </div>
-                                <button type='submit' className='btn btn-lg btn-primary btn-block'>
+                                <button type='submit' className='btn btn-lg btn-primary btn-block registerButton'>
                                     Register
                                 </button>
                             </form>

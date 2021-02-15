@@ -1,19 +1,10 @@
-*{
-  margin: 0;
-  padding:0;
-  box-sizing: border-box;
+
+.timesheet {
+  padding: 20px;
 }
 
-#body{
-  min-height: 30vh;
-  min-width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  margin: 0px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  
+.engagementView {
+  margin-bottom: 200px;
 }
 
 .header{
@@ -33,113 +24,11 @@
   font-size: 20px;
 }
 
-.section{
-  flex-flow: row wrap;
-  width: 90%;
-  display: flex;
-  flex-direction: row wrap;
-  align-items: center;
-  justify-content: center;
-  
-}
-
-.section > div {
-  padding: 30px;
-}
-
-.small-div {
-  width: 20%;
-}
-
-.big-div {
-  width: 80%;
-}
-
 .bg-grey{
   background-color:#f6f6f6;
 }
 
-.orange {
-  color: #f4511e;
+.landingPage h4 {
+  color: #ff7256;
+  padding-top: 70px
 }
-
-.div-title {
-  font-size: 30px;
-  font-weight: 600;
-}
-
-.contact-container  {
-  flex-flow: column;
-  padding-top: 30px;
-  display: flex;
-  justify-content: space-between;
-  width:80%;
-  
-}
-.div-title{
-  text-align: center;
-}
-
-
-.contact-form{
-  display: flex;
-  flex-direction: row;
-  /*flex-flow: row wrap;*/
-  justify-content: space-between;
-  width:100%;
-}
-
-#sect1{
-  width: 100%;
-}
-
-#sect2{
-  width:100%;
-}
-
-.contact-form > div {
-  width: 500px;
-  max-height: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: 30px;
-}
-
-.input-field {
-  height: 40px;
-  margin: 15px 0;
-}
-
-.contact-btn {
-  margin-top: 15px;
-  height: 40px;
-  color: white;
-  border: 0;
-  background-color: #f4511e;
-}
-
-@media only screen and (min-width:320px) and (max-width:725px){
-  .contact-form{
-    display: flex;
-    flex-direction: column;
-    /*flex-flow: row wrap;*/
-    width:80%;
-  }
-
-  .section{
-    
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    
-  }
-
-
-  .small-div {
-    width: 80%;
-  }
-}
-

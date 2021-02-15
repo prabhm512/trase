@@ -1,0 +1,17 @@
+.swiper-wrapper img {
+    width: 700px;
+    height: 450px;
+}
+
+/* .swiper-container-horizontal>.swiper-pagination-bullets {
+    bottom: 0;
+} */
+
+.swiper-pagination {
+    margin-top: 10px;
+    position: relative;
+}
+
+.swiper-container {
+    align-content: center;
+}
