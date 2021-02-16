@@ -19,32 +19,29 @@ export default function Landing() {
                 </span>
             </div>
             <br></br>
-            {/* <h4>Team oriented. Increase efficiency. Become organised.</h4> */}
             <div className="container-sm landingPage">
                 <div className="row taskBoard">
-                    <div className="col-sm-7">
+                    {/* <div className="col-sm-3"></div> */}
+                    <div className="col-sm-8">
+                        <h4>Employees manage their tasks on a personalised Kanban.</h4>
                         <img src={tasksImg} className="image tasksImg" alt="task board" />
                     </div>
-                    <div className="col-sm-3">
-                        <h4 className="stepText">Employees manage their tasks on a personalised Kanban.</h4>
-                    </div>
+                    <div className="col-sm-2"></div>
                 </div>
                 <br></br>
-                <div className="row bg-grey timesheet">
-                    <div className="col-sm-4">
-                        <h4 className="stepText">Employee timesheets get filled based on the status of their tasks.</h4>
-                    </div>
-                    <div className="col-sm-7">
+                <div className="row timesheet">
+                    <div className="col-sm-4"></div>
+                    <div className="col-sm-8">
+                        <h4>Employee timesheets get filled based on the status of their tasks.</h4>
                         <img src={timesheetImg} className="image timesheetImg" alt="timesheet" />
                     </div>
                 </div>
                 <br></br>
                 <div className="row engagementView">
-                    <div className="col-sm-7">
+                    {/* <div className="col-sm-4"></div> */}
+                    <div className="col-sm-8">
+                        <h4>All tasks done by your team are collated and a report is available for export as PDF.</h4>
                         <img src={engagementsImg} className="image engagementsImg" alt="engagement report" />
-                    </div>
-                    <div className="col-sm-3">
-                        <h4 className="stepText">All tasks done by your team are collated and a report is available for export as PDF.</h4>
                     </div>
                 </div>
             </div>

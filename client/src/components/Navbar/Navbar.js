@@ -142,12 +142,12 @@ function TemporaryDrawer(props) {
     }
     
     return (
-        <div>
-            <nav className='navbar navbar-expand-lg'>
+        <nav className='navbar navbar-expand-lg'>
+            {/* <div className='collapse navbar-collapse d-flex justify-content-end' id='navbar1'> */}
+            <div className="container-fluid">
                 <Typography style={prodNameTheme.typography}>
                     <button className="productNameButton" onClick={handleProdNameBtnClick}><h1 className="productName">Trase</h1></button> 
                 </Typography>
-                <div className='collapse navbar-collapse d-flex justify-content-end' id='navbar1'>
                 {[`right`].map((anchor) => (
                     <React.Fragment key={anchor}>
                         <Button onClick={toggleDrawer(anchor, true)}><MenuIcon /></Button>
@@ -156,9 +156,9 @@ function TemporaryDrawer(props) {
                         </Drawer>
                     </React.Fragment>
                 ))}
-                </div>
-            </nav>
-        </div>
+            </div>
+            {/* </div> */}
+        </nav>
     );
 }
                     

@@ -1,8 +1,4 @@
 
-.timesheet {
-  padding: 20px;
-}
-
 .engagementView {
   margin-bottom: 200px;
 }
@@ -24,11 +20,44 @@
   font-size: 20px;
 }
 
-.bg-grey{
-  background-color:#f6f6f6;
-}
-
 .landingPage h4 {
   color: #ff7256;
-  padding-top: 70px
 }
+
+.landingPage img {
+  width: 642px;
+  height: 300px;
+}
+
+@media screen and (max-width: 768px) {
+  .landingPage img {
+    width: 500px;
+    height: 233px;
+  }
+  
+  .landingPage h4 {
+    font-size: medium;
+  }
+} 
+
+@media screen and (max-width: 541px) {
+  .landingPage img {
+    width: 350px;
+    height: 164px;
+  }
+  
+  .landingPage h4 {
+    font-size: small;
+  }
+} 
+
+@media screen and (max-width: 378px) {
+  .landingPage img {
+    width: 280px;
+    height: 131px;
+  }
+  
+  .landingPage h4 {
+    font-size: small;
+  }
+} 
