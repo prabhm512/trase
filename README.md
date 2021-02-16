@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# Trase
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description 
 
-## Available Scripts
+`Client 1`: Roger <br>
+Roger wants Atlassian to develop a website for his new company.
 
-In the project directory, you can run:
+Roger has the opportunity to <u>profit</u> from this investment. He can improve business credibility, enhance online presence and expand market reach/coverage among many other profitability opportunities.
 
-### `npm start`
+Roger primarily wants deadlines to be met and the work to be of top quality. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+`Client 2`: Rafael <br>
+Rafael needs PwC to deal with a legal case that he is stuck in. He has no other choice but to seek professional aid. 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Rafael <i>does not</i> have any opportunity to profit from this investement. 
 
-### `npm test`
+Along with high quality work, <b>Rafael wants to see the time and cost of each task that is done in his case.</b>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+`Value Propositon` <br>
+By leveraging the Kanban ideology, Trase <b><i>automatically</i></b> manages the time and cost of each task done by PwC in Rafael's case.
 
-### `npm run build`
+## Table of Contents 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+[User Story](#user%20story)<br>
+[Technologies](#technologies)<br>
+[Main Packages](#main%20packages)<br>
+[Deployment](#deployment)<br>
+[Acknowledgements](#acknowledgements)<br>
+[Questions](#questions)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## User Story
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+AS A team that has to provide task-based costs to clients <br>
+WE WANT to automatically manage the time and cost of each task in our client's case<br>
+SO THAT we can be more efficient and accurate.
 
-### `npm run eject`
+## Technologies 
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+MERN stack:
+- React 
+- MongoDB
+- Node.js
+- Express
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Main Packages
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- Material-UI
+- Styled Components
+- Axios
+- [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
+- [react-pdf](https://www.npmjs.com/package/@react-pdf/renderer)
+- [date-fns](https://www.npmjs.com/package/date-fns)
+- [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+- [jwt-decode](https://www.npmjs.com/package/jwt-decode)
+- [bcrypt](https://www.npmjs.com/package/bcrypt)
 
-## Learn More
+## Deployment
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+[https://ps-trase.herokuapp.com/](https://ps-trase.herokuapp.com/)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+<img src="./client/src/assets/tasks.png">
+<img src="./client/src/assets/timesheet.png">
+<img src="./client/src/assets/engagements.png">
 
-### Code Splitting
+## Acknowledgements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- [Alex Reardon](https://twitter.com/alexandereardon) + contributors: react-beautiful-dnd
+- [Diego Muracciole](https://github.com/diegomura) + contributors: react-pdf
 
-### Analyzing the Bundle Size
+## Questions
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+If you have any questions regarding this project, please email me at [prabhm512@gmail.com](prabhm512@gmail.com)
