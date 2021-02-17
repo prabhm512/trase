@@ -16,6 +16,7 @@ import uniqid from 'uniqid';
 // Styling
 import styled from 'styled-components';
 import './ReactDND.css';
+import { decode } from 'jsonwebtoken';
 
 const Container = styled.div`
   display:flex;
@@ -26,9 +27,18 @@ function ReactDND(props) {
   // Used when task is moved in to the 'Puased' & 'Done' columns to record time for current day.
   // One task may be worked on for multiple days
   let dayToday = new Date().getDay();
+  let token, decoded;
 
-  const token = localStorage.usertoken;
-  const decoded = jwt_decode(token);
+  if (localStorage.usertoken) {
+      token = localStorage.usertoken;
+      decoded = jwt_decode(token);
+  } else {
+    decoded = {
+      teamName: 'Doe Consulting',
+      email: 'jane@doeconsulting.com',
+      empCost: 100
+    }
+  }
 
   initialData.teamName = decoded.teamName;
   const [ DND, setDND ] = useState(initialData);
@@ -40,30 +50,43 @@ function ReactDND(props) {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    // Load tasks on component mount
-    loadTasks(props.userID);
-
-    // Store all engagements of the logged in user's team
-    getOneTeam(decoded.teamName).then(res => {
-      const tempEngArr = [];
-
-      res.engagements.forEach(el => {
-        tempEngArr.push({ engName: el })
+    if (decoded.email !== 'jane@doeconsulting.com') {
+      if (sessionStorage.traseDemo) {
+        sessionStorage.removeItem("traseDemo");
+      }
+      // Load tasks on component mount
+      loadTasks(props.userID);
+  
+      // Store all engagements of the logged in user's team
+      getOneTeam(decoded.teamName).then(res => {
+        const tempEngArr = [];
+  
+        res.engagements.forEach(el => {
+          tempEngArr.push({ engName: el })
+        })
+        setEngs(tempEngArr);
       })
-      setEngs(tempEngArr);
-    })
-
-    getTeamMembers(decoded.teamName).then(res => {
-
-      const tempMembersArr = [];
-
-      res.forEach(el => {
-        if (el.email !== decoded.email) {
-          tempMembersArr.push(el.email);
-        }
+  
+      getTeamMembers(decoded.teamName).then(res => {
+  
+        const tempMembersArr = [];
+  
+        res.forEach(el => {
+          if (el.email !== decoded.email) {
+            tempMembersArr.push(el.email);
+          }
+        })
+        setMembers(tempMembersArr);
       })
-      setMembers(tempMembersArr);
-    })
+    } else {
+      if (sessionStorage.traseDemo) {
+        const demoDND = JSON.parse(sessionStorage.getItem("traseDemo"));
+        setDND(demoDND);
+      }
+
+      setEngs([{ engName: 'lorem'}, {engName: 'ipsum'}]);
+      setMembers(['john@doeconsulting.com', 'james@doeconsulting.com']);
+    }
   }, []);
   
   // Updates state to reflect drag & drop result
@@ -108,7 +131,11 @@ function ReactDND(props) {
 
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
-      API.updateUserBoard(newState);
+      if (decoded.email !== 'jane@doeconsulting.com') {
+        API.updateUserBoard(newState);
+      } else {
+        sessionStorage.setItem("traseDemo", JSON.stringify(newState));
+      }
       return
     }
 
@@ -235,7 +262,11 @@ function ReactDND(props) {
       // console.log(newState);
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
-      API.updateUserBoard(newState);
+      if (decoded.email !== 'jane@doeconsulting.com') {
+        API.updateUserBoard(newState);
+      } else {
+        sessionStorage.setItem("traseDemo", JSON.stringify(newState));
+      }
     }
   } 
 
@@ -282,7 +313,11 @@ function ReactDND(props) {
       }
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newToDos);
-      API.updateUserBoard(newToDos);
+      if (decoded.email !== 'jane@doeconsulting.com') {
+        API.updateUserBoard(newToDos);
+      } else {
+        sessionStorage.setItem("traseDemo", JSON.stringify(newToDos));
+      }
 
       // console.log(newToDos);
       document.querySelector('.inputNewTaskContent').value = "";
@@ -309,7 +344,11 @@ function ReactDND(props) {
     }
 
     setDND(newState);
-    API.updateUserBoard(newState);
+    if (decode.email !== 'jane@doeconsulting.com') {
+      API.updateUserBoard(newState);
+    } else {
+      sessionStorage.setItem("traseDemo", JSON.stringify(newState));
+    }
   }
 
   // Called from component inside task.js (2 levels down). Allows task to be deleted
@@ -340,7 +379,11 @@ function ReactDND(props) {
     }
 
     setDND(newState);
-    API.updateUserBoard(newState);
+    if (decoded.email !== 'jane@doeconsulting.com') {
+      API.updateUserBoard(newState);
+    } else {
+      sessionStorage.setItem("traseDemo", JSON.stringify(newState));
+    }
   }
 
   // Get all tasks of the logged in user
@@ -364,69 +407,82 @@ function ReactDND(props) {
     }
 
     setDND(newState);
-    API.updateUserBoard(newState);
+    if (decoded.email !== 'jane@doeconsulting.com') {
+      API.updateUserBoard(newState);
+    }
   }
 
   const handleTransfer = (taskID, transferEmail) => {
-    getOneUser({email: transferEmail}).then(response => {
-      API.getUserBoard(response[0]._id).then(res => {
-
-        // Disable drag for task that is being transferred on logged in users board
+    if (decoded.email !== 'jane@doeconsulting.com') {
+      getOneUser({email: transferEmail}).then(response => {
+        API.getUserBoard(response[0]._id).then(res => {
+  
+          // Disable drag for task that is being transferred on logged in users board
+          const newStateForLoggedInUser = {
+            ...DND,
+            transferredTasks: {
+              ...DND.transferredTasks,
+              [taskID]: { id: taskID, content: DND.tasks[taskID].content, transferredToId: res.data._id, transferredToEmail: transferEmail, timesheet: {...DND.tasks[taskID].timesheet} }
+            }
+          }
+  
+          const newStateForTransferUser = {
+            ...res.data,
+            _id: res.data._id, 
+            tasks: { [taskID]: {
+              id: taskID, 
+              content: DND.tasks[taskID].content, 
+              inProgressDate: 0, 
+              pausedDate: 0, 
+              doneDate: 0, 
+              timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, 
+              engagement: DND.tasks[taskID].engagement, 
+              employees: { ...DND.tasks[taskID].employees },
+              transferred: false,
+            }, ...res.data.tasks },
+            columns: {
+              'column-1': {
+                id: 'column-1',
+                title: 'To Do',
+                taskIds: [taskID, ...res.data.columns['column-1'].taskIds]
+              },
+              'column-2': {
+                id: res.data.columns['column-2'].id,
+                title: res.data.columns['column-2'].title,
+                taskIds: [...res.data.columns['column-2'].taskIds]
+              },
+              'column-3': {
+                id: res.data.columns['column-3'].id,
+                title: res.data.columns['column-3'].title,
+                taskIds: [...res.data.columns['column-3'].taskIds]
+              },
+              'column-4': {
+                id: res.data.columns['column-4'].id,
+                title: res.data.columns['column-4'].title,
+                taskIds: [...res.data.columns['column-4'].taskIds]
+              }
+            }
+          }
+  
+          // Delete task from logged in users board
+          // This also updates the transferred object of the logged in users board
+          deleteTask(taskID, newStateForLoggedInUser);
+  
+          // Update board of user who the task is beign transferred to
+          API.updateUserBoard(newStateForTransferUser);
+  
+        })
+      })
+    } else {
         const newStateForLoggedInUser = {
           ...DND,
           transferredTasks: {
             ...DND.transferredTasks,
-            [taskID]: { id: taskID, content: DND.tasks[taskID].content, transferredToId: res.data._id, transferredToEmail: transferEmail, timesheet: {...DND.tasks[taskID].timesheet} }
+            [taskID]: { id: taskID, content: DND.tasks[taskID].content, transferredToEmail: transferEmail, timesheet: {...DND.tasks[taskID].timesheet} }
           }
         }
-
-        const newStateForTransferUser = {
-          ...res.data,
-          _id: res.data._id, 
-          tasks: { [taskID]: {
-            id: taskID, 
-            content: DND.tasks[taskID].content, 
-            inProgressDate: 0, 
-            pausedDate: 0, 
-            doneDate: 0, 
-            timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, 
-            engagement: DND.tasks[taskID].engagement, 
-            employees: { ...DND.tasks[taskID].employees },
-            transferred: false,
-          }, ...res.data.tasks },
-          columns: {
-            'column-1': {
-              id: 'column-1',
-              title: 'To Do',
-              taskIds: [taskID, ...res.data.columns['column-1'].taskIds]
-            },
-            'column-2': {
-              id: res.data.columns['column-2'].id,
-              title: res.data.columns['column-2'].title,
-              taskIds: [...res.data.columns['column-2'].taskIds]
-            },
-            'column-3': {
-              id: res.data.columns['column-3'].id,
-              title: res.data.columns['column-3'].title,
-              taskIds: [...res.data.columns['column-3'].taskIds]
-            },
-            'column-4': {
-              id: res.data.columns['column-4'].id,
-              title: res.data.columns['column-4'].title,
-              taskIds: [...res.data.columns['column-4'].taskIds]
-            }
-          }
-        }
-
-        // Delete task from logged in users board
-        // This also updates the transferred object of the logged in users board
         deleteTask(taskID, newStateForLoggedInUser);
-
-        // Update board of user who the task is beign transferred to
-        API.updateUserBoard(newStateForTransferUser);
-
-      })
-    })
+    }
   }
 
   return (

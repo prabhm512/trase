@@ -151,11 +151,57 @@ function Timesheet() {
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
     const handleTaskBtnClick = () => {
-        history.push("/tasks");
+        if (localStorage.usertoken) {
+            history.push("/tasks");
+        } else {
+            history.push("/demo/tasks")
+        }
     } 
 
     useEffect(() => {
-        renderTasks();
+        if (localStorage.usertoken) {
+            renderTasks();
+        } else {
+            if (sessionStorage.traseDemo) {
+                const demo = JSON.parse(sessionStorage.getItem("traseDemo"));
+                const tempRowArr = []
+                // Loop through initial data to find out content & time of each task
+                // Add this data to table
+                for (let key in demo.tasks) {
+                    if (demo.tasks.hasOwnProperty(key)) {
+                        if (key === 'task-1') {
+                            continue;
+                        } else {
+                            if (demo.tasks[key].transferred === false) {
+                                const tempTimesheetArr = [];
+                                for (let timeKey in demo.tasks[key].timesheet) {
+                                    if (demo.tasks[key].timesheet[timeKey] === 0) {
+                                        tempTimesheetArr.push("");
+                                    } else {
+                                        tempTimesheetArr.push(demo.tasks[key].timesheet[timeKey]);
+                                    }
+                                }
+                                tempRowArr.push(createData(demo.tasks[key].content, ...tempTimesheetArr))
+                            }
+                        }
+                    }
+                    if (('transferredTasks') in demo) {
+                        for (let key in demo.transferredTasks) {
+                            const tempTimesheetArr = [];
+                            for (let timeKey in demo.transferredTasks[key].timesheet) {
+                                if (demo.transferredTasks[key].timesheet[timeKey] === 0) {
+                                    tempTimesheetArr.push("");
+                                } else {
+                                    tempTimesheetArr.push(demo.transferredTasks[key].timesheet[timeKey]);
+                                }
+                            }
+                            tempRowArr.push(createData(demo.transferredTasks[key].content, ...tempTimesheetArr));
+                        }
+                    }
+                }
+                setRows(tempRowArr);
+            }
+        } 
     }, []);
 
     return (

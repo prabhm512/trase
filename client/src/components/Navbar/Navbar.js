@@ -23,8 +23,7 @@ const useStyles = makeStyles({
 const prodNameTheme = createMuiTheme({
     typography: {
         fontFamily: font,
-        color: '#2094B9',
-        paddingLeft: 10
+        color: '#2094B9'
     }
 })
 
@@ -68,68 +67,47 @@ function TemporaryDrawer(props) {
         onClick={toggleDrawer(anchor, false)}
         onKeyDown={toggleDrawer(anchor, false)}
         >
-            {localStorage.usertoken ? (
-                <List>
-                    <Link to={'/tasks'}>
-                        <ListItem button>
-                            <ListItemText primary='Tasks' />
-                        </ListItem>
-                    </Link>
-                    <Link to={'/timesheet/' + decoded._id}>
-                        <ListItem button>
-                            <ListItemText primary='Timesheet' />
-                        </ListItem>
-                    </Link>
-                    {decoded.admin ? (
-                        <div>
-                            <Link to={'/engagements'}>
-                                <ListItem>
-                                    <ListItemText primary='Engagements' />
-                                </ListItem>
-                            </Link>
-                            <Divider />
-                            <Link to={'/admin'}>
-                                <ListItem>
-                                    <ListItemText primary='Admin' />
-                                </ListItem>
-                            </Link>
-                        </div>
-                    ) : (
+            <List>
+                <Link to={'/tasks'}>
+                    <ListItem button>
+                        <ListItemText primary='Tasks' />
+                    </ListItem>
+                </Link>
+                <Link to={'/timesheet/' + decoded._id}>
+                    <ListItem button>
+                        <ListItemText primary='Timesheet' />
+                    </ListItem>
+                </Link>
+                {decoded.admin ? (
+                    <div>
                         <Link to={'/engagements'}>
                             <ListItem>
                                 <ListItemText primary='Engagements' />
                             </ListItem>
                         </Link>
-                    )}
-                    <Divider />
-                    <ListItem button onClick={props.handleShowCB}>
-                        <ListItemText primary='Reset Pwd' />
-                    </ListItem>
-                    <ListItem button onClick={logOut.bind(this)}>
-                        <ListItemText primary='Logout' />
-                    </ListItem>
+                        <Divider />
+                        <Link to={'/admin'}>
+                            <ListItem>
+                                <ListItemText primary='Admin' />
+                            </ListItem>
+                        </Link>
+                    </div>
+                ) : (
+                    <Link to={'/engagements'}>
+                        <ListItem>
+                            <ListItemText primary='Engagements' />
+                        </ListItem>
+                    </Link>
+                )}
+                <Divider />
+                <ListItem button onClick={props.handleShowCB}>
+                    <ListItemText primary='Reset Pwd' />
+                </ListItem>
+                <ListItem button onClick={logOut.bind(this)}>
+                    <ListItemText primary='Logout' />
+                </ListItem>
 
-                </List>
-            ): 
-            (
-                <List>
-                    <Link to={'/'}>
-                        <ListItem button>
-                            <ListItemText primary='Home' />
-                        </ListItem>
-                    </Link>
-                    <Link to={'/login'}>
-                        <ListItem button>
-                            <ListItemText primary='Login' />
-                        </ListItem>
-                    </Link>
-                    <Link to={'/register'}>
-                        <ListItem button>
-                            <ListItemText primary='Register' />
-                        </ListItem>
-                    </Link>
-                </List>
-            )}
+            </List>
         </div>
     );  
 
@@ -148,14 +126,32 @@ function TemporaryDrawer(props) {
                 <Typography style={prodNameTheme.typography}>
                     <button className="productNameButton" onClick={handleProdNameBtnClick}><h1 className="productName">Trase</h1></button> 
                 </Typography>
-                {[`right`].map((anchor) => (
+                {localStorage.usertoken ? [`right`].map((anchor) => (
                     <React.Fragment key={anchor}>
                         <Button onClick={toggleDrawer(anchor, true)}><MenuIcon /></Button>
                         <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
                             {userList(anchor)}
                         </Drawer>
                     </React.Fragment>
-                ))}
+                )) : 
+                <div>
+                    <Link to="/login"
+                        variant="contained"
+                        color="primary"
+                        style={{fontWeight: 'bold'}}
+                    >
+                        Login
+                    </Link>
+                    &nbsp;&nbsp;
+                    <Link to="/register">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            >
+                            Sign Up
+                        </Button>
+                    </Link>
+                </div>}
             </div>
             {/* </div> */}
         </nav>

@@ -67,6 +67,7 @@ MERN stack:
 
 - [Alex Reardon](https://twitter.com/alexandereardon) + contributors: react-beautiful-dnd
 - [Diego Muracciole](https://github.com/diegomura) + contributors: react-pdf
+- [Sandes Pathak](https://github.com/sandes93/MERNSignUpLogin) + contributors: MERNSignUpLogin
 
 ## Questions
 

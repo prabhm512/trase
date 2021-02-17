@@ -91,6 +91,8 @@ function App() {
                         <Navbar handleShowCB={handleShow}/>
                         <Route exact path="/" component={Landing} />
                         <div className='container-fluid m-0 p-0'>
+                            <Route exact path="/demo/tasks" render={(props) => <Tasks {...props} handleShowCB={handleShow} />} />
+                            <Route exact path="/demo/timesheet" component={Timesheet} />
                             <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
                             <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
                             <Route exact path="/admin" component={Auth(Admin)} />
