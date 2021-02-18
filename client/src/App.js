@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React , { useState, useEffect } from 'react';
 import './App.css';
 import Tasks from './pages/Tasks/Tasks';
 import Timesheet from './components/Timesheet/Timesheet';
@@ -84,6 +84,10 @@ function App() {
         setShow(true)
     }; 
 
+    useEffect(() => {
+        document.getElementById('overlay').style.display = 'none';
+    }, []);
+
     return (
         <div className="App">
             <Switch>
@@ -93,6 +97,7 @@ function App() {
                         <div className='container-fluid m-0 p-0'>
                             <Route exact path="/demo/tasks" render={(props) => <Tasks {...props} handleShowCB={handleShow} />} />
                             <Route exact path="/demo/timesheet" component={Timesheet} />
+                            <Route exact path="/demo/engagements" component={Team} />
                             <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
                             <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
                             <Route exact path="/admin" component={Auth(Admin)} />

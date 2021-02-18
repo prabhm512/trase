@@ -18,6 +18,10 @@ li {
     float: right;
 }
 
+.backToTasks {
+    float: right;
+}
+
 .btn.btn-primary {
     background-color: #1874cd;  
 }

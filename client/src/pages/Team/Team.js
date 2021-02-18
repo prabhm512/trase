@@ -11,6 +11,7 @@ import endOfWeek from 'date-fns/endOfWeek';
 import { makeStyles } from '@material-ui/core/styles';
 import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow, Paper, FormControlLabel, Switch, Box, Menu, MenuItem, Button } from '@material-ui/core';
 import EnhancedTableHead from './TableHead';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,8 +40,15 @@ const useStyles = makeStyles((theme) => ({
 
 function Team() {
 
-    const token = localStorage.usertoken;
-    const decoded = jwt_decode(token);
+    let token = null;
+    let decoded = null;
+
+    if (localStorage.usertoken) {
+        token = localStorage.usertoken;
+        decoded = jwt_decode(token);
+    }
+
+    const history = useHistory();
 
     const [engs, setEngs] = useState([]);
 
@@ -131,7 +139,6 @@ function Team() {
         // Table data render
 
         const tempRowArr = [];
-        
         engs.forEach((el, idx) => {
             if (el.engName === event.target.id) {
                 el.tasks.forEach(task => {
@@ -246,14 +253,33 @@ function Team() {
     };
 
     useEffect(() => {
-        storeEngagementNames();
+        if (decoded === null) {  
+            if (sessionStorage.traseDemo) {
+                const demo = JSON.parse(sessionStorage.getItem("traseDemo"));;
+                tempEngArr.push({ engName: 'lorem', tasks: [] }, { engName: 'ipsum', tasks: [] });
+
+                for (let key in demo.tasks) {
+                    if (demo.tasks[key].engagement !== "") {
+                        tempEngArr.map((eng, idx) => {
+                            if (eng.engName === demo.tasks[key].engagement) {
+                                tempEngArr[idx].tasks.push({employees: { ...demo.tasks[key].employees }, content: demo.tasks[key].content })
+                            }
+                        })
+                    }
+                }
+                console.log(tempEngArr);
+                setEngs(tempEngArr);
+            }
+        } else {
+            storeEngagementNames();
+        }
     }, [])
 
     return (
         <div className="container">
             <div className="row">
                 <div className="col-sm-12">
-                    <h1 className="teamNameEngPage">{decoded.teamName}</h1>
+                    <h1 className="teamNameEngPage">{decoded === null ? 'Doe Consulting' : decoded.teamName}</h1>
                 </div>
             </div>
             <div className="row">
@@ -358,9 +384,18 @@ function Team() {
                             />
                         </div>
                         <br></br>
-                        <PDFDownloadLink className="btn btn-primary pdfDownloadLink" document={<MyDocument name={showReport.name.toUpperCase()} tasks={showReport.tasks} weekStart={showReport.weekStart} weekEnd={showReport.weekEnd}/>} fileName={showReport.name + '-' + fullDate + '.pdf'}>
-                            {({ blob, url, loading, error }) => (loading ? 'Loading document...' : `Download PDF`)}
-                        </PDFDownloadLink>
+                        {decoded === null ? (
+                            <div>
+                                <Button className="backToTasks" onClick={() => history.push('/demo/tasks')}variant="contained" color="primary" style={{marginLeft: 10}}>Tasks</Button>
+                                <PDFDownloadLink className="btn btn-primary pdfDownloadLink" document={<MyDocument name={showReport.name.toUpperCase()} tasks={showReport.tasks} weekStart={showReport.weekStart} weekEnd={showReport.weekEnd}/>} fileName={showReport.name + '-' + fullDate + '.pdf'}>
+                                    {({ blob, url, loading, error }) => (loading ? 'Loading document...' : `Download PDF`)}
+                                </PDFDownloadLink>
+                            </div>
+                        ) : (
+                            <PDFDownloadLink className="btn btn-primary pdfDownloadLink" document={<MyDocument name={showReport.name.toUpperCase()} tasks={showReport.tasks} weekStart={showReport.weekStart} weekEnd={showReport.weekEnd}/>} fileName={showReport.name + '-' + fullDate + '.pdf'}>
+                                {({ blob, url, loading, error }) => (loading ? 'Loading document...' : `Download PDF`)}
+                            </PDFDownloadLink>
+                        )}
                         </div> ) : ''}
                 </div>
             </div>

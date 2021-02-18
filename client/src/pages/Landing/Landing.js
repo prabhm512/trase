@@ -44,7 +44,6 @@ export default function Landing() {
                     <div className="col-xl-3"></div>
                     <div className="col-xl-9">
                         <h5>Weekly client reports available for export as PDF.</h5>
-                        <p><i>(Not available in free demo)</i></p>
                         <img src={engagementsImg} className="image engagementsImg" alt="engagement report" />
                     </div>
                 </div>

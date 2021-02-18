@@ -409,6 +409,8 @@ function ReactDND(props) {
     setDND(newState);
     if (decoded.email !== 'jane@doeconsulting.com') {
       API.updateUserBoard(newState);
+    } else {
+      sessionStorage.setItem("traseDemo", JSON.stringify(newState));
     }
   }
 
