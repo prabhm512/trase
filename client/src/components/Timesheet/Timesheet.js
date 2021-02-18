@@ -100,8 +100,8 @@ function Timesheet() {
     }
 
     // Functions required for MUI Table
-    function createData(task, mon, tues, wed, thurs, fri) {
-        return { task, mon, tues, wed, thurs, fri };
+    function createData(task, mon, tues, wed, thurs, fri, sat, sun) {
+        return { task, mon, tues, wed, thurs, fri, sat, sun };
     }
 
     const handleSelectAllClick = (event) => {
@@ -250,6 +250,8 @@ function Timesheet() {
                                                 <TableCell align="center">{row.wed}</TableCell>
                                                 <TableCell align="center">{row.thurs}</TableCell>
                                                 <TableCell align="center">{row.fri}</TableCell>
+                                                <TableCell align="center">{row.sat}</TableCell>
+                                                <TableCell align="center">{row.sun}</TableCell>
                                             </TableRow>
                                         );
                                         })}

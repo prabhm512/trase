@@ -11,7 +11,7 @@ function EnhancedTableHead() {
     useEffect(() => {
         // Make sure that only dates from Mon-Fri get rendered every time component is mounted
         const weekStart = startOfWeek(new Date(), {weekStartsOn: 1}).getDate();
-        const weekEnd = endOfWeek(new Date(), {weekStartsOn: 1}).getDate() - 2;
+        const weekEnd = endOfWeek(new Date(), {weekStartsOn: 1}).getDate();
     
         const tempDatesArr = [{id: 'task', numeric: false, disablePadding: false, label: 'Task'}];
     

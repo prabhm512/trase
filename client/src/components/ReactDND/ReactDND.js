@@ -278,7 +278,7 @@ function ReactDND(props) {
 
       // Add new task
       // New timer instantiated on creation of new task
-      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, engagement: '', employees: {}, transferred: false };
+      DND.tasks[newTaskID] = { id: newTaskID, content: document.querySelector('.inputNewTaskContent').value, inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0,'6': 0, '7': 0}, engagement: '', employees: {}, transferred: false };
 
       // ID of new task gets inserted into first column
       const newToDos = {
@@ -437,7 +437,7 @@ function ReactDND(props) {
               inProgressDate: 0, 
               pausedDate: 0, 
               doneDate: 0, 
-              timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, 
+              timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0}, 
               engagement: DND.tasks[taskID].engagement, 
               employees: { ...DND.tasks[taskID].employees },
               transferred: false,

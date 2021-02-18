@@ -2,7 +2,7 @@
 const initialData = {
   // _id: '',
   tasks:  {
-    'task-1': { id: 'task-1', content: "Demo", inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}, engagement: '', employees: {}, transferred: false } 
+    'task-1': { id: 'task-1', content: "Demo", inProgressDate: 0, pausedDate: 0, doneDate: 0, timesheet: {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0, '6': 0, '7': 0}, engagement: '', employees: {}, transferred: false } 
   },
   columns: {
     'column-1': {
