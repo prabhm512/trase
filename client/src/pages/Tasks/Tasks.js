@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import jwt_decode from 'jwt-decode';
 import ReactDND from '../../components/ReactDND/ReactDND';
 import { updateLoginStatus } from '../../utils/apis/userFunctions';
@@ -8,15 +8,15 @@ import { useHistory } from 'react-router-dom';
 
 function Tasks(props) {
 
-    const [state, setState] = useState({
-        teamName: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        password: '',
-        admin: '',
-        errors: {}
-    })
+    // const [state, setState] = useState({
+    //     teamName: '',
+    //     first_name: '',
+    //     last_name: '',
+    //     email: '',
+    //     password: '',
+    //     admin: '',
+    //     errors: {}
+    // })
 
     const history = useHistory();
     let token = null; 
@@ -70,7 +70,7 @@ function Tasks(props) {
                             <h5>Assign Task to an Engagement</h5>
                             <ol>
                                 <li>Click on the coral button that is shown on the top right of each task</li>
-                                <li>Click the 'Assign' option, select and engagement, then click 'Assign'</li>
+                                <li>Click the 'Assign' option, select an engagement, then click 'Assign'</li>
                                 <li><b>Task must be timed for its cost to be shown on the engagements page</b></li>
                                 <li>Click on the 'Engagements' button</li>
                             </ol>
