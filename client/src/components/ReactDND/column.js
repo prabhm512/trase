@@ -31,6 +31,11 @@ const TaskList = styled.div`
   position: relative;
 `
 
+const TaskNumber = styled.div`
+    font-size: 15px;
+    margin-top: 5px;
+`
+
   // color: ${props => 
   //   props.title === 'To Do' ? '#1874cd' : props.title === 'In Progress' ? '#ff0000' : props.title === 'Paused' ? '#D4AF37' : 'green'}
 
@@ -55,8 +60,11 @@ function Column(props) {
           <h4 className="openTextArea"><FontAwesomeIcon icon={faPlus} onClick={displayTextArea}></FontAwesomeIcon></h4>
           <NewTask></NewTask>
         </div>
-        : 
+        :
         props.column.title }
+        <TaskNumber>
+          <i>{'Tasks: ' + props.tasks.length}</i>
+        </TaskNumber>
         </Title>
 
       {/* Child of Droppable has to be a function that returns a react component */}
