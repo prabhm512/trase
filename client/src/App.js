@@ -2,7 +2,7 @@ import React , { useState, useEffect } from 'react';
 import './App.css';
 import Tasks from './pages/Tasks/Tasks';
 import Timesheet from './components/Timesheet/Timesheet';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 
 import Navbar from "./components/Navbar/Navbar";
 import Landing from "./pages/Landing/Landing";
@@ -15,6 +15,7 @@ import Auth from './Auth';
 import { getOneUser, updatePassword } from './utils/apis/userFunctions';
 import jwt_decode from 'jwt-decode';
 import { Modal, Button } from 'react-bootstrap';
+import { decode } from 'jsonwebtoken';
 
 function App() {
 
@@ -92,20 +93,21 @@ function App() {
         <div className="App">
             <Switch>
                 <div className="container-fluid pl-0 pr-0 m-0">
-                        <Navbar handleShowCB={handleShow}/>
-                        <Route exact path="/" component={Landing} />
-                        <div className='container-fluid m-0 p-0'>
-                            <Route exact path="/demo/tasks" render={(props) => <Tasks {...props} handleShowCB={handleShow} />} />
-                            <Route exact path="/demo/timesheet" component={Timesheet} />
-                            <Route exact path="/demo/engagements" component={Team} />
-                            <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
-                            <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
-                            <Route exact path="/admin" component={Auth(Admin)} />
-                            <Route exact path="/engagements" component={Auth(Team)} />
-                            <Route exact path="/register" component={Register} />
-                            <Route exact path="/login" component={Login} />
-                        </div>
+                    <Navbar handleShowCB={handleShow}/>
+                    <Route exact path="/" component={Landing} />
+                    <div className='container-fluid m-0 p-0'>
+                        <Route exact path="/demo/tasks" render={(props) => <Tasks {...props} handleShowCB={handleShow} />} />
+                        <Route exact path="/demo/timesheet" component={Timesheet} />
+                        <Route exact path="/demo/engagements" component={Team} />
+                        <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
+                        <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
+                        <Route exact path="/admin" render={(props) => localStorage.getItem('usertoken') ? decoded.admin ? <Admin {...props} /> : <Redirect {...props} to="tasks"/> : <Redirect {...props} to="/" /> } />
+                        <Route exact path="/engagements" component={Auth(Team)} />
+                        <Route exact path="/register" component={Register} />
+                        <Route exact path="/login" component={Login} />
                     </div>
+                    {/* {localStorage.getItem('usertoken') ? <Redirect to="/tasks" /> : <Redirect to="/" />}  */}
+                </div>
             </Switch>
             <Modal
                 show={show}
