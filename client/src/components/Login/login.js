@@ -31,6 +31,7 @@ class Login extends Component {
             .then(res => {
                 if(res) {
                     this.props.history.push('/tasks');
+                    window.location.reload();
                 }
                 else {
                     errors['incorrect-login'] = "Incorrect email or password";

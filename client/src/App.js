@@ -101,7 +101,7 @@ function App() {
                         <Route exact path="/demo/engagements" component={Team} />
                         <Route exact path="/tasks" render={(props) => localStorage.getItem('usertoken') ? <Tasks {...props} handleShowCB={handleShow} /> : <Landing {...props} />}/>
                         <Route exact path="/timesheet/:id" component={Auth(Timesheet)}/>
-                        <Route exact path="/admin" render={(props) => localStorage.getItem('usertoken') ? decoded.admin ? <Admin {...props} /> : <Redirect {...props} to="tasks"/> : <Redirect {...props} to="/" /> } />
+                        <Route exact path="/admin" render={(props) => localStorage.getItem('usertoken') ? decoded.admin ? <Admin {...props} /> : <Redirect {...props} to="/tasks" />  : <Redirect {...props} to="/" /> } />
                         <Route exact path="/engagements" component={Auth(Team)} />
                         <Route exact path="/register" component={Register} />
                         <Route exact path="/login" component={Login} />
