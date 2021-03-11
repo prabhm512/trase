@@ -341,7 +341,7 @@ class Admin extends Component {
                                 />
                                 <span style={{ color: "red" }}>{this.state.errors["engagement"]}</span>
                             </div>
-                            <button type='submit' className='btn btn-lg btn-primary btn-block'>Add</button>
+                            <button type='submit' className='btn btn-lg btn-primary btn-block addEngButton'>Add</button>
                         </form>
                     </div>
                 </div> 
