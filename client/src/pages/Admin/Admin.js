@@ -246,7 +246,8 @@ class Admin extends Component {
                 <div className="row">
                     <div className="col-sm-8">
                         <form onSubmit={this.onTeamMemberSubmit}>
-                            <h3>Add Team Members</h3>
+                            <h3 className="addMemberHeading">Add Team Members</h3>
+                            <hr></hr>
                             <div className='form-group'>
                                 <label htmlFor='first_name'>First Name</label>
                                 <input type='text'
@@ -307,7 +308,8 @@ class Admin extends Component {
                     </div>
                     <div className="col-sm-4">
                         <form onSubmit={this.onTeamMemberRemove}>
-                            <h3>Remove Team Members</h3>
+                            <h3 className="removeMemberHeading">Remove Team Members</h3>
+                            <hr></hr>
                             <div className='form-group'>
                                 <label htmlFor='removeEmail'>Email Address</label>
                                 <input type='email'
@@ -327,7 +329,8 @@ class Admin extends Component {
                 <br></br> 
                 <div className="row">
                     <div className="col-sm-8">
-                        <h3>Add New Engagement</h3>
+                        <h3 className="addEngagement">Add New Engagement</h3>
+                        <hr></hr>
                         <form onSubmit={this.onEngagementsSubmit}>
                             <div className='form-group'>
                                 <label htmlFor='engagement'>Engagement Name</label>

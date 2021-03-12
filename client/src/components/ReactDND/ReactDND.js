@@ -20,6 +20,10 @@ import { decode } from 'jsonwebtoken';
 
 const Container = styled.div`
   display:flex;
+  @media screen and (max-width: 767px) {
+    overflow-x: scroll;
+    width: 90vw;
+  }
 `
 
 function ReactDND(props) {

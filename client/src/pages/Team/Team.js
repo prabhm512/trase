@@ -153,6 +153,7 @@ function Team() {
             }
         })
         setRows(tempRowArr);
+        setAnchorEl(null);
     }
 
     // Functions required for MUI Table
@@ -285,7 +286,7 @@ function Team() {
             <div className="row">
                 <div className="col-sm-12">
                     {/* <h3>Engagements</h3> */}
-                    <Button aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleMenuClick} variant="contained" color="primary">
+                    <Button aria-label="more" aria-controls="long-menu" aria-haspopup="true" onClick={handleMenuClick} variant="contained" color="primary" style={{marginTop: 10}}>
                         View Engagements
                     </Button>
                     <Menu

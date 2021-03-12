@@ -20,3 +20,13 @@
 .addEngButton {
     margin-bottom: 100px;
 }
+
+@media screen and (max-width: 767px) {
+    .addMemberHeading, .removeMemberHeading, .addEngagement {
+        font-size: 26px;
+    }
+
+    .removeMemberHeading { 
+        padding-top: 20px;
+    }
+}

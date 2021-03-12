@@ -12,9 +12,15 @@ const Container = styled.div`
   width: 275px;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 767px) {
+    width: 85vw;
+  }
 `
 
-const Title = styled.h3`
+const Title = styled.h3`  
+  @media screen and (max-width: 767px) {
+    width: 85vw;
+  }
   border: ${(props) => 
     props.title === 'To Do' ? '1px solid #1874cd;' : props.title === 'In Progress' ? '1px solid red;' : props.title === 'Paused' ? '1px solid #D4AF37;' : '1px solid green;'}
   border-radius: 2px;
