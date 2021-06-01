@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import { getOneTeam } from '../../utils/apis/userFunctions';
-import API from '../../utils/apis/API';
+import API from '../../utils/apis/kanbanFunctions';
 import './Team.css';
 // import EngAccordion from './Accordion';
 import MyDocument from './engagementPDF';
@@ -142,8 +142,8 @@ function Team() {
         engs.forEach((el, idx) => {
             if (el.engName === event.target.id) {
                 el.tasks.forEach(task => {
-                    let taskCost = 0.00;
-                    let taskTime = 0.00;
+                    let taskCost = 0.000;
+                    let taskTime = 0.000;
                     for (let empsKey in task.employees) {
                         taskCost += parseFloat(task.employees[empsKey].cost);
                         taskTime += parseFloat(task.employees[empsKey].overallTime);
@@ -268,7 +268,7 @@ function Team() {
                         })
                     }
                 }
-                console.log(tempEngArr);
+
                 setEngs(tempEngArr);
             }
         } else {
@@ -356,7 +356,7 @@ function Team() {
                                                             {row.task}
                                                         </Box>
                                                     </TableCell>
-                                                    <TableCell align="center">{row.hours}</TableCell>
+                                                    <TableCell align="center">{row.hours.toFixed(3)}</TableCell>
                                                     <TableCell align="center">{row.cost}</TableCell>
                                                 </TableRow>
                                             );

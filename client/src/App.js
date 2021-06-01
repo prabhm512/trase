@@ -1,15 +1,15 @@
 import React , { useState, useEffect } from 'react';
 import './App.css';
-import Tasks from './pages/Tasks/Tasks';
+import Tasks from './components/Tasks/Tasks';
 import Timesheet from './components/Timesheet/Timesheet';
 import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
 
 import Navbar from "./components/Navbar/Navbar";
-import Landing from "./pages/Landing/Landing";
-import Register from "./components/Register/register";
-import Login from "./components/Login/login";
-import Admin from './pages/Admin/Admin';
-import Team from './pages/Team/Team';
+import Landing from "./components/Landing/Landing";
+import Register from "./components/Register/Register";
+import Login from "./components/Login/Login";
+import Admin from './components/Admin/Admin';
+import Team from './components/Team/Team';
 import Auth from './Auth';
 
 import { getOneUser, updatePassword } from './utils/apis/userFunctions';

@@ -8,10 +8,12 @@ import Column from './column';
 
 // Utils
 import UpdateToDoContext from '../../utils/contexts/UpdateToDoContext';
-import API from '../../utils/apis/API';
+import API from '../../utils/apis/kanbanFunctions';
 import { getOneTeam, getTeamMembers, getOneUser } from '../../utils/apis/userFunctions';
 import jwt_decode from 'jwt-decode';
 import uniqid from 'uniqid';
+import updateTime from './updateTime';
+import getTimeAndCost from './getTimeAndCost';
 
 // Styling
 import styled from 'styled-components';
@@ -30,7 +32,7 @@ function ReactDND(props) {
 
   // Used when task is moved in to the 'Puased' & 'Done' columns to record time for current day.
   // One task may be worked on for multiple days
-  let dayToday = new Date().getDay();
+  // let dayToday = new Date().getDay();
   let token, decoded;
 
   if (localStorage.usertoken) {
@@ -171,101 +173,29 @@ function ReactDND(props) {
 
       // Record the date task was moved into 'In Progress' column
       if (finish.id === 'column-2') {
-
-        newState = {
-          ...DND, 
-          tasks: { 
-            ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], inProgressDate: Date.now() }
-          },
-          columns: {
-            ...DND.columns,
-            [newStart.id]: newStart,
-            [newFinish.id]: newFinish
-          }
-        }
+        newState = updateTime(start, finish, draggableId, DND, newStart, newFinish);
       } 
 
       // Record the date task was moved FROM 'In Progress' column into 'Paused' column 
       else if (finish.id === 'column-3' && start.id === 'column-2')  {
 
-        let taskTime;
-        let totalTaskTime = 0;
+        let timeAndCost = getTimeAndCost(decoded, DND, draggableId);
 
-        // Calculate exact time (in miilliseconds) that task was in 'In Progress' column
-        if (DND.tasks[draggableId].inProgressDate !== 0) {
-          taskTime = Date.now() - DND.tasks[draggableId].inProgressDate;
-        }
-
-        const timeInSeconds = Math.round(taskTime / 1000);
-        const timeInHours = (timeInSeconds / 3600).toFixed(3);
-        const parsedTimeInHours = parseFloat(timeInHours);
-      
-        // Calculate total time it took to complete task
-        for (let i=1; i<6; i++) {
-          totalTaskTime += DND.tasks[draggableId].timesheet[i];
-        }
-        totalTaskTime+=parsedTimeInHours;
-
-        // Calculate cost of task
-        const cost = calculateCost(decoded.empCost, totalTaskTime);
-
-        newState = {
-          ...DND, 
-          tasks: { 
-            ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], pausedDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + parsedTimeInHours }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
-          },
-          columns: {
-            ...DND.columns,
-            [newStart.id]: newStart,
-            [newFinish.id]: newFinish
-          }
-        }
-
+        newState = updateTime(start, finish, draggableId, DND, newStart, newFinish, timeAndCost.parsedTimeInHours, decoded, timeAndCost.totalTaskTime, timeAndCost.cost);
       }
 
       // Record the date task was moved FROM 'In Progress' column into 'Done' column 
       else if (finish.id === 'column-4'  && start.id === 'column-2') {
 
-        let taskTime;
-        let totalTaskTime=0;
+        let timeAndCost = getTimeAndCost(decoded, DND, draggableId);
 
-        // Calculate exact time (in miilliseconds) that task was in 'In Progress' column
-        if (DND.tasks[draggableId].inProgressDate !== 0) {
-          taskTime = Date.now() - DND.tasks[draggableId].inProgressDate;
-        }
-
-        const timeInSeconds = Math.round(taskTime / 1000);
-        const timeInHours = (timeInSeconds / 3600).toFixed(3);
-        const parsedTimeInHours = parseFloat(timeInHours);
-
-        // Calculate total time it took to complete task
-        for (let i=1; i<6; i++) {
-          totalTaskTime += DND.tasks[draggableId].timesheet[i];
-        }
-        totalTaskTime+=parsedTimeInHours;
-
-         // Calculate cost of task
-        const cost = calculateCost(decoded.empCost, totalTaskTime); 
-
-        newState = {
-          ...DND, 
-          tasks: { 
-            ...DND.tasks,
-            [draggableId]: { ...DND.tasks[draggableId], doneDate: Date.now(), timesheet: { ...DND.tasks[draggableId].timesheet, [`${dayToday}`]: DND.tasks[draggableId].timesheet[dayToday] + parsedTimeInHours }, employees: { ...DND.tasks[draggableId].employees, [decoded.email]: { email: decoded.email, overallTime: totalTaskTime, cost: cost }} }
-          },
-          columns: {
-            ...DND.columns,
-            [newStart.id]: newStart,
-            [newFinish.id]: newFinish
-          }
-        }
-
+        newState = updateTime(start, finish, draggableId, DND, newStart, newFinish, timeAndCost.parsedTimeInHours, decoded, timeAndCost.totalTaskTime, timeAndCost.cost);
       }
+
       // console.log(newState);
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newState);
+
       if (decoded.email !== 'jane@doeconsulting.com') {
         API.updateUserBoard(newState);
       } else {
@@ -315,8 +245,10 @@ function ReactDND(props) {
         transferredTasks: { ...DND.transferredTasks },
         empCost: decoded.empCost
       }
+
       // Do not set state inside method that does an axios call as task movement lags.
       setDND(newToDos);
+
       if (decoded.email !== 'jane@doeconsulting.com') {
         API.updateUserBoard(newToDos);
       } else {
@@ -326,15 +258,6 @@ function ReactDND(props) {
       // console.log(newToDos);
       document.querySelector('.inputNewTaskContent').value = "";
     }
-  }
-
-  const calculateCost = (empCost, taskTime) => {
-
-    let cost = 0; 
-
-    cost = Math.round((empCost * taskTime) * (10^2)) / (10^2);
-    
-    return cost;
   }
 
   // Called from component inside task.js (2 levels down). Allows task content to be edited
@@ -356,7 +279,7 @@ function ReactDND(props) {
   }
 
   // Called from component inside task.js (2 levels down). Allows task to be deleted
-  // Second parameted optional because it is only needed when task is being transferred
+  // Second parameter optional because it is only needed when task is being transferred
   const deleteTask = (taskID, newStateForLoggedInUser = 0) => {
     let newState = {};
     // console.log(taskID);
@@ -383,6 +306,7 @@ function ReactDND(props) {
     }
 
     setDND(newState);
+
     if (decoded.email !== 'jane@doeconsulting.com') {
       API.updateUserBoard(newState);
     } else {
@@ -401,6 +325,7 @@ function ReactDND(props) {
     .catch(err => console.log(err));
   }
 
+  // Assign task to an engagement
   const handleAssign = (taskID, radioValue) => {
     const newState = {
       ...DND, 
@@ -418,6 +343,7 @@ function ReactDND(props) {
     }
   }
 
+  // Transfer task to a team member
   const handleTransfer = (taskID, transferEmail) => {
     if (decoded.email !== 'jane@doeconsulting.com') {
       getOneUser({email: transferEmail}).then(response => {

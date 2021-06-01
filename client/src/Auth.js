@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import React, { Component } from 'react';
-import Landing from './pages/Landing/Landing.js';
+import Landing from './components/Landing/Landing.js';
 
 export default function(ComposedComponent) {
   class Authentication extends Component {

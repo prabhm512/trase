@@ -1,6 +1,6 @@
 /* eslint-disable no-loop-func */
 import React, { useEffect, useState } from 'react';
-import API from '../../utils/apis/API';
+import API from '../../utils/apis/kanbanFunctions';
 import { useParams, useHistory } from 'react-router-dom';
 import './Timesheet.css';
 import { makeStyles } from '@material-ui/core/styles';
@@ -97,6 +97,7 @@ function Timesheet() {
             }
         })
         .then(() => {
+            // console.log(tempRowArr);
             setRows(tempRowArr);
         })
     }
@@ -251,7 +252,7 @@ function Timesheet() {
                                     aria-labelledby="tableTitle"
                                     size={dense ? 'small' : 'medium'}
                                     aria-label="enhanced table"
-                                >
+                                >   
                                     <EnhancedTableHead
                                         classes={classes}
                                         numSelected={selected.length}

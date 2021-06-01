@@ -49,7 +49,7 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 // Use apiRoutes
-require("./routes/apiRoutes")(app);
+require("./routes/kanbanRoutes")(app);
 require("./routes/userRoutes")(app);
 
 // Send every request to the React app

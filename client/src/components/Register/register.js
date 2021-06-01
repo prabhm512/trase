@@ -2,7 +2,7 @@
 /* eslint-disable no-useless-escape */
 import React, { Component } from "react";
 import { registerUser, getUsers, getTeams, registerTeam, getOneUser } from '../../utils/apis/userFunctions';
-import API from '../../utils/apis/API';
+import API from '../../utils/apis/kanbanFunctions';
 import initialData from '../ReactDND/initial-data';
 import './Register.css';
 

@@ -1,5 +1,5 @@
 import React from "react";
-import "./style.css";
+import "./Landing.css";
 import tasksImg from "../../assets/tasks.png";
 import timesheetImg from "../../assets/timesheet.png";
 import engagementsImg from "../../assets/engagements.png";

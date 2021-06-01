@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import jwt_decode from 'jwt-decode';
-import API from '../../utils/apis/API';
+import API from '../../utils/apis/kanbanFunctions';
 import { registerUser, getUsers, getOneUser, registerEng, getOneTeam, removeUser } from '../../utils/apis/userFunctions';
-import initialData from '../../components/ReactDND/initial-data';
+import initialData from '../ReactDND/initial-data';
 import './Admin.css';
 import { Modal } from 'react-bootstrap';
 
