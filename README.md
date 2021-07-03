@@ -3,21 +3,21 @@
 ## Description 
 
 `Client 1`: Roger <br>
-Roger wants Atlassian to develop a website for his new company.
+Roger wants company X to develop a website for his new company.
 
 Roger has the opportunity to <u>profit</u> from this investment. He can improve business credibility, enhance online presence and expand market reach/coverage among many other profitability opportunities.
 
 Roger primarily wants deadlines to be met and the work to be of top quality. 
 
 `Client 2`: Rafael <br>
-Rafael needs PwC to deal with a legal case that he is stuck in. He has no other choice but to seek professional aid. 
+Rafael needs company Y to deal with a legal case that he is stuck in. He has no other choice but to seek professional aid. 
 
 Rafael <i>does not</i> have any opportunity to profit from this investement. 
 
 Along with high quality work, <b>Rafael wants to see the time and cost of each task that is done in his case.</b>
 
 `Value Propositon` <br>
-By leveraging the Kanban ideology, Trase <b><i>automatically</i></b> manages the time and cost of each task done by PwC in Rafael's case.
+By leveraging the Kanban ideology, Trase <b><i>automatically</i></b> manages the time and cost of each task done by company Y in Rafael's case.
 
 ## Table of Contents 
 
